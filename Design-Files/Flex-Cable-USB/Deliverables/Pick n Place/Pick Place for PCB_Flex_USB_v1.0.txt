@@ -1,0 +1,17 @@
+Altium Designer Pick and Place Locations
+E:\Mars\Projects\Flex-Cable-USB\Design Files\Project Outputs for Flex-USB_v1.0\Pick Place for PCB_Flex_USB_v1.0.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       04/06/24
+Time:       19:21
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+Designator Layer       Center-X(mm) Center-Y(mm) Rotation Ref-X(mm) Ref-Y(mm) Pad-X(mm) Pad-Y(mm) 
+J1         TopLayer    2,4862mm     1,8470mm     180      2,4862mm  1,7200mm  3,9862mm  1,8470mm  
+J2         TopLayer    2,4488mm     52,4692mm    0        2,4488mm  52,5962mm 3,9488mm  52,4692mm 
+J3         BottomLayer 2,4608mm     1,8470mm     0        2,4608mm  1,7200mm  0,9608mm  1,8470mm  
+J4         BottomLayer 2,4742mm     52,4692mm    180      2,4742mm  52,5962mm 0,9742mm  52,4692mm 

@@ -1,0 +1,17 @@
+Altium Designer Pick and Place Locations
+E:\Mars\Projects\Flex-Cable-LED Board\Design Files\Project Outputs for Flex-LED-Board_v1.0\Pick Place for PCB_Flex_LED_v1.0.csv
+
+========================================================================================================================
+File Design Information:
+
+Date:       04/06/24
+Time:       18:56
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+"Designator","Layer","Center-X(mm)","Center-Y(mm)","Rotation","Ref-X(mm)","Ref-Y(mm)","Pad-X(mm)","Pad-Y(mm)"
+"J1","BottomLayer","2,4860mm","0,6858mm","0","2,4860mm","0,5588mm","3,9860mm","0,6858mm"
+"J2","BottomLayer","2,4860mm","53,6884mm","180","2,4860mm","53,8154mm","0,9860mm","53,6884mm"
+"J3","TopLayer","2,4860mm","53,6884mm","0","2,4860mm","53,8154mm","3,9860mm","53,6884mm"
+"J4","TopLayer","2,4860mm","0,6858mm","180","2,4860mm","0,5588mm","0,9860mm","0,6858mm"
