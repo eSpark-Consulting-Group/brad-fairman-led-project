@@ -1,0 +1,69 @@
+Altium Designer Pick and Place Locations
+C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v1.0\Design File\Project Outputs for Button-Board\Pick Place for PCB_Button_Board.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       22/07/24
+Time:       05:25
+Revision:   5eacfdfc04997f862f9fd2c77ae5defbcd44c18e
+Variant:    No variations
+Units used: mm
+
+Designator Center-X(mm) Center-Y(mm) Layer       Rotation 
+C1         -1.6503mm    30.9954mm    TopLayer    90       
+C2         -2.6917mm    30.9954mm    TopLayer    90       
+C3         12.5479mm    32.8335mm    BottomLayer 90       
+C4         12.5408mm    30.6230mm    BottomLayer 270      
+C6         6.5278mm     20.8280mm    BottomLayer 270      
+C7         11.9448mm    19.0203mm    TopLayer    90       
+C8         12.9354mm    19.0203mm    TopLayer    90       
+C9         12.5317mm    20.7837mm    BottomLayer 270      
+C10        12.5634mm    24.2840mm    BottomLayer 270      
+C11        11.9155mm    24.2840mm    BottomLayer 90       
+C12        7.2644mm     11.6176mm    BottomLayer 180      
+C13        7.2644mm     10.1144mm    BottomLayer 180      
+C14        0.9708mm     11.0973mm    BottomLayer 0        
+C15        10.4902mm    16.2278mm    BottomLayer 270      
+J1         6.7836mm     30.8068mm    BottomLayer 0        
+J2         14.9832mm    31.9383mm    TopLayer    180      
+J3         -3.7160mm    30.8068mm    BottomLayer 0        
+J4         5.6868mm     33.6268mm    TopLayer    180      
+L1         10.7409mm    27.2336mm    TopLayer    0        
+L2         9.3500mm     19.1726mm    BottomLayer 180      
+LED1       9.5105mm     16.0918mm    TopLayer    270      
+LED2       4.4945mm     17.0000mm    TopLayer    270      
+LED3       -0.4971mm    16.0918mm    TopLayer    270      
+Q1         -3.4596mm    23.0728mm    TopLayer    180      
+Q2         2.9718mm     13.3350mm    BottomLayer 0        
+R1         17.1018mm    30.3055mm    BottomLayer 90       
+R2         11.3463mm    27.4734mm    BottomLayer 90       
+R3         17.1018mm    32.8335mm    BottomLayer 90       
+R4         -4.6510mm    27.4292mm    TopLayer    0        
+R5         14.0752mm    26.5550mm    BottomLayer 270      
+R6         10.4902mm    5.9436mm     BottomLayer 90       
+R7         12.0196mm    27.4734mm    BottomLayer 90       
+R8         9.3698mm     16.1008mm    BottomLayer 90       
+R9         0.9708mm     10.0026mm    BottomLayer 180      
+R10        9.0645mm     22.6870mm    TopLayer    90       
+R11        -3.4318mm    26.4386mm    TopLayer    0        
+R12        -3.4318mm    25.3718mm    TopLayer    180      
+R13        -6.0939mm    27.6297mm    TopLayer    270      
+R14        4.4930mm     17.0152mm    BottomLayer 90       
+R15        -0.4854mm    16.2024mm    BottomLayer 90       
+R16        -0.4971mm    23.1743mm    TopLayer    90       
+R17        0.9708mm     8.9092mm     BottomLayer 0        
+R18        9.2202mm     5.9436mm     BottomLayer 90       
+R19        10.9441mm    19.0203mm    TopLayer    90       
+R20        0.9708mm     12.1920mm    BottomLayer 0        
+R21        0.9708mm     13.9800mm    BottomLayer 180      
+R22        -9.0170mm    31.1648mm    TopLayer    90       
+R23        -8.6398mm    30.2398mm    TopLayer    0        
+SW1        4.4899mm     8.9990mm     TopLayer    180      
+U1         14.8223mm    31.7547mm    BottomLayer 90       
+U2         4.1402mm     10.5410mm    BottomLayer 180      
+U3         -5.5141mm    30.6398mm    TopLayer    180      
+U4         12.1125mm    22.1536mm    TopLayer    270      
+U5         12.0380mm    25.8946mm    BottomLayer 270      
+U6         9.3500mm     22.8186mm    BottomLayer 90       
+U7         9.8552mm     11.0744mm    BottomLayer 90       

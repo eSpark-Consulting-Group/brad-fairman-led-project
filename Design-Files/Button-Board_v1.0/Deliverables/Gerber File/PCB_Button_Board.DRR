@@ -1,14 +1,15 @@
 ----------------------------------------------------------------------------------------------------------------------------------
-NCDrill File Report For: PCB_Button_Board_v1.0.PcbDoc   6/7/2024  8:26:53 PM
+NCDrill File Report For: PCB_Button_Board.PcbDoc   22/07/2024  5:23:41 am
 ----------------------------------------------------------------------------------------------------------------------------------
 
 Layer Pair : Top Layer to Bottom Layer
-ASCII RoundHoles File : PCB_Button_Board_v1.0.TXT
+ASCII RoundHoles File : PCB_Button_Board.TXT
 
 Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
 ----------------------------------------------------------------------------------------------------------------------------------
-T1      12mil (0.3mm)                                             Round             49        PTH        5.89inch (149.50mm)
+T1      0.2mm (8mil)                                              Round             14        PTH        40.65mm (1.60inch)
+T2      0.3mm (12mil)                                             Round             69        PTH        173.37mm (6.83inch)
 ----------------------------------------------------------------------------------------------------------------------------------
-Totals                                                                              49
+Totals                                                                              83
 
 Total Processing Time (hh:mm:ss) : 00:00:00
