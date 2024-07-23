@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------------------
-Gerber File Extension Report For: PCB_Button_Board.GBR   22/07/2024  5:23:03 am
+Gerber File Extension Report For: PCB_Button_Board.GBR   23/07/2024  6:05:04 pm
 ------------------------------------------------------------------------------------------
 
 
@@ -16,8 +16,14 @@ Layer Extension     Layer Description
 .GBO                Bottom Overlay                          
 .GM1                Dimensions                              
 .GM2                Board Shape                             
+.GM4                Top Courtyard                           
+.GM5                Top Assembly                            
 .GM13               Mechanical 13                           
 .GM15               Mechanical 15                           
+.GM16               Top Component Center                    
+.GM20               Bottom Assembly                         
+.GM21               Bottom Courtyard                        
+.GM24               Bottom Component Center                 
 .GKO                Keep-Out Layer                          
 .GPT                Top Pad Master                          
 .GPB                Bottom Pad Master                       
