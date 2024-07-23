@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\USB-Board_v2.0\Design Files\PCB_USB_Board_v2.0.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=pcb_usb_board_v2.0-roundholes.txt|DrillLayers=gtl,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=pcb_usb_board_v2.0-slotholes.txt|DrillLayers=gtl,gbl

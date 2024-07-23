@@ -1,0 +1,184 @@
+*************************************************************
+FileName = PCB_LED_Board_v2.0.GBR
+AutoAperture = True
+*************************************************************
+Generating : Board Shape
+      File : PCB_LED_Board_v2.0.GM2
+
+    Adding Layer      : Board Shape
+
+
+Used DCodes :
+    D16
+*************************************************************
+
+*************************************************************
+Generating : Keep-Out Layer
+      File : PCB_LED_Board_v2.0.GKO
+
+    Adding Layer      : Keep-Out Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : PCB_LED_Board_v2.0.GBO
+
+    Adding Layer      : Bottom Overlay
+
+
+Used DCodes :
+    D15
+    D16
+*************************************************************
+
+*************************************************************
+Generating : Bottom Paste
+      File : PCB_LED_Board_v2.0.GBP
+
+    Adding Layer      : Bottom Paste
+
+    Adding Layer      : Copper Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : PCB_LED_Board_v2.0.GBS
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Copper Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D11
+    D12
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Top Solder
+      File : PCB_LED_Board_v2.0.GTS
+
+    Adding Layer      : Top Solder
+
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Top Paste
+      File : PCB_LED_Board_v2.0.GTP
+
+    Adding Layer      : Top Paste
+
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Top Overlay
+      File : PCB_LED_Board_v2.0.GTO
+
+    Adding Layer      : Top Overlay
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Top Pad Master
+      File : PCB_LED_Board_v2.0.GPT
+
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Pad Master
+      File : PCB_LED_Board_v2.0.GPB
+
+    Adding Layer      : Copper Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+*************************************************************
+
+*************************************************************
+Generating : Copper Layer
+      File : PCB_LED_Board_v2.0.GBL
+
+    Adding Layer      : Copper Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+*************************************************************
+
+*************************************************************
+Generating : Dielectric
+      File : PCB_LED_Board_v2.0.G1
+
+    Adding Layer      : Dielectric
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Aluminium
+      File : PCB_LED_Board_v2.0.GTL
+
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Profile
+      File : PCB_LED_Board_v2.0.GM
+
+
+Used DCodes :
+    D17
+*************************************************************
+

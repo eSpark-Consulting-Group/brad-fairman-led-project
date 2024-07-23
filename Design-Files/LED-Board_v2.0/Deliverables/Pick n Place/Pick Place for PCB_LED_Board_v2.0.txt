@@ -1,0 +1,17 @@
+Altium Designer Pick and Place Locations
+C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\LED-Board_v1.0\Design Files\Project Outputs for LED-Board_v2.0\Pick Place for PCB_LED_Board_v2.0.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       23/07/24
+Time:       22:33
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+Designator Layer       Center-X(mm) Center-Y(mm) Rotation Ref-X(mm) Ref-Y(mm) Pad-X(mm) Pad-Y(mm) 
+J1         BottomLayer 21.9964mm    8.3820mm     0        21.9964mm 8.5090mm  23.4964mm 8.3820mm  
+LED1       BottomLayer 28.9953mm    5.4240mm     270      28.9953mm 5.4240mm  28.9953mm 6.8210mm  
+LED2       BottomLayer 19.0131mm    5.4240mm     270      19.0131mm 5.4240mm  19.0131mm 6.8210mm  
+LED3       BottomLayer 8.9916mm     5.4102mm     90       8.9916mm  5.4102mm  8.9916mm  4.0132mm  
