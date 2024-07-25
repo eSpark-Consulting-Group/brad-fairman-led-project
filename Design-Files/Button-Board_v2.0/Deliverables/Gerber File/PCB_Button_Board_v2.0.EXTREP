@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------------------
-Gerber File Extension Report For: PCB_Button_Board_v2.0.GBR   24/07/2024  8:33:35 pm
+Gerber File Extension Report For: PCB_Button_Board_v2.0.GBR   7/25/2024  1:52:14 AM
 ------------------------------------------------------------------------------------------
 
 
@@ -29,5 +29,4 @@ Layer Extension     Layer Description
 .GPB                Bottom Pad Master                       
 .GD1                Drill Drawing                           
 .GG1                Drill Guide                             
-.GM                 Profile                                 
 ------------------------------------------------------------------------------------------

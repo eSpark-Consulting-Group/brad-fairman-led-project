@@ -1,12 +1,12 @@
 Altium Designer Pick and Place Locations
-C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.0\Design File\Project Outputs for Button-Board_v2.0\Pick Place for PCB_Button_Board_v2.0.txt
+C:\Users\ASIM HAYAT\Downloads\Button-Board_v2.0\Button-Board_v2.0\Design File\Project Outputs for Button-Board_v2.0\Pick Place for PCB_Button_Board_v2.0.txt
 
 ========================================================================================================================
 File Design Information:
 
-Date:       24/07/24
-Time:       20:30
-Revision:   728e2f1a5431c93ef4fe0a73f5ff4f6783ab4ad8
+Date:       25/07/24
+Time:       01:48
+Revision:   Not in VersionControl
 Variant:    No variations
 Units used: mm
 
@@ -16,7 +16,7 @@ C2         -2.6917mm    30.9954mm    TopLayer    90       -2.6917mm 30.9954mm -2
 C3         12.3955mm    32.8335mm    BottomLayer 90       12.3955mm 32.8335mm 12.3955mm 32.3636mm 
 C4         12.3884mm    30.6230mm    BottomLayer 270      12.3884mm 30.6230mm 12.3884mm 31.0929mm 
 C6         7.2905mm     22.1202mm    BottomLayer 90       7.2905mm  22.1202mm 7.2905mm  21.6503mm 
-C7         7.7495mm     29.3080mm    TopLayer    0        7.7495mm  29.3080mm 7.2796mm  29.3080mm 
+C7         8.7099mm     29.2159mm    TopLayer    180      8.7099mm  29.2159mm 9.1798mm  29.2159mm 
 C8         13.3350mm    22.1031mm    TopLayer    90       13.3350mm 22.1031mm 13.3350mm 21.6332mm 
 C9         12.5317mm    20.7837mm    BottomLayer 270      12.5317mm 20.7837mm 12.5317mm 21.2536mm 
 C10        15.8237mm    28.1912mm    BottomLayer 270      15.8237mm 28.1912mm 15.8237mm 28.6611mm 
@@ -29,7 +29,7 @@ J1         6.7836mm     30.8068mm    BottomLayer 0        6.7836mm  32.4318mm 8.
 J2         12.2830mm    31.9383mm    TopLayer    180      12.2830mm 31.9758mm 12.7830mm 30.0008mm 
 J3         -3.7160mm    30.8068mm    BottomLayer 0        -3.7160mm 32.4318mm -2.2126mm 29.1818mm 
 J4         5.6868mm     33.6268mm    TopLayer    180      5.6868mm  33.6268mm 8.2268mm  33.6268mm 
-L1         12.0323mm    25.1580mm    TopLayer    180      12.0323mm 25.1580mm 13.5033mm 25.1580mm 
+L1         11.8545mm    25.1580mm    TopLayer    180      11.8545mm 25.1580mm 13.3255mm 25.1580mm 
 L2         9.3500mm     19.1726mm    BottomLayer 180      9.3500mm  19.1726mm 8.0220mm  19.1726mm 
 LED1       9.5105mm     16.0918mm    TopLayer    270      9.5105mm  16.0918mm 9.5105mm  16.5668mm 
 LED2       4.4945mm     17.0000mm    TopLayer    270      4.4945mm  17.0000mm 4.4945mm  17.4750mm 
