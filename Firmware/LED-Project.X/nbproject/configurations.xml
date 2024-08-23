@@ -45,6 +45,7 @@
           <itemPath>mcc_generated_files/timer/tca0.h</itemPath>
           <itemPath>mcc_generated_files/timer/timer_interface.h</itemPath>
           <itemPath>mcc_generated_files/timer/tcb0.h</itemPath>
+          <itemPath>mcc_generated_files/timer/tcb1.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -92,6 +93,7 @@
             <itemPath>mcc_generated_files/timer/src/delay.c</itemPath>
             <itemPath>mcc_generated_files/timer/src/tca0.c</itemPath>
             <itemPath>mcc_generated_files/timer/src/tcb0.c</itemPath>
+            <itemPath>mcc_generated_files/timer/src/tcb1.c</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>

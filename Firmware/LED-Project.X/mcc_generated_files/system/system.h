@@ -50,6 +50,7 @@ extern "C" {
 #include "../nvm/nvm.h"
 #include "../timer/tca0.h"
 #include "../timer/tcb0.h"
+#include "../timer/tcb1.h"
 #include "../system/interrupt.h"
 #include "../system/clock.h"
 /**

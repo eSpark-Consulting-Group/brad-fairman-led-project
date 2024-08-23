@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "system.h": "c",
+        "delay.h": "c",
+        "sparkfun_max1704x_fuel_gauge_arduino_library.h": "c"
+    }
+}

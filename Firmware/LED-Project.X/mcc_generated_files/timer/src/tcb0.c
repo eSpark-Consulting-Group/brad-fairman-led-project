@@ -49,25 +49,25 @@ void TCB0_CaptureCallbackRegister(TCB0_cb_t cb)
 }
 
 
-//ISR(TCB0_INT_vect)
-//{
-//	/* Insert your TCB interrupt handling code */
-//
-//	/*
-//	 *  The Capture interrupt flag is cleared by writing a 1 to it or when the
-//	 *  Capture register is read in Capture mode
-//	 */
-//	if (TCB0.INTFLAGS & TCB_CAPT_bm)
-//    {
-//        if (TCB0_CAPT_isr_cb != NULL)
-//        {
-//            (*TCB0_CAPT_isr_cb)();
-//        }
-//
-//        TCB0.INTFLAGS = TCB_CAPT_bm;
-//    }
-//
-//}
+ISR(TCB0_INT_vect)
+{
+	/* Insert your TCB interrupt handling code */
+
+	/*
+	 *  The Capture interrupt flag is cleared by writing a 1 to it or when the
+	 *  Capture register is read in Capture mode
+	 */
+	if (TCB0.INTFLAGS & TCB_CAPT_bm)
+    {
+        if (TCB0_CAPT_isr_cb != NULL)
+        {
+            (*TCB0_CAPT_isr_cb)();
+        }
+
+        TCB0.INTFLAGS = TCB_CAPT_bm;
+    }
+
+}
 
 void TCB0_Initialize(void)
 {

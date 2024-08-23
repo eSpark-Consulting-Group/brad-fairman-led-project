@@ -49,6 +49,7 @@ void SYSTEM_Initialize(void)
     NVM_Initialize();
     TCA0_Initialize();
     TCB0_Initialize();
+    TCB1_Initialize();
     CPUINT_Initialize();
 }
 

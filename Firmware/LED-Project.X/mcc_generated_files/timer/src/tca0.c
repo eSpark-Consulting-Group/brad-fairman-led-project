@@ -56,33 +56,21 @@ void (*TCA0_OVF_isr_cb)(void) = &TCA0_DefaultOverflowCallbackRegister;
 void TCA0_DefaultCompare0CallbackRegister(void)
 {
     //Add your ISR code here
-//    CTRL_SIG_SetLow();
 }
 
 void TCA0_DefaultCompare1CallbackRegister(void)
 {
     //Add your ISR code here
-//    CTRL_SIG_SetLow();
 }
-
-uint32_t var1 = 0
-        , var2 = 0;
 
 void TCA0_DefaultCompare2CallbackRegister(void)
 {
     //Add your ISR code here
-    CTRL_SIG_SetLow();
-    var1++;
-//    CTRL_SIG_SetHigh();
 }
 
 void TCA0_DefaultOverflowCallbackRegister(void)
 {
     //Add your ISR code here
-    CTRL_SIG_SetHigh();
-    var2++;
-//    CTRL_SIG_SetLow();
-//    TCA0_ClearOverflowInterruptFlag();
 }
 
 void TCA0_OverflowCallbackRegister(TCA0_cb_t cb)
