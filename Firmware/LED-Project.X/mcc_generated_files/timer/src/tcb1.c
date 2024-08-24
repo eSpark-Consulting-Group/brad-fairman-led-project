@@ -71,8 +71,8 @@ ISR(TCB1_INT_vect)
 
 void TCB1_Initialize(void)
 {
-    // CCMP 33333; 
-    TCB1.CCMP = 0x8235;
+    // CCMP 3333; 
+    TCB1.CCMP = 0xD05;
 
     // CNT undefined; 
     TCB1.CNT = 0x0;

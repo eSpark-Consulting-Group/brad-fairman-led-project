@@ -43,7 +43,6 @@ build/default/production/main.o.d build/default/production/main.o: main.c \
  mcc_generated_files/system/../timer/../system/utils/compiler.h \
  mcc_generated_files/system/../timer/tcb0.h \
  mcc_generated_files/system/../timer/./timer_interface.h \
- mcc_generated_files/system/../timer/tcb1.h \
  mcc_generated_files/system/../system/interrupt.h \
  mcc_generated_files/system/../system/../system/utils/atomic.h \
  mcc_generated_files/timer/delay.h \
@@ -137,8 +136,6 @@ mcc_generated_files/system/../timer/../system/utils/compiler.h:
 mcc_generated_files/system/../timer/tcb0.h:
 
 mcc_generated_files/system/../timer/./timer_interface.h:
-
-mcc_generated_files/system/../timer/tcb1.h:
 
 mcc_generated_files/system/../system/interrupt.h:
 

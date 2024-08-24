@@ -44,7 +44,6 @@ build/default/production/mcc_generated_files/timer/src/tca0.o.d \
  mcc_generated_files/timer/src/../../system/../timer/tcb0.h \
  mcc_generated_files/timer/src/../../system/../timer/../system/utils/compiler.h \
  mcc_generated_files/timer/src/../../system/../timer/./timer_interface.h \
- mcc_generated_files/timer/src/../../system/../timer/tcb1.h \
  mcc_generated_files/timer/src/../../system/../system/interrupt.h \
  mcc_generated_files/timer/src/../../system/../system/../system/utils/atomic.h \
  mcc_generated_files/timer/src/../timer_interface.h \
@@ -135,8 +134,6 @@ mcc_generated_files/timer/src/../../system/../timer/tcb0.h:
 mcc_generated_files/timer/src/../../system/../timer/../system/utils/compiler.h:
 
 mcc_generated_files/timer/src/../../system/../timer/./timer_interface.h:
-
-mcc_generated_files/timer/src/../../system/../timer/tcb1.h:
 
 mcc_generated_files/timer/src/../../system/../system/interrupt.h:
 

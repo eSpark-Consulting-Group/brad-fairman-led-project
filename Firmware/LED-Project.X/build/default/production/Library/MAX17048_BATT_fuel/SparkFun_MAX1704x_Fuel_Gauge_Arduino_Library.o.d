@@ -46,7 +46,6 @@ build/default/production/Library/MAX17048_BATT_fuel/SparkFun_MAX1704x_Fuel_Gauge
  Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/../system/utils/compiler.h \
  Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/tcb0.h \
  Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/./timer_interface.h \
- Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/tcb1.h \
  Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../system/interrupt.h \
  Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../system/../system/utils/atomic.h
 
@@ -139,8 +138,6 @@ Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/../system/u
 Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/tcb0.h:
 
 Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/./timer_interface.h:
-
-Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../timer/tcb1.h:
 
 Library/MAX17048_BATT_fuel/../../mcc_generated_files/system/../system/interrupt.h:
 

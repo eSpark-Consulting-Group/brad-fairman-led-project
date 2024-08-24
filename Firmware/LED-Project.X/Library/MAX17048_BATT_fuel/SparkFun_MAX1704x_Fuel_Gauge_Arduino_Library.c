@@ -68,14 +68,6 @@ bool SFE_MAX1704X_isConnected(void)
     uint8_t reg_addr = MAX17043_VERSION;
     uint8_t read_data[2] = {0};
 
-    // I2C0_SetBuffer(&reg_addr,1);
-    // I2C0_MasterWrite(MAX17043_VERSION); // Attempt to read the version register
-
-    // _i2cPort->beginTransmission(MAX1704x_ADDRESS);
-    // _i2cPort->write(MAX17043_VERSION); // Attempt to read the version register
-    // _i2cPort->endTransmission(false); // Don't release the bus
-
-    // if (_i2cPort->requestFrom(MAX1704x_ADDRESS, 2) == 2) // Attempt to read the version (2 bytes)
     if (I2C0_Host_Write(MAX1704x_ADDRESS, &reg_addr, 1)) // Attempt to read the version (2 bytes)
     {
       while(I2C0_Host_IsBusy());
@@ -87,7 +79,6 @@ bool SFE_MAX1704X_isConnected(void)
     else
     {
       retries--;
-      // delay(50);
       for(int i = 0; i<100; i++){
          __asm__("nop"); // Do nothing, just wait
       }
@@ -722,25 +713,14 @@ uint8_t SFE_MAX1704X_disableHibernate()
 
 uint8_t SFE_MAX1704X_write16(uint16_t data, uint8_t address)
 {
-  // uint8_t msb, lsb;
-  // msb = (data & 0xFF00) >> 8;
-  // lsb = (data & 0x00FF);
-
   // uint8_t* ptr = (uint8_t*)&data;
-  // uint8_t write_data[2] = {ptr[1], ptr[0]};
-
-  // _i2cPort->beginTransmission(MAX1704x_ADDRESS);
-  // _i2cPort->write(address);
-  // _i2cPort->write(msb);
-  // _i2cPort->write(lsb);
-  // return (_i2cPort->endTransmission());
-
+  // uint8_t write_data[2] = {ptr[1], ptr[0]}; 
   data = ((data & 0xFF00) >> 8 ) || ((data & 0x00FF) << 8 );
-
+  
   while(I2C0_Host_IsBusy());
   I2C0_Host_Write(MAX1704x_ADDRESS, &address, 1);
   while(I2C0_Host_IsBusy());
-  I2C0_Host_Write(MAX1704x_ADDRESS, (uint8_t*)&data, 2);
+  I2C0_Host_Write(MAX1704x_ADDRESS, (uint8_t*)data, 2);
   while(I2C0_Host_IsBusy());
   return true;
 }
@@ -754,23 +734,11 @@ uint16_t SFE_MAX1704X_read16(uint8_t address)
   while ((success == false) && (retries > 0))
   {
     uint8_t read_data[2];
-    // I2C0_Open(MAX1704x_ADDRESS);
-    // uint8_t reg_addr = address;
-    // I2C0_SetBuffer(&reg_addr,1);
 
-    // _i2cPort->beginTransmission(MAX1704x_ADDRESS);
-    // _i2cPort->write(address);
-    // _i2cPort->endTransmission(false); // Don't release the bus
-
-    if (I2C0_Host_WriteRead(MAX1704x_ADDRESS, &address, 1, read_data, 2))
+    if (I2C0_Host_Write(MAX1704x_ADDRESS, &address, 1)) // Attempt to read the version (2 bytes)
     {
-      // uint8_t msb;
-      // I2C0_SetBuffer(&msb, 1);
-      // I2C0_MasterRead();
-
-      // uint8_t lsb;
-      // I2C0_SetBuffer(&lsb, 1);
-      // I2C0_MasterRead();
+      while(I2C0_Host_IsBusy());
+      I2C0_Host_Read(MAX1704x_ADDRESS, read_data, 2);
       while(I2C0_Host_IsBusy());
       result = ((uint16_t)read_data[0] << 8) | read_data[1];
       success = true;
@@ -778,12 +746,10 @@ uint16_t SFE_MAX1704X_read16(uint8_t address)
     else
     {
       retries--;
-      // delay(50);
       for(int i = 0; i<100; i++){
          __asm__("nop"); // Do nothing, just wait
       }
     }
-    // I2C0_Close(); // Don't release the bus
   }
 
   return (result);

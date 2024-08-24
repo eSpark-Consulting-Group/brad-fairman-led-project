@@ -43,8 +43,8 @@
 #define FUEL_CHECK_TIME 2000            // button press time to trigger batt fuel check
 #define MODE_CHANGE_TIME 250            // button press time to trigger mode change
 #define EEPROM_Address  0x14FE
-#define BATTERY_LVL_MIN
-#define BATTERY_LVL_MAX
+#define BATTERY_LVL_MIN 3.0f
+#define BATTERY_LVL_MAX 4.2f
 
 
 
@@ -98,21 +98,26 @@ typedef struct {
 
 LED_STATE_t LED[3];
 
-#define LED_BLINK_STEPS 3
-uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
-uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS] = {{0,0,0},            {0,0,0},    {3000,0,0}, {3000,0,0}};
-uint32_t led3_chg_sequence[LVL_MAX][LED_BLINK_STEPS] = {{0,0,0},            {0,0,0},    {0,0,0},    {3000,0,0}};
-uint8_t led_step = 0;
-uint32_t led_timer = 0;
+#define LED_BLINK_STEPS_DISCHG 3
+#define LED_BLINK_STEPS_CHG 2
+uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
+uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {3000,0,0}, {3000,0,0}};
+uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {0,0,0},    {3000,0,0}};
+uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000}, {1000,0},      {1000,0},       {1000,0}};
+uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0},        {1000,1000},   {1000,0},       {1000,0}};
+uint32_t led3_chg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0},        {0,0},         {1000,1000},    {1000,0}};
+//uint32_t led_timer = 0;
+//uint8_t led_step = 0;
 
 eeprom_data_t current_mode;
 volatile BATT_LVL_e batt_lvl = LVL_20;
 volatile uint32_t timerB1_counter=0;
 volatile uint32_t timerB0_counter=0;
 volatile uint32_t debounce_timer=0;
-volatile uint32_t button_timer=0;
+volatile uint32_t button_press_time=0;
 volatile bool is_button_pressed = false;
 volatile bool is_usb_connected=false;
+
 volatile bool batt_lvl_acquire_flag=false;
 volatile bool mode_change_flag=false;
 
@@ -198,12 +203,10 @@ void update_mode(MODE_e new_mode)
 void TCA0_cmpr2_isr()
 {
    CTRL_SIG_SetLow();
-//    CTRL_SIG_SetHigh();
 }
 void TCA0_overflow_isr()
 {
     CTRL_SIG_SetHigh();
-//    CTRL_SIG_SetLow();
 }
 
 // bool debounce(INT_PINS_e pin) {
@@ -217,33 +220,33 @@ void TCA0_overflow_isr()
 //   return (state == 0xff00);
 // }
 
-void button_int()
-{
-    if(M_BUTTON_GetValue() && !is_button_pressed)
-    {
-        // TCB0_Start();
-        button_timer = TCB0_Read();
-        is_button_pressed = true;
-    }
-    else
-    {
-        // TCB0_Stop();
-        uint16_t timer_val = TCB0_Read() - button_timer;
+// void button_int()
+// {
+//     if(M_BUTTON_GetValue() && !is_button_pressed)
+//     {
+//         // TCB0_Start();
+//         button_press_time = TCB0_Read();
+//         is_button_pressed = true;
+//     }
+//     else
+//     {
+//         // TCB0_Stop();
+//         uint16_t button_pressed_time_val = TCB0_Read() - button_press_time;
 
-        if((timer_val >= (FUEL_CHECK_TIME-150)) && (timer_val <= (FUEL_CHECK_TIME+150)))
-        {
-            batt_lvl_acquire_flag = true;
-        }
-        else if(( timer_val >= (MODE_CHANGE_TIME-25)) && (timer_val <= (MODE_CHANGE_TIME+25)))
-        {
-            mode_change_flag = true;
-        }
-//        else if()
-        button_timer = 0;
-    }
-}
+//         if((button_pressed_time_val >= (FUEL_CHECK_TIME-150)) && (button_pressed_time_val <= (FUEL_CHECK_TIME+150)))
+//         {
+//             batt_lvl_acquire_flag = true;
+//         }
+//         else if(( button_pressed_time_val >= (MODE_CHANGE_TIME-25)) && (button_pressed_time_val <= (MODE_CHANGE_TIME+25)))
+//         {
+//             mode_change_flag = true;
+//         }
+// //        else if()
+//         button_press_time = 0;
+//     }
+// }
 
-void led_control(BATT_LVL_e lvl, uint8_t step, uint8_t led)
+void led_control_dischg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 {
     LED[led].state = ((step+1) % 2);
     LED[led].timer = timerB1_counter;//TCB1_Read();
@@ -251,21 +254,20 @@ void led_control(BATT_LVL_e lvl, uint8_t step, uint8_t led)
     switch(led)
     {
         case 0:
-//            LED[led] = {    LED[led].state = ((step+1) % 2), LED[led].time = led1_chg_sequence[lvl][step], LED[led].timer = TCB1_Read()  };
-            LED[led].time = led1_chg_sequence[lvl][step];
+            LED[led].time = led1_dischg_sequence[lvl][step];
             break;
         case 1:
-//            LED[led] = {    .state = ((step+1) % 2), .time = led1_chg_sequence[lvl][step], .timer = TCB1_Read()  };
-            LED[led].time = led2_chg_sequence[lvl][step];
+            LED[led].time = led2_dischg_sequence[lvl][step];
             break;
         case 2:
-//            LED[led] = {    .state = ((step+1) % 2), .time = led1_chg_sequence[lvl][step], .timer = TCB1_Read() };
-            LED[led].time = led3_chg_sequence[lvl][step];
+            LED[led].time = led3_dischg_sequence[lvl][step];
             break;
     }
 
     if(step == 0)
+    {
         digitalWrite(led, LED[led].state);
+    }
 }
 
 void led_sequence_action(bool state)
@@ -279,6 +281,10 @@ void led_sequence_action(bool state)
     else
     {
         TCB1_Stop();
+        // turn off all status LEDs
+        digitalWrite(0,0);
+        digitalWrite(1,0);
+        digitalWrite(2,0);
     }
 }
 
@@ -293,35 +299,37 @@ void TCB0_handler()
         if(M_BUTTON_GetValue() && !is_button_pressed)
         {
             is_button_pressed = true;
-            button_timer = timerB0_counter;
+            button_press_time = timerB0_counter;
         }
         else if(!M_BUTTON_GetValue())
         {
             is_button_pressed = false;
-            uint16_t timer_val = timerB0_counter - button_timer;
+            uint16_t button_pressed_time_val = timerB0_counter - button_press_time;
 
-            if((timer_val >= (FUEL_CHECK_TIME-200)) && (timer_val <= (FUEL_CHECK_TIME+200)))
+            if((button_pressed_time_val >= (FUEL_CHECK_TIME-200)) && (button_pressed_time_val <= (FUEL_CHECK_TIME+200)))
             {
                 batt_lvl_acquire_flag = true;
             }
-            else if(( timer_val >= (MODE_CHANGE_TIME-150)) && (timer_val <= (MODE_CHANGE_TIME+150)))
+            else if(( button_pressed_time_val >= (MODE_CHANGE_TIME-150)) && (button_pressed_time_val <= (MODE_CHANGE_TIME+150)))
             {
                 mode_change_flag = true;
             }
         }
-        if(GPOUT_GetValue())            // check batt fuel guage alert pin state
-        {
+        
+    }
 
-        }
+    if(GPOUT_GetValue())            // check batt fuel guage alert pin state
+    {
 
-        if(!BAT_CHG_GetValue())            // check if usb is connected, ACTIVE LOW
-        {
-            is_usb_connected = true;
-        }
-        else
-        {
-            is_usb_connected = true;
-        }
+    }
+
+    if(!BAT_CHG_GetValue())            // check if usb is connected, ACTIVE LOW
+    {
+        is_usb_connected = true;
+    }
+    else
+    {
+        is_usb_connected = false;
     }
     
 /*
@@ -344,18 +352,18 @@ void status_LED_handler()
     {
         if(((timerB1_counter-LED[i].timer) >= LED[i].time) && !(step_count & (1 << i) ))
         {
-            if (LED[i].step == LED_BLINK_STEPS)
+            if (LED[i].step == LED_BLINK_STEPS_DISCHG)
             {
                 step_count |= (1 << i);
             }
             else{
-                led_control(batt_lvl, ++LED[i].step, i);
+                led_control_dischg(batt_lvl, ++LED[i].step, i);
                 digitalWrite(i, LED[i].state);
             }
         }
         else if (LED[i].time == 0)
         {
-            led_control(batt_lvl, ++LED[i].step, i);
+            led_control_dischg(batt_lvl, ++LED[i].step, i);
         }
     }
 
@@ -367,10 +375,45 @@ void status_LED_handler()
 
 }
 
+float mapValue(float *input) {
+    return ((*input - BATTERY_LVL_MIN) * (100.0 - 0.0)) / (BATTERY_LVL_MAX - BATTERY_LVL_MIN);
+}
+
+BATT_LVL_e batt_lvl_percent(float *batt_voltage)
+{
+    float soc = mapValue(batt_voltage);
+
+    if(soc<20.0)
+    {
+        return LVL_20;
+    }
+    else if(soc<33.0)
+    {
+        return LVL_33;
+    }
+    else if(soc<66.0)
+    {
+        return LVL_66;
+    }
+    else if(soc<100.0)
+    {
+        return LVL_100;
+    }
+    return LVL_MAX;
+}
+
+void batt_fuel_ic_init()
+{
+    SFE_MAX1704X_Init(MAX1704X_MAX17048);
+    while(!SFE_MAX1704X_begin()) {}
+    SFE_MAX1704X_quickStart();
+    SFE_MAX1704X_setThreshold(4);
+}
+
 int main(void)
 {
     SYSTEM_Initialize();
-    TCB0_Stop();         // 1ms timer for button
+    // TCB0_Stop();         // 1ms timer for button
     TCB1_Stop();         // 1ms timer for LEDs
 
     // timer callbacks for PWM generation
@@ -381,36 +424,18 @@ int main(void)
     TCB0_CaptureCallbackRegister(&TCB0_handler);
     TCB1_CaptureCallbackRegister(&status_LED_handler);
 
-    // button_timer = 0;
-    M_BUTTON_EnableInterruptForBothEdges();
-    M_BUTTON_SetInterruptHandler(&button_int);
-    
-    // DELAY_milliseconds(5000);
+    // button_press_time = 0;
+    // M_BUTTON_EnableInterruptForBothEdges();
+    // M_BUTTON_SetInterruptHandler(&button_int);
     
     // read last mode setting
     current_mode = EEPROM_Read(EEPROM_Address);
-//    update_mode(current_mode);
+    update_mode(current_mode);
     
     // initialize batt fuel guage sensor
-//    SFE_MAX1704X_Init(MAX1704X_MAX17048);
-//    while(!SFE_MAX1704X_begin()) {}
-//    SFE_MAX1704X_quickStart();
-    
-    // B_HIGH_SetHigh();
-    // B_MID_SetHigh();
-    // B_LOW_SetHigh();
+    batt_fuel_ic_init();
 
     sei();
-
-    led_control(LVL_33, 0, 0);
-    led_control(LVL_33, 0, 1);
-    led_control(LVL_33, 0, 2);
-    led_sequence_action(1);
-    
-    // DELAY_microseconds(5000);
-
-    // while(1)
-    // {}
 
     while(1)
     {
@@ -423,12 +448,12 @@ int main(void)
 
         if(batt_lvl_acquire_flag && !is_usb_connected)       // if button held for 2secs, flash onboard LEDs based on chg lvl
         {
-            // uint16_t current_batt_lvl = 
+            float current_batt_lvl = SFE_MAX1704X_getVoltage();
+            batt_lvl = batt_lvl_percent(&current_batt_lvl);
 
-
-            led_control(batt_lvl, 0, 0);
-            led_control(batt_lvl, 0, 1);
-            led_control(batt_lvl, 0, 2);
+            led_control_dischg(batt_lvl, 0, 0);
+            led_control_dischg(batt_lvl, 0, 1);
+            led_control_dischg(batt_lvl, 0, 2);
             led_sequence_action(1);
             batt_lvl_acquire_flag = false;
         }
