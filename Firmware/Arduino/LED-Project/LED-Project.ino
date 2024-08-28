@@ -22,12 +22,16 @@
 #define DEBOUNCE_TIME   50
 #define FUEL_CHECK_TIME 2000            // button press time to trigger batt fuel check
 #define MODE_CHANGE_TIME 250            // button press time to trigger mode change
-#define EEPROM_Address  0x00//14FE
+// #define EEPROM_Address  0x00//14FE
+#define EEPROM_ENDURANCE  100000        // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN 3.0f
 #define BATTERY_LVL_MAX 4.2f
 
 SFE_MAX1704X lipo(MAX1704X_MAX17048); // Create a MAX17048
 EEPROMClass EEPROM1;
+uint8_t EEPROM_Address;
+uint8_t EEPROM_Write_Count;
+uint8_t EEPROM_Mode_Addr;
 
 unsigned int Period = 0xFFFF;
 
@@ -137,18 +141,15 @@ void update_led(MODE_e mode)
     }
 }
 
-void update_mode(MODE_e new_mode)
+void update_mode(MODE_e* mode)
 {
-    if(new_mode>MODE_4)
+    if(*mode > MODE_4)
     {
-        current_mode = MODE_1;
-        new_mode = current_mode;
+        *mode = MODE_1;
     }
-    if(EEPROM1.read((uint8_t)EEPROM_Address) != new_mode)
-    {
-        EEPROM1.write((uint8_t)EEPROM_Address, new_mode);
-    }
-    update_led(new_mode);
+
+    eeprom_mode_write(*mode);
+    update_led(*mode);
 }
 
 void setFrequency(unsigned long freqInHz) {
@@ -438,7 +439,35 @@ void batt_fuel_ic_init()
     lipo.disableSOCAlert();
 }
 
-void setup() {
+void eeprom_setup()
+{
+  EEPROM_Write_Count = EEPROM1.read(EEPROM1.begin());
+  EEPROM_Address = EEPROM1.begin()+1;
+  EEPROM_Mode_Addr = (MODE_e)(EEPROM1.read(EEPROM_Address));
+
+  current_mode = (MODE_e)(EEPROM1.read(EEPROM_Mode_Addr));
+  if(current_mode > MODE_4)
+  {
+    current_mode = MODE_1;
+    eeprom_mode_write(current_mode);
+  }
+}
+
+void eeprom_mode_write(MODE_e mode)
+{
+  EEPROM_Write_Count++;
+  if(EEPROM_Write_Count > (EEPROM_ENDURANCE-100))
+  {
+    EEPROM_Write_Count=1;
+    EEPROM_Mode_Addr++;
+  }
+  EEPROM1.update(EEPROM_Address, EEPROM_Mode_Addr);
+  EEPROM1.update(EEPROM_Mode_Addr, mode);
+  EEPROM1.update(EEPROM1.begin(), EEPROM_Write_Count);
+}
+
+void setup()
+{
   // put your setup code here, to run once:
   pinMode(STATUS_LED_75, OUTPUT);
   pinMode(STATUS_LED_50, OUTPUT);
@@ -452,7 +481,28 @@ void setup() {
   pinMode(GPOUT_PIN, INPUT);
   pinMode(BATT_CHG_PIN, INPUT);
 
-  // digitalWrite(STATUS_LED_25,HIGH);
+  // update EEPROM with initial setup
+  // i.e. addr 0 is for number of times EEPROM_Mode_addr have been written
+  //      addr 1 holds the address of mode addr
+  // 
+  // // for(int i=0;i<EEPROM_SIZE;i++)
+  // // {
+  //      EEPROM.update(i,0);
+  // //   digitalWrite(STATUS_LED_75, HIGH);
+  // //   delay(10);
+  // //   digitalWrite(STATUS_LED_75, LOW);
+  // //   delay(10);
+  // // }
+  //   EEPROM.update(0,100);
+  //   EEPROM.update(1,2);
+  //   EEPROM.update(2,1);
+  // digitalWrite(STATUS_LED_25, HIGH);
+  // delay(100);
+  // digitalWrite(STATUS_LED_25, LOW);
+  // // delay(100);
+
+  // while(1){}
+
 
   // takeOverTCA0();             // This replaces disabling and resettng the timer, required previously.
   TCA0_Initialize();
@@ -480,17 +530,16 @@ void setup() {
   //     var1 = timerB0_counter;
   //   }
   // }
+
   Wire.pins(SDA, SCL);
   Wire.begin();
 
   batt_fuel_ic_init();
 
-  current_mode = (MODE_e)(EEPROM1.read((uint8_t)EEPROM_Address));
-  update_mode(current_mode);
+  eeprom_setup();
+  update_mode(&current_mode);
 
   led_sequence_action(0);
-
-  // is_usb_connected = true;
 
 }
 
@@ -498,8 +547,8 @@ void loop() {
 
   if(mode_change_flag && !is_usb_connected)            // if button pressed once change mode accordingly
   {
-      current_mode = (current_mode + 0x1);
-      update_mode(current_mode);
+      current_mode = (current_mode + 1);
+      update_mode(&current_mode);
       mode_change_flag = false;
   }
   else
@@ -535,7 +584,7 @@ void loop() {
     }
   }
 
-    delay(DEBOUNCE_TIME);
+  delay(DEBOUNCE_TIME);
   bool state = !digitalRead(BUTTON_PIN) ;
     if(state)//&& debounce_condition)
     {
@@ -593,7 +642,7 @@ void loop() {
     {
         TCA0_Start();
         led_sequence_action(0);
-        update_mode(current_mode);
+        update_mode(&current_mode);
         is_usb_connected = false;
     }
 }
