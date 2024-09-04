@@ -6,32 +6,37 @@
 #include "tcb0.h"
 #include "tcb1.h"
 
-#define STATUS_LED_75 PIN_PA1
-#define STATUS_LED_50 PIN_PA2
-#define STATUS_LED_25 PIN_PA4
-#define GPOUT_PIN     PIN_PA5
-#define BATT_CHG_PIN  PIN_PA6
-#define SCL           PIN_PB0
-#define SDA           PIN_PB1
-#define U_INT_PIN     PIN_PB4
-#define U_KILL_PIN    PIN_PB5
-#define RED_LED_CTRL  PIN_PC0
+#define STATUS_LED_75   PIN_PA1
+#define STATUS_LED_50   PIN_PA2
+#define STATUS_LED_25   PIN_PA4
+#define GPOUT_PIN       PIN_PA5
+#define BATT_CHG_PIN    PIN_PA6
+#define SCL             PIN_PB0
+#define SDA             PIN_PB1
+#define U_INT_PIN       PIN_PB4
+#define U_KILL_PIN      PIN_PB5
+#define RED_LED_CTRL    PIN_PC0
 #define WHITE_LED_CTRL  PIN_PC2
-#define BUTTON_PIN    PIN_PC1
+#define BUTTON_PIN      PIN_PC1
 
 #define DEBOUNCE_TIME   50
 #define FUEL_CHECK_TIME 2000            // button press time to trigger batt fuel check
 #define MODE_CHANGE_TIME 250            // button press time to trigger mode change
-// #define EEPROM_Address  0x00//14FE
 #define EEPROM_ENDURANCE  100000        // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN 3.0f
 #define BATTERY_LVL_MAX 4.2f
 
+#define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
+#define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
+#define EEPROM_COUNT_ADDRESS      (EEPROM.begin()+2)
+#define EEPROM_MODE_REF_ADDRESS   (EEPROM.begin()+3)
+#define EEPROM_MODE_ADDRESS       (EEPROM.begin()+4)
+
 SFE_MAX1704X lipo(MAX1704X_MAX17048); // Create a MAX17048
-EEPROMClass EEPROM1;
-uint8_t EEPROM_Address;
+// uint8_t EEPROM_Address;
 uint8_t EEPROM_Write_Count;
 uint8_t EEPROM_Mode_Addr;
+uint16_t DEVICE_id = 0x1616;          // ATTiny1616
 
 unsigned int Period = 0xFFFF;
 
@@ -83,6 +88,9 @@ volatile BATT_LVL_e chg_sequence = (BATT_LVL_e)5;
 volatile bool batt_lvl_acquire_flag=false;
 volatile bool mode_change_flag=false;
 
+bool is_device_wakeup=true;
+
+
 // ISR for main WHITE/RED LEDs
 void TCA0_cmpr2_isr()
 {
@@ -117,24 +125,18 @@ void update_led(MODE_e mode)
     switch(mode)
     {
         case MODE_4:
-            // TCA0_Compare2Set((TCA0.SINGLE.PER)/2);
             setDutyCycleTCA(50);
             TCA0_Start();
             break;
         case MODE_1:
-//            TCA0_Compare2Set((TCA0.SINGLE.PER)/4);
-            // TCA0_Compare2Set(TCA0.SINGLE.PER*(.7f));
             setDutyCycleTCA(25);
             TCA0_Start();
             break;
         case MODE_2:
-            // TCA0_Compare2Set((TCA0.SINGLE.PER)/2);
             setDutyCycleTCA(50);
             TCA0_Start();
             break;
         case MODE_3:
-//            TCA0_Compare2Set(TCA0.SINGLE.PER-1);
-            // TCA0_Compare2Set((TCA0.SINGLE.PER)/4);
             setDutyCycleTCA(75);
             TCA0_Start();
             break;
@@ -175,7 +177,6 @@ void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
           LED[led].time = led1_chg_sequence[lvl][LED[led].step];
           if((step == 0) && (LED[led].time!=0))
           {
-              // digitalWrite(STATUS_LED_75, LED[led].state);
               status_LED_toggler(led, LED[led].state);
           }
           break;
@@ -183,7 +184,6 @@ void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
           LED[led].time = led2_chg_sequence[lvl][LED[led].step];
           if((step == 0) && (LED[led].time!=0))
           {
-              // digitalWrite(STATUS_LED_50, LED[led].state);
               status_LED_toggler(led, LED[led].state);
           }
           break;
@@ -191,7 +191,6 @@ void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
           LED[led].time = led3_chg_sequence[lvl][LED[led].step];
           if((step == 0) && (LED[led].time!=0))
           {
-              // digitalWrite(STATUS_LED_25, LED[led].state);
               status_LED_toggler(led, LED[led].state);
           }
           break;
@@ -264,32 +263,6 @@ void led_sequence_action(bool state)
         }
     }
 }
-
-// void button_int()
-// {
-//     if(M_BUTTON_GetValue() && !is_button_pressed)
-//     {
-//         // TCB0_Start();
-//         button_press_time = TCB0_Read();
-//         is_button_pressed = true;
-//     }
-//     else
-//     {
-//         // TCB0_Stop();
-//         uint16_t button_pressed_time_val = TCB0_Read() - button_press_time;
-
-//         if((button_pressed_time_val >= (FUEL_CHECK_TIME-150)) && (button_pressed_time_val <= (FUEL_CHECK_TIME+150)))
-//         {
-//             batt_lvl_acquire_flag = true;
-//         }
-//         else if(( button_pressed_time_val >= (MODE_CHANGE_TIME-25)) && (button_pressed_time_val <= (MODE_CHANGE_TIME+25)))
-//         {
-//             mode_change_flag = true;
-//         }
-// //        else if()
-//         button_press_time = 0;
-//     }
-// }
 
 void TCB0_handler()
 {
@@ -441,11 +414,48 @@ void batt_fuel_ic_init()
 
 void eeprom_setup()
 {
-  EEPROM_Write_Count = EEPROM1.read(EEPROM1.begin());
-  EEPROM_Address = EEPROM1.begin()+1;
-  EEPROM_Mode_Addr = (MODE_e)(EEPROM1.read(EEPROM_Address));
+  // update EEPROM with initial setup
+  // i.e. addr 0,1 holds the device id
+  //      addr 2 is for number of times EEPROM_Mode_addr have been written
+  //      addr 3 holds the address where mode is stored
+  
+  EEPROM.update(EEPROM_ID_HIGH_BYTE,(uint8_t)((DEVICE_id & 0xFF00) >>8));
+  EEPROM.update(EEPROM_ID_LOW_BYTE,(uint8_t)(DEVICE_id & 0x00FF));
+  
+  for(uint16_t i=EEPROM_COUNT_ADDRESS; i<EEPROM_SIZE; i++)
+  {
+    EEPROM.update(i,0);
+    status_LED_toggler(0, HIGH);
+    delay(10);
+    status_LED_toggler(0, LOW);
+    delay(10);
+  }
 
-  current_mode = (MODE_e)(EEPROM1.read(EEPROM_Mode_Addr));
+  EEPROM.update(EEPROM_COUNT_ADDRESS,100);
+  EEPROM.update(EEPROM_MODE_REF_ADDRESS,EEPROM_MODE_ADDRESS);
+  EEPROM.update(EEPROM_MODE_ADDRESS,MODE_1);
+
+  status_LED_toggler(2, HIGH);
+  delay(100);
+  status_LED_toggler(2, LOW);
+  // delay(100);
+}
+
+void eeprom_init()
+{
+  uint8_t high_byte = EEPROM.read(EEPROM_ID_HIGH_BYTE);
+  uint8_t low_byte = EEPROM.read(EEPROM_ID_LOW_BYTE);
+
+  if((((uint16_t)high_byte << 8) | low_byte) != DEVICE_id)
+  {
+    eeprom_setup();
+  }
+
+  EEPROM_Write_Count = EEPROM.read(EEPROM_COUNT_ADDRESS);
+  // EEPROM_Address = EEPROM_MODE_REF_ADDRESS;
+  EEPROM_Mode_Addr = EEPROM.read(EEPROM_MODE_REF_ADDRESS);
+
+  current_mode = (MODE_e)(EEPROM.read(EEPROM_Mode_Addr));
   if(current_mode > MODE_4)
   {
     current_mode = MODE_1;
@@ -461,9 +471,9 @@ void eeprom_mode_write(MODE_e mode)
     EEPROM_Write_Count=1;
     EEPROM_Mode_Addr++;
   }
-  EEPROM1.update(EEPROM_Address, EEPROM_Mode_Addr);
-  EEPROM1.update(EEPROM_Mode_Addr, mode);
-  EEPROM1.update(EEPROM1.begin(), EEPROM_Write_Count);
+  EEPROM.update(EEPROM_MODE_REF_ADDRESS, EEPROM_Mode_Addr);
+  EEPROM.update(EEPROM_Mode_Addr, mode);
+  EEPROM.update(EEPROM_COUNT_ADDRESS, EEPROM_Write_Count);
 }
 
 void setup()
@@ -481,29 +491,6 @@ void setup()
   pinMode(GPOUT_PIN, INPUT);
   pinMode(BATT_CHG_PIN, INPUT);
 
-  // update EEPROM with initial setup
-  // i.e. addr 0 is for number of times EEPROM_Mode_addr have been written
-  //      addr 1 holds the address of mode addr
-  // 
-  // // for(int i=0;i<EEPROM_SIZE;i++)
-  // // {
-  //      EEPROM.update(i,0);
-  // //   digitalWrite(STATUS_LED_75, HIGH);
-  // //   delay(10);
-  // //   digitalWrite(STATUS_LED_75, LOW);
-  // //   delay(10);
-  // // }
-  //   EEPROM.update(0,100);
-  //   EEPROM.update(1,2);
-  //   EEPROM.update(2,1);
-  // digitalWrite(STATUS_LED_25, HIGH);
-  // delay(100);
-  // digitalWrite(STATUS_LED_25, LOW);
-  // // delay(100);
-
-  // while(1){}
-
-
   // takeOverTCA0();             // This replaces disabling and resettng the timer, required previously.
   TCA0_Initialize();
   TCB0_Initialize();           // Timer for checking button/Interrupt pins
@@ -512,8 +499,8 @@ void setup()
   // // TCB0_Stop();         // 1ms timer for button
   // TCB1_Stop();
 
-  // timer callbacks for PWM generation
   TCA0_Stop();
+  // timer callbacks for PWM generation
   TCA0_Compare2CallbackRegister(&TCA0_cmpr2_isr);
   TCA0_OverflowCallbackRegister(&TCA0_overflow_isr);
 
@@ -536,7 +523,7 @@ void setup()
 
   batt_fuel_ic_init();
 
-  eeprom_setup();
+  eeprom_init();
   update_mode(&current_mode);
 
   led_sequence_action(0);
@@ -547,7 +534,7 @@ void loop() {
 
   if(mode_change_flag && !is_usb_connected)            // if button pressed once change mode accordingly
   {
-      current_mode = (current_mode + 1);
+      current_mode = (MODE_e)(current_mode + 1);
       update_mode(&current_mode);
       mode_change_flag = false;
   }
@@ -584,65 +571,73 @@ void loop() {
     }
   }
 
+  while(is_device_wakeup)
+  {
+    if(digitalRead(BUTTON_PIN))
+    {
+      is_device_wakeup = false;
+    }
+  }
+
   delay(DEBOUNCE_TIME);
   bool state = !digitalRead(BUTTON_PIN) ;
-    if(state)//&& debounce_condition)
-    {
-        if (!is_button_pressed){
-          button_press_time = timerB0_counter;
-          is_button_pressed = true;
-        }
-        else
-        {
-          uint32_t button_pressed_time_val = timerB0_counter - button_press_time;
-
-          if(button_pressed_time_val >= FUEL_CHECK_TIME)
-          {
-              batt_lvl_acquire_flag = true;
-              is_button_pressed = false;
-              fuel_pressed = true;
-          }
-        }
-    }
-    else
-    {
-        if(is_button_pressed && (!fuel_pressed))
-        {
-          uint32_t button_pressed_time_val = timerB0_counter - button_press_time;
-
-          if((button_pressed_time_val >= MODE_CHANGE_TIME) && (button_pressed_time_val < FUEL_CHECK_TIME))
-          {
-              mode_change_flag = true;
-              is_button_pressed = false;
-          }
-        }
-        else{
-          fuel_pressed = false;
-          is_button_pressed = false;
-        }
-    }
-    
-    if(!digitalRead(GPOUT_PIN))            // check batt fuel guage alert pin state
-    {
-      float current_batt_lvl = lipo.getVoltage();
-      if(current_batt_lvl <= BATTERY_LVL_MIN)
-      {
-        lipo.clearAlert();
-        digitalWrite(U_KILL_PIN, HIGH);
+  if(state)//&& debounce_condition)
+  {
+      if (!is_button_pressed){
+        button_press_time = timerB0_counter;
+        is_button_pressed = true;
       }
-    }
+      else
+      {
+        uint32_t button_pressed_time_val = timerB0_counter - button_press_time;
 
-    if(!digitalRead(BATT_CHG_PIN))            // check if usb is connected, ACTIVE LOW
+        if(button_pressed_time_val >= FUEL_CHECK_TIME)
+        {
+            batt_lvl_acquire_flag = true;
+            is_button_pressed = false;
+            fuel_pressed = true;
+        }
+      }
+  }
+  else
+  {
+      if(is_button_pressed && (!fuel_pressed))
+      {
+        uint32_t button_pressed_time_val = timerB0_counter - button_press_time;
+
+        if((button_pressed_time_val >= MODE_CHANGE_TIME) && (button_pressed_time_val < FUEL_CHECK_TIME))
+        {
+            mode_change_flag = true;
+            is_button_pressed = false;
+        }
+      }
+      else{
+        fuel_pressed = false;
+        is_button_pressed = false;
+      }
+  }
+    
+  if(!digitalRead(GPOUT_PIN))            // check batt fuel guage alert pin state
+  {
+    float current_batt_lvl = lipo.getVoltage();
+    if(current_batt_lvl <= BATTERY_LVL_MIN)
     {
-        TCA0_Stop();
-        setDutyCycleTCA(0);
-        is_usb_connected = true;
+      lipo.clearAlert();
+      digitalWrite(U_KILL_PIN, HIGH);
     }
-    else if(is_usb_connected)
-    {
-        TCA0_Start();
-        led_sequence_action(0);
-        update_mode(&current_mode);
-        is_usb_connected = false;
-    }
+  }
+
+  if(!digitalRead(BATT_CHG_PIN))            // check if usb is connected, ACTIVE LOW
+  {
+      TCA0_Stop();
+      setDutyCycleTCA(0);
+      is_usb_connected = true;
+  }
+  else if(is_usb_connected)
+  {
+      TCA0_Start();
+      led_sequence_action(0);
+      update_mode(&current_mode);
+      is_usb_connected = false;
+  }
 }
