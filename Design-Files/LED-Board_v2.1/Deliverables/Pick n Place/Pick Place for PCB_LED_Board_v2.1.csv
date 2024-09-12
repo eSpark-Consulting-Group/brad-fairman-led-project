@@ -1,0 +1,20 @@
+Altium Designer Pick and Place Locations
+C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\LED-Board_v2.1\Design Files\Project Outputs for LED-Board_v2.1\Pick Place for PCB_LED_Board_v2.1.csv
+
+========================================================================================================================
+File Design Information:
+
+Date:       12/09/24
+Time:       20:47
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+"Designator","Layer","Center-X(mm)","Center-Y(mm)","Rotation","Ref-X(mm)","Ref-Y(mm)","Pad-X(mm)","Pad-Y(mm)"
+"LED1","BottomLayer","-9.0000mm","5.4006mm","270","-9.0000mm","5.4006mm","-9.0000mm","6.7976mm"
+"LED2","BottomLayer","-19.0000mm","5.4006mm","270","-19.0000mm","5.4006mm","-19.0000mm","6.7976mm"
+"LED3","BottomLayer","-29.0000mm","5.4006mm","90","-29.0000mm","5.4006mm","-29.0000mm","4.0036mm"
+"P1","BottomLayer","-18.7598mm","9.6520mm","180","-18.1610mm","9.5718mm","-18.7598mm","9.6520mm"
+"P2","BottomLayer","-20.9199mm","9.6520mm","180","-20.6756mm","9.6012mm","-20.9199mm","9.6520mm"
+"P3","BottomLayer","-23.0801mm","9.6520mm","180","-23.1902mm","9.6520mm","-23.0801mm","9.6520mm"
+"P4","BottomLayer","-25.2402mm","9.6520mm","180","-25.2730mm","9.7242mm","-25.2402mm","9.6520mm"
