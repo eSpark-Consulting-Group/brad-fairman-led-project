@@ -89,83 +89,83 @@ __DATA_REGION_LENGTH__|00000800|   A  |            NOTYPE|        |     |*ABS*
 setDutyCycleTCA(unsigned char)|00000830|   t  |              FUNC|00000026|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:401
 digitalRead         |00000856|   t  |              FUNC|00000030|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:351
 digitalWrite        |00000886|   t  |              FUNC|00000118|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:240
-update_mode(MODE_e*) [clone .constprop.18]|0000099e|   t  |              FUNC|00000070|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:223
-status_LED_toggler(int, bool)|00000a0e|   t  |              FUNC|0000001e|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:140
-led_sequence_action(bool) [clone .constprop.33]|00000a2c|   t  |              FUNC|00000056|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:324
-led_control_dischg(BATT_LVL_e, unsigned char, unsigned char)|00000a82|   t  |              FUNC|0000012e|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:265
-led_control_chg(BATT_LVL_e, unsigned char, unsigned char)|00000bb0|   t  |              FUNC|00000124|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:225
-status_LED_handler()|00000cd4|   t  |              FUNC|000001b0|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:194
-led_sequence_action(bool) [clone .part.6]|00000e84|   t  |              FUNC|00000082|     |.text
-TCA0_overflow_isr() |00000f06|   t  |              FUNC|00000016|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:107
-TCA0_cmpr2_isr()    |00000f1c|   t  |              FUNC|00000016|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:112
-pinMode             |00000f32|   t  |              FUNC|0000003e|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:41
-__vector_15         |00000f70|   T  |              FUNC|0000005e|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:202
-ovf_end             |00000f8c|   t  |            NOTYPE|        |     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:317
-sub4                |00000fa6|   t  |            NOTYPE|        |     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:317
-sub_end             |00000fc0|   t  |            NOTYPE|        |     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:317
-__vector_24         |00000fce|   T  |              FUNC|00000148|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\libraries\Wire\src/Wire.cpp:977
-__vector_14         |00001116|   T  |              FUNC|00000060|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tcb1.c:53
-__vector_13         |00001176|   T  |              FUNC|00000060|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tcb0.c:53
-__vector_8          |000011d6|   T  |              FUNC|00000058|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tca0.c:107
-__vector_12         |0000122e|   T  |              FUNC|00000058|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tca0.c:99
-global constructors keyed to 65535_0_LED_Project.ino.cpp.o.3210|00001286|   t  |              FUNC|00000048|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tca0.c:105
-main                |000012ce|   T  |              FUNC|00000670|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/main.cpp:49
-__subsf3            |0000193e|   T  |              FUNC|0000000a|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:640
-__addsf3            |00001940|   T  |            NOTYPE|        |     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:640
-__addsf3x           |00001962|   T  |              FUNC|000000cc|     |.text
-__cmpsf2            |00001a08|   T  |              FUNC|00000008|     |.text
-__eqsf2             |00001a08|   T  |            NOTYPE|        |     |.text
-__lesf2             |00001a08|   T  |            NOTYPE|        |     |.text
-__ltsf2             |00001a08|   T  |            NOTYPE|        |     |.text
-__nesf2             |00001a08|   T  |            NOTYPE|        |     |.text
-__divsf3            |00001a10|   T  |              FUNC|00000004|     |.text
-__divsf3x           |00001a2a|   T  |              FUNC|000000dc|     |.text
-__divsf3_pse        |00001a2e|   T  |            NOTYPE|        |     |.text
-__floatunsisf       |00001ae0|   T  |              FUNC|0000007a|     |.text
-__floatsisf         |00001ae4|   T  |            NOTYPE|        |     |.text
-__fp_cmp            |00001b5a|   T  |              FUNC|00000048|     |.text
-__fp_inf            |00001ba2|   T  |              FUNC|0000000c|     |.text
-__fp_nan            |00001bae|   T  |              FUNC|00000006|     |.text
-__fp_pscA           |00001bb4|   T  |              FUNC|0000000e|     |.text
-__fp_pscB           |00001bc2|   T  |              FUNC|0000000e|     |.text
-__fp_round          |00001bd0|   T  |              FUNC|00000022|     |.text
-__fp_split3         |00001bf2|   T  |              FUNC|00000044|     |.text
-__fp_splitA         |00001c02|   T  |            NOTYPE|        |     |.text
-__fp_zero           |00001c36|   T  |              FUNC|0000000e|     |.text
-__fp_szero          |00001c38|   T  |            NOTYPE|        |     |.text
-__mulsf3            |00001c44|   T  |              FUNC|00000004|     |.text
-__mulsf3x           |00001c5c|   T  |              FUNC|000000d2|     |.text
-__mulsf3_pse        |00001c60|   T  |            NOTYPE|        |     |.text
-__divmodsi4         |00001d0a|   T  |            NOTYPE|00000028|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1686
-__divmodsi4_neg2    |00001d22|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1701
-__divmodsi4_exit    |00001d30|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1709
-__negsi2            |00001d32|   T  |            NOTYPE|00000010|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1718
-__umulhisi3         |00001d42|   T  |            NOTYPE|0000001e|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:564
-__muluhisi3         |00001d60|   T  |            NOTYPE|00000014|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:626
-__udivmodsi4        |00001d74|   T  |            NOTYPE|00000044|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1638
-__udivmodsi4_loop   |00001d80|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1646
-__udivmodsi4_ep     |00001d9a|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1660
-__tablejump2__      |00001db8|   T  |            NOTYPE|0000000c|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2296
-_exit               |00001dc4|   T  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2278
-exit                |00001dc4|   W  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2278
-__stop_program      |00001dc6|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2280
-_etext              |00001dc8|   T  |            NOTYPE|        |     |.text
-__data_load_start   |00001f15|   A  |            NOTYPE|        |     |*ABS*
-__data_load_end     |00001f21|   A  |            NOTYPE|        |     |*ABS*
+update_mode(MODE_e*) [clone .constprop.18]|0000099e|   t  |              FUNC|00000074|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:223
+status_LED_toggler(int, bool)|00000a12|   t  |              FUNC|0000001e|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:140
+led_sequence_action(bool) [clone .constprop.33]|00000a30|   t  |              FUNC|00000056|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:324
+led_control_dischg(BATT_LVL_e, unsigned char, unsigned char)|00000a86|   t  |              FUNC|0000012e|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:265
+led_control_chg(BATT_LVL_e, unsigned char, unsigned char)|00000bb4|   t  |              FUNC|00000124|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:225
+status_LED_handler()|00000cd8|   t  |              FUNC|000001b0|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:194
+led_sequence_action(bool) [clone .part.6]|00000e88|   t  |              FUNC|00000082|     |.text
+TCA0_overflow_isr() |00000f0a|   t  |              FUNC|00000016|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:107
+TCA0_cmpr2_isr()    |00000f20|   t  |              FUNC|00000016|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:112
+pinMode             |00000f36|   t  |              FUNC|0000003e|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring_digital.c:41
+__vector_15         |00000f74|   T  |              FUNC|0000005e|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:202
+ovf_end             |00000f90|   t  |            NOTYPE|        |     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:317
+sub4                |00000faa|   t  |            NOTYPE|        |     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:317
+sub_end             |00000fc4|   t  |            NOTYPE|        |     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/wiring.c:317
+__vector_24         |00000fd2|   T  |              FUNC|00000148|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\libraries\Wire\src/Wire.cpp:977
+__vector_14         |0000111a|   T  |              FUNC|00000060|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tcb1.c:53
+__vector_13         |0000117a|   T  |              FUNC|00000060|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tcb0.c:53
+__vector_8          |000011da|   T  |              FUNC|00000058|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tca0.c:107
+__vector_12         |00001232|   T  |              FUNC|00000058|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tca0.c:99
+global constructors keyed to 65535_0_LED_Project.ino.cpp.o.3210|0000128a|   t  |              FUNC|00000048|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/tca0.c:105
+main                |000012d2|   T  |              FUNC|00000674|     |.text	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\cores\megatinycore/main.cpp:49
+__subsf3            |00001946|   T  |              FUNC|0000000a|     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:640
+__addsf3            |00001948|   T  |            NOTYPE|        |     |.text	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:640
+__addsf3x           |0000196a|   T  |              FUNC|000000cc|     |.text
+__cmpsf2            |00001a10|   T  |              FUNC|00000008|     |.text
+__eqsf2             |00001a10|   T  |            NOTYPE|        |     |.text
+__lesf2             |00001a10|   T  |            NOTYPE|        |     |.text
+__ltsf2             |00001a10|   T  |            NOTYPE|        |     |.text
+__nesf2             |00001a10|   T  |            NOTYPE|        |     |.text
+__divsf3            |00001a18|   T  |              FUNC|00000004|     |.text
+__divsf3x           |00001a32|   T  |              FUNC|000000dc|     |.text
+__divsf3_pse        |00001a36|   T  |            NOTYPE|        |     |.text
+__floatunsisf       |00001ae8|   T  |              FUNC|0000007a|     |.text
+__floatsisf         |00001aec|   T  |            NOTYPE|        |     |.text
+__fp_cmp            |00001b62|   T  |              FUNC|00000048|     |.text
+__fp_inf            |00001baa|   T  |              FUNC|0000000c|     |.text
+__fp_nan            |00001bb6|   T  |              FUNC|00000006|     |.text
+__fp_pscA           |00001bbc|   T  |              FUNC|0000000e|     |.text
+__fp_pscB           |00001bca|   T  |              FUNC|0000000e|     |.text
+__fp_round          |00001bd8|   T  |              FUNC|00000022|     |.text
+__fp_split3         |00001bfa|   T  |              FUNC|00000044|     |.text
+__fp_splitA         |00001c0a|   T  |            NOTYPE|        |     |.text
+__fp_zero           |00001c3e|   T  |              FUNC|0000000e|     |.text
+__fp_szero          |00001c40|   T  |            NOTYPE|        |     |.text
+__mulsf3            |00001c4c|   T  |              FUNC|00000004|     |.text
+__mulsf3x           |00001c64|   T  |              FUNC|000000d2|     |.text
+__mulsf3_pse        |00001c68|   T  |            NOTYPE|        |     |.text
+__divmodsi4         |00001d12|   T  |            NOTYPE|00000028|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1686
+__divmodsi4_neg2    |00001d2a|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1701
+__divmodsi4_exit    |00001d38|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1709
+__negsi2            |00001d3a|   T  |            NOTYPE|00000010|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1718
+__umulhisi3         |00001d4a|   T  |            NOTYPE|0000001e|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:564
+__muluhisi3         |00001d68|   T  |            NOTYPE|00000014|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:626
+__udivmodsi4        |00001d7c|   T  |            NOTYPE|00000044|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1638
+__udivmodsi4_loop   |00001d88|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1646
+__udivmodsi4_ep     |00001da2|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:1660
+__tablejump2__      |00001dc0|   T  |            NOTYPE|0000000c|     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2296
+_exit               |00001dcc|   T  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2278
+exit                |00001dcc|   W  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2278
+__stop_program      |00001dce|   t  |            NOTYPE|        |     |.text	/home/admin/Arduino/toolchain-avr-special-master/gcc-build/avr/avrxmega3/libgcc/../../../../gcc/libgcc/config/avr/lib1funcs.S:2280
+_etext              |00001dd0|   T  |            NOTYPE|        |     |.text
+__data_load_start   |00001f1d|   A  |            NOTYPE|        |     |*ABS*
+__data_load_end     |00001f29|   A  |            NOTYPE|        |     |*ABS*
 __stack             |00003fff|   W  |            NOTYPE|        |     |*ABS*
 __TEXT_REGION_LENGTH__|00004000|   A  |            NOTYPE|        |     |*ABS*
 __RODATA_PM_OFFSET__|00008000|   A  |            NOTYPE|        |     |*ABS*
-led3_chg_sequence   |00009dc8|   r  |            OBJECT|00000020|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:75
-led2_chg_sequence   |00009de8|   r  |            OBJECT|00000020|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:74
-led1_chg_sequence   |00009e08|   r  |            OBJECT|00000020|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:73
-led3_dischg_sequence|00009e28|   r  |            OBJECT|00000030|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:71
-led2_dischg_sequence|00009e58|   r  |            OBJECT|00000030|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:70
-led1_dischg_sequence|00009e88|   r  |            OBJECT|00000030|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:69
-digital_pin_to_timer|00009eb8|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:379
-digital_pin_to_bit_position|00009eca|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:330
-digital_pin_to_port |00009edc|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:305
-digital_pin_to_bit_mask|00009eee|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:354
-vtable for TwoWire  |00009f00|   r  |            OBJECT|00000012|     |.rodata
+led3_chg_sequence   |00009dd0|   r  |            OBJECT|00000020|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:75
+led2_chg_sequence   |00009df0|   r  |            OBJECT|00000020|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:74
+led1_chg_sequence   |00009e10|   r  |            OBJECT|00000020|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:73
+led3_dischg_sequence|00009e30|   r  |            OBJECT|00000030|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:71
+led2_dischg_sequence|00009e60|   r  |            OBJECT|00000030|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:70
+led1_dischg_sequence|00009e90|   r  |            OBJECT|00000030|     |.rodata	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:69
+digital_pin_to_timer|00009ec0|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:379
+digital_pin_to_bit_position|00009ed2|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:330
+digital_pin_to_port |00009ee4|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:305
+digital_pin_to_bit_mask|00009ef6|   r  |            OBJECT|00000012|     |.rodata	C:\Users\Farhan\AppData\Local\Arduino15\packages\megaTinyCore\hardware\megaavr\2.6.10\variants\txy6/pins_arduino.h:354
+vtable for TwoWire  |00009f08|   r  |            OBJECT|00000012|     |.rodata
 __DATA_REGION_ORIGIN__|00803800|   A  |            NOTYPE|        |     |*ABS*
 __data_start        |00803800|   D  |            NOTYPE|        |     |.data
 Period              |00803800|   d  |            OBJECT|00000002|     |.data	C:\.Embedded\.GITHUB\bradfairman-ledproject\Firmware\Arduino\LED-Project/LED-Project.ino:41

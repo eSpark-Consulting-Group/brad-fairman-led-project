@@ -125,19 +125,19 @@ void update_led(MODE_e mode)
     switch(mode)
     {
         case MODE_4:
-            setDutyCycleTCA(50);
+            setDutyCycleTCA(65);
             TCA0_Start();
             break;
         case MODE_1:
-            setDutyCycleTCA(25);
+            setDutyCycleTCA(8);
             TCA0_Start();
             break;
         case MODE_2:
-            setDutyCycleTCA(50);
+            setDutyCycleTCA(18);
             TCA0_Start();
             break;
         case MODE_3:
-            setDutyCycleTCA(75);
+            setDutyCycleTCA(37);
             TCA0_Start();
             break;
     }
@@ -495,7 +495,7 @@ void setup()
   TCA0_Initialize();
   TCB0_Initialize();           // Timer for checking button/Interrupt pins
   TCB1_Initialize();           // 1ms timer for Status LEDs sequence
-  setFrequency(1000);          // set PWM freq to 1KHz
+  setFrequency(10000);         // set PWM freq to 10KHz
   // // TCB0_Stop();         // 1ms timer for button
   // TCB1_Stop();
 
