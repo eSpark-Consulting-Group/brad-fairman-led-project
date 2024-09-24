@@ -21,13 +21,13 @@
 #define WHITE_LED_CTRL  PIN_PC2
 #define BUTTON_PIN      PIN_PC1
 
-#define DEBOUNCE_TIME   11
-#define FUEL_CHECK_TIME 2000            // button press time to trigger batt fuel check
-#define POWER_OFF_TIME 4000            // button press time to trigger batt fuel check
-#define MODE_CHANGE_TIME 50            // button press time to trigger mode change
-#define EEPROM_ENDURANCE  100000        // Number of cycles EEPROM can be erased/written
-#define BATTERY_LVL_MIN 3.0f
-#define BATTERY_LVL_MAX 4.2f
+#define DEBOUNCE_TIME     11
+#define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
+#define POWER_OFF_TIME    4000            // button press time to trigger batt fuel check
+#define MODE_CHANGE_TIME  50              // button press time to trigger mode change
+#define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
+#define BATTERY_LVL_MIN   3.0f
+#define BATTERY_LVL_MAX   4.2f
 
 #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
 #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
@@ -83,9 +83,9 @@ volatile BATT_LVL_e batt_lvl = LVL_20;
 volatile uint32_t timerB1_counter=0;
 volatile uint64_t timerB0_counter=0;
 volatile uint32_t debounce_timer=0;
-volatile uint32_t button_press_time=0;
+volatile uint64_t button_press_time=0;
 volatile bool is_button_pressed = false;
-volatile bool fuel_pressed = false;
+// volatile bool fuel_pressed = false;
 volatile bool is_usb_connected=false;
 volatile bool is_turned_on=false;
 volatile BATT_LVL_e chg_sequence = (BATT_LVL_e)5;
@@ -199,6 +199,7 @@ void update_led(MODE_e mode)
             TCA0_Start();
             break;
         case MODE_OFF:
+            setDutyCycleTCA(0);
             break;
     }
 }
@@ -230,9 +231,9 @@ void setFrequency(unsigned long freqInHz)
 
 void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 {
-  LED[led].state = ((step+1) % 2);
   LED[led].timer = timerB1_counter;
   LED[led].step = step%2;
+  LED[led].state = ((step+1) % 2);
   switch(led)
   {
       case 0:
@@ -328,7 +329,6 @@ void led_sequence_action(bool state)
 
 void TCB0_handler()
 {
-    /* Insert your TCB interrupt handling code */
     timerB0_counter++;
     // count_loop++;
 }
@@ -400,7 +400,7 @@ void status_LED_handler()
   }
 }
 
-float mapValue(float *input)
+float mapValue(float *input)      // arduino map function does not allow decimal point values
 {
     return ((*input - BATTERY_LVL_MIN) * (100.0 - 0.0)) / (BATTERY_LVL_MAX - BATTERY_LVL_MIN);
 }
@@ -427,9 +427,9 @@ BATT_LVL_e batt_lvl_percent(float *batt_voltage)
     }
     return LVL_MAX;
 }
-BATT_LVL_e batt_soc_percent(float *batt_voltage)
+BATT_LVL_e batt_soc_percent(float *batt_soc)
 {
-    float soc = *batt_voltage;
+    float soc = *batt_soc;
 
     if(soc<=20.0)
     {
@@ -457,6 +457,8 @@ void batt_fuel_ic_init()
     lipo.quickStart();
     lipo.setThreshold(4);
     lipo.disableSOCAlert();
+    lipo.setVALRTMin(BATTERY_LVL_MIN);
+    lipo.setVALRTMax(BATTERY_LVL_MAX);
 }
 
 void eeprom_setup()
@@ -538,23 +540,21 @@ void eeprom_mode_write(MODE_e mode)
 
 void power_off()
 {
-  is_turned_on = false;
+  // is_turned_on = false;
   batt_lvl_acquire_flag = false;
-  fuel_pressed = false;
   is_device_wakeup = true;
   led_sequence_action(0);
-  TCA0_Stop();
-  setDutyCycleTCA(0);
+  update_led(MODE_OFF);
+
+  lipo.sleep();
   
+  // fuel_pressed = false;
   // is_button_pressed = false;
   // sleep_mode();
 }
 
-void setup()
+void gpio_init()
 {
-  eeprom_init();
-  disableUnusedPeripherals();
-
   pinMode(STATUS_LED_75, OUTPUT);
   pinMode(STATUS_LED_50, OUTPUT);
   pinMode(STATUS_LED_25, OUTPUT);
@@ -574,12 +574,20 @@ void setup()
   // Flash the status LEDs twice to indicate that the mcu is running setup
   for(int i=0; i<4; i++)
   {
-    digitalWrite(STATUS_LED_75, CHANGE);
-    digitalWrite(STATUS_LED_50, CHANGE);
-    digitalWrite(STATUS_LED_25, CHANGE);
+    bool ledState = (i == 0 || i == 2) ? HIGH : LOW;
+    for(int y=0; y<3; y++)
+    {
+      status_LED_toggler(y, ledState);
+    }
     delay(150);
   }
 
+  Wire.pins(SDA, SCL);
+  Wire.begin();
+}
+
+void timers_init()
+{
   // takeOverTCA0();             // This replaces disabling and resettng the timer, required previously.
   TCA0_Initialize();
   TCB0_Initialize();           // Timer for checking button/Interrupt pins
@@ -595,9 +603,79 @@ void setup()
 
   TCB0_CaptureCallbackRegister(&TCB0_handler);
   TCB1_CaptureCallbackRegister(&status_LED_handler);
+}
 
-  Wire.pins(SDA, SCL);
-  Wire.begin();
+void process_ButtonState()
+{
+  bool state = !digitalRead(BUTTON_PIN) ;
+  if(state)   // button pressed
+  {
+    if (!is_button_pressed)
+    {
+      button_press_time = timerB0_counter;
+      is_button_pressed = true;
+    }
+    else
+    {
+      uint64_t button_pressed_time_val = timerB0_counter - button_press_time;
+
+      if((button_pressed_time_val >= FUEL_CHECK_TIME) && is_turned_on)
+      {
+          batt_lvl_acquire_flag = true;
+          // fuel_pressed = true;
+      }
+      if((button_pressed_time_val >= POWER_OFF_TIME) && (button_pressed_time_val < (POWER_OFF_TIME+DEBOUNCE_TIME)))
+      {
+          is_turned_on = !is_turned_on;
+          if(is_turned_on)
+          {
+            // update_mode(&current_mode);
+            lipo.wake();
+          }
+      }
+    }
+  }
+  else  // button released
+  {
+    if(is_button_pressed)
+    // if(is_button_pressed && (!fuel_pressed) && is_turned_on)
+    {
+      is_button_pressed = false;
+
+      if(is_turned_on)
+      {
+        uint64_t button_pressed_time_val = timerB0_counter - button_press_time;
+
+        if((button_pressed_time_val >= (MODE_CHANGE_TIME)) && (button_pressed_time_val < FUEL_CHECK_TIME))
+        {
+            mode_change_flag = true;
+        }
+      }
+    }
+    // else{
+    //   fuel_pressed = false;
+    // }
+
+    // if(is_button_pressed)
+    // {
+    //   is_button_pressed = false;
+    // }
+
+    // if((count_loop > 5000))
+    // {
+    //   // is_turned_on = !is_turned_on;
+    //   mode_change_flag = true;
+    //   count_loop = 0;
+    // }
+  }
+}
+void setup()
+{
+  disableUnusedPeripherals();
+  eeprom_init();
+
+  gpio_init();
+  timers_init();
 
   batt_fuel_ic_init();
 
@@ -615,69 +693,12 @@ void loop()
 START_LOOP:
 
   delay(DEBOUNCE_TIME);
-  bool state = !digitalRead(BUTTON_PIN) ;
-  if(state)
-  {
-    if (!is_button_pressed)
-    {
-      button_press_time = timerB0_counter;
-      is_button_pressed = true;
-    }
-    else
-    {
-      uint32_t button_pressed_time_val = timerB0_counter - button_press_time;
-
-      if((button_pressed_time_val >= FUEL_CHECK_TIME) && is_turned_on)
-      {
-          batt_lvl_acquire_flag = true;
-          // is_button_pressed = false;
-          fuel_pressed = true;
-      }
-      if((button_pressed_time_val >= POWER_OFF_TIME) && (button_pressed_time_val < (POWER_OFF_TIME+DEBOUNCE_TIME)))
-      {
-          is_turned_on = !is_turned_on;
-          // if(is_turned_on)
-          // {
-          //   update_mode(&current_mode);
-          // }
-      }
-    }
-  }
-  else
-  {
-    if(is_button_pressed && is_turned_on)
-    // if(is_button_pressed && (!fuel_pressed) && is_turned_on)
-    {
-      uint32_t button_pressed_time_val = timerB0_counter - button_press_time;
-
-      if((button_pressed_time_val >= (MODE_CHANGE_TIME)) && (button_pressed_time_val < FUEL_CHECK_TIME))
-      {
-          mode_change_flag = true;
-          // is_button_pressed = false;
-      }
-    }
-    else{
-      fuel_pressed = false;
-    }
-
-    if(is_button_pressed)
-    {
-      is_button_pressed = false;
-    }
-
-    // if((count_loop > 5000))
-    // {
-    //   // is_turned_on = !is_turned_on;
-    //   mode_change_flag = true;
-    //   count_loop = 0;
-    // }
-
-  }
+  process_ButtonState();
 
 
   if(is_turned_on || is_usb_connected)
   {
-    if (is_device_wakeup)
+    if (is_device_wakeup && !is_usb_connected)
     {
       update_mode(&current_mode);
     }
@@ -695,17 +716,17 @@ START_LOOP:
 
     if(batt_lvl_acquire_flag && !is_usb_connected)       // if button held for 2secs, flash onboard LEDs based on chg lvl
     {
+        batt_lvl_acquire_flag = false;
         led_sequence_action(0);
         float current_batt_lvl = lipo.getVoltage();
         batt_lvl = batt_lvl_percent(&current_batt_lvl);
       // batt_lvl = LVL_20;
         led_sequence_action(1);
-        batt_lvl_acquire_flag = false;
     }
 
     if(is_usb_connected)
     {
-        // led_sequence_action(0);
+      // led_sequence_action(0);
       // float current_batt_lvl = lipo.getVoltage();
       float current_batt_lvl = lipo.getSOC();
       // float current_batt_lvl = 3.85f;
@@ -739,6 +760,7 @@ START_LOOP:
 
   if(!digitalRead(GPOUT_PIN))            // check batt fuel guage alert pin state
   {
+    uint8_t status = lipo.getStatus();
     float current_batt_lvl = lipo.getVoltage();
     if(current_batt_lvl <= BATTERY_LVL_MIN)
     {
@@ -751,8 +773,7 @@ START_LOOP:
 
   if(!digitalRead(BATT_CHG_PIN))            // check if usb is connected, ACTIVE LOW
   {
-      TCA0_Stop();
-      setDutyCycleTCA(0);
+      update_led(MODE_OFF);
       is_usb_connected = true;
       if(is_turned_on)
       {
@@ -763,7 +784,6 @@ START_LOOP:
   {
       is_usb_connected = false;
       led_sequence_action(0);
-      // TCA0_Start();
       // update_mode(&current_mode);
       if(!is_turned_on)
       {
