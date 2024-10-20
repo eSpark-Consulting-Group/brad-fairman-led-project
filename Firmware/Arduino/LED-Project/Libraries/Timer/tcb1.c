@@ -1,13 +1,13 @@
 /**
-  * TCB0 Generated Driver File
+  * TCB1 Generated Driver File
   *
-  * @file tcb0.c
+  * @file tcb1.c
   *
-  * @ingroup tcb0
+  * @ingroup tcb1
   *
-  * @brief This file contains the API implementation for the TCB0 module driver.
+  * @brief This file contains the API implementation for the TCB1 module driver.
   *
-  * @version TCB0 Driver Version 1.1.5
+  * @version TCB1 Driver Version 1.1.5
 */
 /*
 � [2024] Microchip Technology Inc. and its subsidiaries.
@@ -30,27 +30,29 @@
     THIS SOFTWARE.
 */
 
-#include "tcb0.h"
+#include "tcb1.h"
 // #include <avr/io.h>
 
-const struct TMR_INTERFACE TCB0_Interface = {
-    .Initialize = TCB0_Initialize,
-    .Start = TCB0_Start,
-    .Stop = TCB0_Stop,
-    .PeriodCountSet = TCB0_Write,
-    .TimeoutCallbackRegister = NULL,
+const struct TMR_INTERFACE TCB1_Interface = {
+    .Initialize = TCB1_Initialize,
+    .Start = TCB1_Start,
+    .Stop = TCB1_Stop,
+    .PeriodCountSet = TCB1_Write,
+    .TimeoutCallbackRegister = TCB1_CaptureCallbackRegister,
+    .CompareCallbackRegister = NULL,
+    .CompareRegisterSet = NULL,
     .Tasks = NULL
 };
 
-void (*TCB0_OVF_isr_cb)(void) = NULL;
-void (*TCB0_CAPT_isr_cb)(void) = NULL;
-void TCB0_CaptureCallbackRegister(TCB0_cb_t cb)
+void (*TCB1_OVF_isr_cb)(void) = NULL;
+void (*TCB1_CAPT_isr_cb)(void) = NULL;
+void TCB1_CaptureCallbackRegister(TCB1_cb_t cb)
 {
-	TCB0_CAPT_isr_cb = cb;
+	TCB1_CAPT_isr_cb = cb;
 }
 
 
-ISR(TCB0_INT_vect)
+ISR(TCB1_INT_vect)
 {
 	/* Insert your TCB interrupt handling code */
 
@@ -58,97 +60,97 @@ ISR(TCB0_INT_vect)
 	 *  The Capture interrupt flag is cleared by writing a 1 to it or when the
 	 *  Capture register is read in Capture mode
 	 */
-	if (TCB0.INTFLAGS & TCB_CAPT_bm)
+	if (TCB1.INTFLAGS & TCB_CAPT_bm)
     {
-        if (TCB0_CAPT_isr_cb != NULL)
+        if (TCB1_CAPT_isr_cb != NULL)
         {
-            (*TCB0_CAPT_isr_cb)();
+            (*TCB1_CAPT_isr_cb)();
         }
 
-        TCB0.INTFLAGS = TCB_CAPT_bm;
+        TCB1.INTFLAGS = TCB_CAPT_bm;
     }
 
 }
 
-void TCB0_Initialize(void)
+void TCB1_Initialize(void)
 {
     // CCMP 3333; 
-    TCB0.CCMP = (F_CPU / 1000);//0xD05;
+    TCB1.CCMP = (F_CPU / 1000);//0xD05;
 
     // CNT undefined; 
-    TCB0.CNT = 0x0;
+    TCB1.CNT = 0x0;
 
     //ASYNC disabled; CCMPEN disabled; CCMPINIT disabled; CNTMODE INT; 
-    TCB0.CTRLB = 0x0;
+    TCB1.CTRLB = 0x0;
     
-    //DBGRUN enabled; 
-    TCB0.DBGCTRL = 0x1;
+    //DBGRUN disabled; 
+    TCB1.DBGCTRL = 0x0;
 
     //CAPTEI disabled; EDGE disabled; FILTER disabled; 
-    TCB0.EVCTRL = 0x0;
+    TCB1.EVCTRL = 0x0;
 
     //CAPT enabled; 
-    TCB0.INTCTRL = 0x1;
+    TCB1.INTCTRL = 0x1;
 
     //CAPT disabled; 
-    TCB0.INTFLAGS = 0x0;
+    TCB1.INTFLAGS = 0x0;
 
     //Temporary Value
-    TCB0.TEMP = 0x0;
+    TCB1.TEMP = 0x0;
 
     //CLKSEL CLKDIV1; ENABLE enabled; RUNSTDBY disabled; SYNCUPD disabled; 
-    TCB0.CTRLA = 0x1;
-    TCB0.CTRLA |= TCB_ENABLE_bm;
+    TCB1.CTRLA = 0x1;
+    TCB1.CTRLA &= ~TCB_ENABLE_bm;
 }
 
-void TCB0_Start(void)
+void TCB1_Start(void)
 {
-    TCB0.CTRLA |= TCB_ENABLE_bm; /* Start Timer */
+    TCB1.CTRLA |= TCB_ENABLE_bm; /* Start Timer */
 }
 
-void TCB0_Stop(void)
+void TCB1_Stop(void)
 {
-    TCB0.CTRLA &= ~TCB_ENABLE_bm; /* Stop Timer */
+    TCB1.CTRLA &= ~TCB_ENABLE_bm; /* Stop Timer */
 }
 
-void TCB0_Write(uint16_t timerVal)
+void TCB1_Write(uint16_t timerVal)
 {
-    TCB0.CNT = timerVal;
+    TCB1.CNT = timerVal;
 }
 
-uint16_t TCB0_Read(void)
+uint16_t TCB1_Read(void)
 {
     uint16_t readVal;
 
-    readVal = TCB0.CNT;
+    readVal = TCB1.CNT;
 
     return readVal;
 }
 
-void TCB0_EnableCaptInterrupt(void)
+void TCB1_EnableCaptInterrupt(void)
 {
-    TCB0.INTCTRL |= TCB_CAPT_bm; /* Capture or Timeout: enabled */
+    TCB1.INTCTRL |= TCB_CAPT_bm; /* Capture or Timeout: enabled */
 }
 
 
-void TCB0_DisableCaptInterrupt(void)
+void TCB1_DisableCaptInterrupt(void)
 {
-    TCB0.INTCTRL &= ~TCB_CAPT_bm; /* Capture or Timeout: disabled */
+    TCB1.INTCTRL &= ~TCB_CAPT_bm; /* Capture or Timeout: disabled */
 }
 
-inline void TCB0_ClearCaptInterruptFlag(void)
+inline void TCB1_ClearCaptInterruptFlag(void)
 {
-    TCB0.INTFLAGS |= TCB_CAPT_bm;
+    TCB1.INTFLAGS |= TCB_CAPT_bm;
 }
 
-inline bool TCB0_IsCaptInterruptFlag(void)
+inline bool TCB1_IsCaptInterruptFlag(void)
 {
-	return TCB0.INTFLAGS & TCB_CAPT_bm;
+	return TCB1.INTFLAGS & TCB_CAPT_bm;
 
 }
 
-inline bool TCB0_IsCaptInterruptEnabled(void)
+inline bool TCB1_IsCaptInterruptEnabled(void)
 {
-    return ((TCB0.INTCTRL & TCB_CAPT_bm) > 0);
+    return ((TCB1.INTCTRL & TCB_CAPT_bm) > 0);
 }
 

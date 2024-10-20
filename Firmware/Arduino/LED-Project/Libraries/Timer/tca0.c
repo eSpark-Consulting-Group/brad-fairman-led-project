@@ -41,8 +41,11 @@ const struct TMR_INTERFACE TCA0_Interface = {
     .Stop = TCA0_Stop,
     .PeriodCountSet = TCA0_Write,
     .TimeoutCallbackRegister = TCA0_OverflowCallbackRegister,
+    .CompareCallbackRegister = TCA0_Compare2CallbackRegister,
+    .CompareRegisterSet = TCA0_Compare2Set,
     .Tasks = NULL
 };
+
 void TCA0_DefaultCompare0CallbackRegister(void);
 void (*TCA0_CMP0_isr_cb)(void) = &TCA0_DefaultCompare0CallbackRegister;
 

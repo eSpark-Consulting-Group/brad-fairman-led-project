@@ -54,6 +54,8 @@ struct TMR_INTERFACE
     void (*Stop)(void);
     void (*PeriodCountSet)(size_t count);
     void (*TimeoutCallbackRegister)(void (* CallbackHandler)(void));
+    void (*CompareCallbackRegister)(void (* CallbackHandler)(void));
+    void (*CompareRegisterSet)(void (* CallbackHandler)(uint16_t));
     void (*Tasks)(void);
 };
 /**

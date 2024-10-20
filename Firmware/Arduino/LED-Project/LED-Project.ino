@@ -1,84 +1,79 @@
 #include <stdint.h>
 #include <Wire.h>
 #include <SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h>
-#include <EEPROM.h>
-#include "tca0.h"
-#include "tcb0.h"
-#include "tcb1.h"
+// #include <EEPROM.h>
+// #include "tca0.h"
+// #include "tcb0.h"
+// #include "tcb1.h"
+
+#include "definitions.h"
+#include "button.hpp"
+#include "device.hpp"
+#include "status_led.hpp"
+#include "output_led.hpp"
+
 // #include <avr/sleep.h>      // For sleep modes
 // #include <avr/interrupt.h>  // For enabling interrupts
 
-#define STATUS_LED_75   PIN_PA1
-#define STATUS_LED_50   PIN_PA2
-#define STATUS_LED_25   PIN_PA4
-#define GPOUT_PIN       PIN_PA5
-#define BATT_CHG_PIN    PIN_PA6
-#define SCL             PIN_PB0
-#define SDA             PIN_PB1
-#define U_INT_PIN       PIN_PB4
-#define U_KILL_PIN      PIN_PB5
-#define RED_LED_CTRL    PIN_PC0
-#define WHITE_LED_CTRL  PIN_PC2
-#define BUTTON_PIN      PIN_PC1
 
-#define DEBOUNCE_TIME     11
-#define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
-#define POWER_OFF_TIME    4000            // button press time to trigger batt fuel check
-#define MODE_CHANGE_TIME  50              // button press time to trigger mode change
-#define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
+#define DEBOUNCE_TIME     11U
+// #define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
+// #define POWER_OFF_TIME    4000            // button press time to trigger batt fuel check
+// #define MODE_CHANGE_TIME  50              // button press time to trigger mode change
+// #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
 #define BATTERY_LVL_MAX   4.2f
 
-#define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
-#define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
-#define EEPROM_COUNT_ADDRESS      (EEPROM.begin()+2)
-#define EEPROM_MODE_REF_ADDRESS   (EEPROM.begin()+3)
-#define EEPROM_MODE_ADDRESS       (EEPROM.begin()+4)
+// #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
+// #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
+// #define EEPROM_COUNT_ADDRESS      (EEPROM.begin()+2)
+// #define EEPROM_MODE_REF_ADDRESS   (EEPROM.begin()+3)
+// #define EEPROM_MODE_ADDRESS       (EEPROM.begin()+4)
 
 SFE_MAX1704X lipo(MAX1704X_MAX17048); // Create a MAX17048
 // uint8_t EEPROM_Address;
-uint8_t EEPROM_Write_Count;
-uint8_t EEPROM_Mode_Addr;
-uint16_t DEVICE_id = 0x1616;          // ATTiny1616
+// uint8_t EEPROM_Write_Count;
+// uint8_t EEPROM_Mode_Addr;
+// uint16_t DEVICE_id = 0x1616;          // ATTiny1616
 
-unsigned int Period = 0xFFFF;
+// unsigned int Period = 0xFFFF;
 
-typedef enum {      // white LED state
-    MODE_OFF = 0,
-    MODE_1,
-    MODE_2,
-    MODE_3,
-    MODE_4
-}MODE_e;
+// typedef enum {      // white LED state
+//     MODE_OFF = 0,
+//     MODE_1,
+//     MODE_2,
+//     MODE_3,
+//     MODE_4
+// }MODE_e;
 
-typedef enum {      // batt lvls
-    LVL_20,
-    LVL_33,
-    LVL_66,
-    LVL_100,
-    LVL_MAX
-}BATT_LVL_e;
+// typedef enum {      // batt lvls
+//     LVL_20,
+//     LVL_33,
+//     LVL_66,
+//     LVL_100,
+//     LVL_MAX
+// }BATT_LVL_e;
 
-typedef struct {
-    bool state;             // led on or off
-    uint8_t step;
-    uint32_t time;          // time period for this state
-    uint32_t timer;         // when this sequence started
-}LED_STATE_t;
+// typedef struct {
+//     bool state;             // led on or off
+//     uint8_t step;
+//     uint32_t time;          // time period for current state
+//     uint32_t timer;         // timer value when this sequence started
+// }LED_STATE_t;
 
 LED_STATE_t LED[3];
 
-#define LED_BLINK_STEPS_DISCHG 3
-#define LED_BLINK_STEPS_CHG 2
-uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
-uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {3000,0,0}, {3000,0,0}};
-uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {0,0,0},    {3000,0,0}};
+// #define LED_BLINK_STEPS_DISCHG 3
+// #define LED_BLINK_STEPS_CHG 2
+// uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
+// uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {3000,0,0}, {3000,0,0}};
+// uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {0,0,0},    {3000,0,0}};
 
-uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{1000, 1000}, {1000,1},      {1000,1},       {1000,1}};
-uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {1000,1000},   {1000,1},       {1000,1}};
-uint32_t led3_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {0,0},         {1000,1000},    {1000,1}};
+// uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{1000, 1000}, {1000,1},      {1000,1},       {1000,1}};
+// uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {1000,1000},   {1000,1},       {1000,1}};
+// uint32_t led3_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {0,0},         {1000,1000},    {1000,1}};
 
-MODE_e current_mode = MODE_1;
+// MODE_e current_mode = MODE_1;
 volatile BATT_LVL_e batt_lvl = LVL_20;
 volatile uint32_t timerB1_counter=0;
 volatile uint64_t timerB0_counter=0;
@@ -95,85 +90,84 @@ volatile bool mode_change_flag=false;
 
 bool is_device_wakeup=true;
 
-// static int count_loop = 0;
 
-void disableUnusedPeripherals()
-{
-  // Disable the Analog-to-Digital Converter (ADC)
-  ADC0.CTRLA = 0;    // Disable ADC by clearing the control register
-  ADC1.CTRLA = 0;    // Disable ADC by clearing the control register
+// void disableUnusedPeripherals()
+// {
+//   // Disable the Analog-to-Digital Converter (ADC)
+//   ADC0.CTRLA = 0;    // Disable ADC by clearing the control register
+//   ADC1.CTRLA = 0;    // Disable ADC by clearing the control register
 
-  // Disable the Digital-to-Analog Converter (DAC)
-  DAC0.CTRLA = 0;    // Disable DAC by clearing the control register
-  DAC1.CTRLA = 0;    // Disable DAC by clearing the control register
-  DAC2.CTRLA = 0;    // Disable DAC by clearing the control register
+//   // Disable the Digital-to-Analog Converter (DAC)
+//   DAC0.CTRLA = 0;    // Disable DAC by clearing the control register
+//   DAC1.CTRLA = 0;    // Disable DAC by clearing the control register
+//   DAC2.CTRLA = 0;    // Disable DAC by clearing the control register
 
-  // Disable the Analog Comparator (AC)
-  AC0.CTRLA = 0;     // Disable Analog Comparator
-  AC1.CTRLA = 0;     // Disable Analog Comparator
-  AC2.CTRLA = 0;     // Disable Analog Comparator
+//   // Disable the Analog Comparator (AC)
+//   AC0.CTRLA = 0;     // Disable Analog Comparator
+//   AC1.CTRLA = 0;     // Disable Analog Comparator
+//   AC2.CTRLA = 0;     // Disable Analog Comparator
 
-  // Disable the Serial Peripheral Interface (SPI)
-  SPI0.CTRLA = 0;    // Disable SPI by clearing the control register
+//   // Disable the Serial Peripheral Interface (SPI)
+//   SPI0.CTRLA = 0;    // Disable SPI by clearing the control register
 
-  // Disable the Timer/Counter D (TCD) if present
-  // TCD0.CTRLA = 0;    // CANNOT DISABLE THIS TIMER
+//   // Disable the Timer/Counter D (TCD) if present
+//   // TCD0.CTRLA = 0;    // CANNOT DISABLE THIS TIMER
 
-  // Disable the USARTs (USART0 and USART1)
-  USART0.CTRLA = 0;  // Disable USART0
+//   // Disable the USARTs (USART0 and USART1)
+//   USART0.CTRLA = 0;  // Disable USART0
 
-  // Disable Two-Wire Interface (TWI, I2C)
-  TWI0.MCTRLA = 0;   // Disable TWI master mode
-  TWI0.SCTRLA = 0;   // Disable TWI slave mode
+//   // Disable Two-Wire Interface (TWI, I2C)
+//   TWI0.MCTRLA = 0;   // Disable TWI master mode
+//   TWI0.SCTRLA = 0;   // Disable TWI slave mode
 
-  // Disable the Real-Time Counter (RTC)
-  RTC.CTRLA = 0;     // Disable RTC
+//   // Disable the Real-Time Counter (RTC)
+//   RTC.CTRLA = 0;     // Disable RTC
 
-  // Disable the Event System (EVSYS)
-  EVSYS.SYNCCH0 = 0; // Disable all event channels
-  EVSYS.ASYNCCH0 = 0;
+//   // Disable the Event System (EVSYS)
+//   EVSYS.SYNCCH0 = 0; // Disable all event channels
+//   EVSYS.ASYNCCH0 = 0;
 
-  // Disable the Watchdog Timer (WDT)
-  CCP = CCP_IOREG_gc;     // Configuration Change Protection for writing WDT registers
-  WDT.CTRLA = 0;          // Disable the Watchdog Timer
+//   // Disable the Watchdog Timer (WDT)
+//   CCP = CCP_IOREG_gc;     // Configuration Change Protection for writing WDT registers
+//   WDT.CTRLA = 0;          // Disable the Watchdog Timer
 
-  // Disable Configurable Custom Logic (CCL)
-  CCL.CTRLA = 0;          // Disable the CCL
+//   // Disable Configurable Custom Logic (CCL)
+//   CCL.CTRLA = 0;          // Disable the CCL
 
-  // Disable the Brown-Out Detector (BOD) unless needed
-  CCP = CCP_IOREG_gc;     // Configuration Change Protection for writing BOD registers
-  BOD.CTRLA = 0;          // Disable BOD
-}
+//   // Disable the Brown-Out Detector (BOD) unless needed
+//   CCP = CCP_IOREG_gc;     // Configuration Change Protection for writing BOD registers
+//   BOD.CTRLA = 0;          // Disable BOD
+// }
 
 
 // ISR for main WHITE/RED LEDs
-void TCA0_cmpr2_isr()
-{
-  if(current_mode!=MODE_4)
-  {
-    digitalWrite(WHITE_LED_CTRL, LOW);
-  }
-  else if(current_mode==MODE_4)
-  {
-    digitalWrite(RED_LED_CTRL, LOW);
-  }
-}
-void TCA0_overflow_isr()
-{
-  if(current_mode!=MODE_4)
-  {
-    digitalWrite(WHITE_LED_CTRL, HIGH);
-  }
-  else if(current_mode==MODE_4)
-  {
-    digitalWrite(RED_LED_CTRL, HIGH);
-  }
-}
+// void TCA0_cmpr2_isr()
+// {
+//   if(current_mode!=MODE_4)
+//   {
+//     digitalWrite(WHITE_LED_CTRL, LOW);
+//   }
+//   else if(current_mode==MODE_4)
+//   {
+//     digitalWrite(RED_LED_CTRL, LOW);
+//   }
+// }
+// void TCA0_overflow_isr()
+// {
+//   if(current_mode!=MODE_4)
+//   {
+//     digitalWrite(WHITE_LED_CTRL, HIGH);
+//   }
+//   else if(current_mode==MODE_4)
+//   {
+//     digitalWrite(RED_LED_CTRL, HIGH);
+//   }
+// }
 
-void setDutyCycleTCA(byte duty)
-{
-  TCA0.SINGLE.CMP2 = map(duty, 0, 100, 0, Period);
-}
+// void setDutyCycleTCA(byte duty)
+// {
+//   TCA0.SINGLE.CMP2 = map(duty, 0, 100, 0, Period);
+// }
 
 void update_led(MODE_e mode)
 {
@@ -215,19 +209,19 @@ void update_mode(MODE_e* mode)
     update_led(*mode);
 }
 
-void setFrequency(unsigned long freqInHz)
-{
-  unsigned long tempperiod = (F_CPU / freqInHz);
-  byte presc = 0;
-  while (tempperiod > 65536 && presc < 7)
-  {
-    presc++;
-    tempperiod      = tempperiod >> (presc > 4 ? 2 : 1);
-  }
-  Period            = tempperiod;
-  TCA0.SINGLE.CTRLA = (presc << 1) | TCA_SINGLE_ENABLE_bm;
-  TCA0.SINGLE.PER   = Period;
-}
+// void setFrequency(unsigned long freqInHz)
+// {
+//   unsigned long tempperiod = (F_CPU / freqInHz);
+//   byte presc = 0;
+//   while (tempperiod > 65536 && presc < 7)
+//   {
+//     presc++;
+//     tempperiod      = tempperiod >> (presc > 4 ? 2 : 1);
+//   }
+//   Period            = tempperiod;
+//   TCA0.SINGLE.CTRLA = (presc << 1) | TCA_SINGLE_ENABLE_bm;
+//   TCA0.SINGLE.PER   = Period;
+// }
 
 void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 {
@@ -333,21 +327,21 @@ void TCB0_handler()
     // count_loop++;
 }
 
-void status_LED_toggler(int led_num, bool state)
-{
-  switch(led_num)
-  {
-    case 0:
-      digitalWrite(STATUS_LED_75, state);
-      break;
-    case 1:
-      digitalWrite(STATUS_LED_50, state);
-      break;
-    case 2:
-      digitalWrite(STATUS_LED_25, state);
-      break;
-  }
-}
+// void status_LED_toggler(int led_num, bool state)
+// {
+//   switch(led_num)
+//   {
+//     case 0:
+//       digitalWrite(STATUS_LED_75, state);
+//       break;
+//     case 1:
+//       digitalWrite(STATUS_LED_50, state);
+//       break;
+//     case 2:
+//       digitalWrite(STATUS_LED_25, state);
+//       break;
+//   }
+// }
 
 void status_LED_handler()
 {
@@ -461,81 +455,68 @@ void batt_fuel_ic_init()
     lipo.setVALRTMax(BATTERY_LVL_MAX);
 }
 
-void eeprom_setup()
-{
-  // update EEPROM with initial setup
-  // i.e. addr 0,1 holds the device id
-  //      addr 2 is for number of times EEPROM_Mode_addr have been written
-  //      addr 3 holds the address where mode is stored
-  
-  EEPROM.update(EEPROM_ID_HIGH_BYTE,(uint8_t)((DEVICE_id & 0xFF00) >>8));
-  EEPROM.update(EEPROM_ID_LOW_BYTE,(uint8_t)(DEVICE_id & 0x00FF));
-  
-  for(uint16_t i=EEPROM_COUNT_ADDRESS; i<EEPROM_SIZE; i++)
-  {
-    EEPROM.update(i,0);
-    status_LED_toggler(0, HIGH);
-    delay(10);
-    status_LED_toggler(0, LOW);
-    delay(10);
-  }
-
-  EEPROM.update(EEPROM_COUNT_ADDRESS,100);
-  EEPROM.update(EEPROM_MODE_REF_ADDRESS,EEPROM_MODE_ADDRESS);
-  EEPROM.update(EEPROM_MODE_ADDRESS,MODE_1);
-
-  status_LED_toggler(2, HIGH);
-  delay(100);
-  status_LED_toggler(2, LOW);
-  // delay(100);
-}
-
-void eeprom_init()
-{
-  uint8_t high_byte = EEPROM.read(EEPROM_ID_HIGH_BYTE);
-  uint8_t low_byte = EEPROM.read(EEPROM_ID_LOW_BYTE);
-
-  if((((uint16_t)high_byte << 8) | low_byte) != DEVICE_id)
-  {
-    eeprom_setup();
-  }
-
-  EEPROM_Write_Count = EEPROM.read(EEPROM_COUNT_ADDRESS);
-  // EEPROM_Address = EEPROM_MODE_REF_ADDRESS;
-  EEPROM_Mode_Addr = EEPROM.read(EEPROM_MODE_REF_ADDRESS);
-
-  current_mode = (MODE_e)(EEPROM.read(EEPROM_Mode_Addr));
-  if(current_mode > MODE_4)
-  {
-    current_mode = MODE_1;
-    eeprom_mode_write(current_mode);
-  }
-}
-
-void eeprom_mode_write(MODE_e mode)
-{
-  EEPROM_Write_Count++;
-  if(EEPROM_Write_Count > (EEPROM_ENDURANCE-100))
-  {
-    EEPROM_Write_Count=1;
-    EEPROM_Mode_Addr++;
-  }
-  EEPROM.update(EEPROM_MODE_REF_ADDRESS, EEPROM_Mode_Addr);
-  EEPROM.update(EEPROM_Mode_Addr, mode);
-  EEPROM.update(EEPROM_COUNT_ADDRESS, EEPROM_Write_Count);
-}
-
-// void BAT_chg_int_handler()
+// void eeprom_setup()
 // {
-//       // is_usb_connected = true;
+//   // update EEPROM with initial setup
+//   // i.e. addr 0,1 holds the device id
+//   //      addr 2 is for number of times EEPROM_Mode_addr have been written
+//   //      addr 3 holds the address where mode is stored
+  
+//   EEPROM.update(EEPROM_ID_HIGH_BYTE,(uint8_t)((DEVICE_id & 0xFF00) >>8));
+//   EEPROM.update(EEPROM_ID_LOW_BYTE,(uint8_t)(DEVICE_id & 0x00FF));
+  
+//   for(uint16_t i=EEPROM_COUNT_ADDRESS; i<EEPROM_SIZE; i++)
+//   {
+//     EEPROM.update(i,0);
+//     status_LED_toggler(0, HIGH);
+//     delay(10);
+//     status_LED_toggler(0, LOW);
+//     delay(10);
+//   }
+
+//   EEPROM.update(EEPROM_COUNT_ADDRESS,100);
+//   EEPROM.update(EEPROM_MODE_REF_ADDRESS,EEPROM_MODE_ADDRESS);
+//   EEPROM.update(EEPROM_MODE_ADDRESS,MODE_1);
+
+//   status_LED_toggler(2, HIGH);
+//   delay(100);
+//   status_LED_toggler(2, LOW);
+//   // delay(100);
 // }
 
-// void BUTTON_pin_int_handler()
+// void eeprom_init()
 // {
-//   // if (!is_button_pressed){
-//   //   button_press_time = timerB0_counter;
-//   //   is_button_pressed = true;
-//   // }
+//   uint8_t high_byte = EEPROM.read(EEPROM_ID_HIGH_BYTE);
+//   uint8_t low_byte = EEPROM.read(EEPROM_ID_LOW_BYTE);
+
+//   if((((uint16_t)high_byte << 8) | low_byte) != DEVICE_id)
+//   {
+//     eeprom_setup();
+//   }
+
+//   EEPROM_Write_Count = EEPROM.read(EEPROM_COUNT_ADDRESS);
+//   // EEPROM_Address = EEPROM_MODE_REF_ADDRESS;
+//   EEPROM_Mode_Addr = EEPROM.read(EEPROM_MODE_REF_ADDRESS);
+
+//   current_mode = (MODE_e)(EEPROM.read(EEPROM_Mode_Addr));
+//   if(current_mode > MODE_4)
+//   {
+//     current_mode = MODE_1;
+//     eeprom_mode_write(current_mode);
+//   }
+// }
+
+// void eeprom_mode_write(MODE_e mode)
+// {
+//   EEPROM_Write_Count++;
+//   if(EEPROM_Write_Count > (EEPROM_ENDURANCE-100))
+//   {
+//     EEPROM_Write_Count=1;
+//     EEPROM_Mode_Addr++;
+//   }
+//   EEPROM.update(EEPROM_MODE_REF_ADDRESS, EEPROM_Mode_Addr);
+//   EEPROM.update(EEPROM_Mode_Addr, mode);
+//   EEPROM.update(EEPROM_COUNT_ADDRESS, EEPROM_Write_Count);
 // }
 
 void power_off()
@@ -589,8 +570,8 @@ void gpio_init()
 void timers_init()
 {
   // takeOverTCA0();             // This replaces disabling and resettng the timer, required previously.
-  TCA0_Initialize();
-  TCB0_Initialize();           // Timer for checking button/Interrupt pins
+  TCA0_Initialize();           // For PWM generation for output LEDs
+  TCB0_Initialize();           // Timer for checking button/Interrupt pins      , Counts ms
   TCB1_Initialize();           // 1ms timer for Status LEDs sequence
   setFrequency(10000);         // set PWM freq to 10KHz
   // // TCB0_Stop();         // 1ms timer for button
@@ -605,74 +586,88 @@ void timers_init()
   TCB1_CaptureCallbackRegister(&status_LED_handler);
 }
 
-void process_ButtonState()
-{
-  bool state = !digitalRead(BUTTON_PIN) ;
-  if(state)   // button pressed
-  {
-    if (!is_button_pressed)
-    {
-      button_press_time = timerB0_counter;
-      is_button_pressed = true;
-    }
-    else
-    {
-      uint64_t button_pressed_time_val = timerB0_counter - button_press_time;
+// void process_ButtonState()
+// {
+//   bool state = !digitalRead(BUTTON_PIN) ;
+//   if(state)   // button pressed
+//   {
+//     if (!is_button_pressed)
+//     {
+//       button_press_time = timerB0_counter;
+//       is_button_pressed = true;
+//     }
+//     else
+//     {
+//       uint64_t button_pressed_time_val = timerB0_counter - button_press_time;
 
-      if((button_pressed_time_val >= FUEL_CHECK_TIME) && is_turned_on)
-      {
-          batt_lvl_acquire_flag = true;
-          // fuel_pressed = true;
-      }
-      if((button_pressed_time_val >= POWER_OFF_TIME) && (button_pressed_time_val < (POWER_OFF_TIME+DEBOUNCE_TIME)))
-      {
-          is_turned_on = !is_turned_on;
-          if(is_turned_on)
-          {
-            // update_mode(&current_mode);
-            lipo.wake();
-          }
-      }
-    }
-  }
-  else  // button released
-  {
-    if(is_button_pressed)
-    // if(is_button_pressed && (!fuel_pressed) && is_turned_on)
-    {
-      is_button_pressed = false;
+//       if((button_pressed_time_val >= FUEL_CHECK_TIME) && is_turned_on)
+//       {
+//           batt_lvl_acquire_flag = true;
+//           // fuel_pressed = true;
+//       }
+//       if((button_pressed_time_val >= POWER_OFF_TIME) && (button_pressed_time_val < (POWER_OFF_TIME+DEBOUNCE_TIME)))
+//       {
+//           is_turned_on = !is_turned_on;
+//           if(is_turned_on)
+//           {
+//             // update_mode(&current_mode);
+//             lipo.wake();
+//           }
+//       }
+//     }
+//   }
+//   else  // button released
+//   {
+//     if(is_button_pressed)
+//     // if(is_button_pressed && (!fuel_pressed) && is_turned_on)
+//     {
+//       is_button_pressed = false;
 
-      if(is_turned_on)
-      {
-        uint64_t button_pressed_time_val = timerB0_counter - button_press_time;
+//       if(is_turned_on)
+//       {
+//         uint64_t button_pressed_time_val = timerB0_counter - button_press_time;
 
-        if((button_pressed_time_val >= (MODE_CHANGE_TIME)) && (button_pressed_time_val < FUEL_CHECK_TIME))
-        {
-            mode_change_flag = true;
-        }
-      }
-    }
-    // else{
-    //   fuel_pressed = false;
-    // }
+//         if((button_pressed_time_val >= (MODE_CHANGE_TIME)) && (button_pressed_time_val < FUEL_CHECK_TIME))
+//         {
+//             mode_change_flag = true;
+//         }
+//       }
+//     }
+//     // else{
+//     //   fuel_pressed = false;
+//     // }
 
-    // if(is_button_pressed)
-    // {
-    //   is_button_pressed = false;
-    // }
+//     // if(is_button_pressed)
+//     // {
+//     //   is_button_pressed = false;
+//     // }
 
-    // if((count_loop > 5000))
-    // {
-    //   // is_turned_on = !is_turned_on;
-    //   mode_change_flag = true;
-    //   count_loop = 0;
-    // }
-  }
-}
+//     // if((count_loop > 5000))
+//     // {
+//     //   // is_turned_on = !is_turned_on;
+//     //   mode_change_flag = true;
+//     //   count_loop = 0;
+//     // }
+//   }
+// }
+
+Button      button(BUTTON_PIN, DEBOUNCE_TIME);
+Leds*       leds[STATUS_LEDS];
+StatusLed*  statusLedController;
+Device*     device;
+
 void setup()
 {
   disableUnusedPeripherals();
-  eeprom_init();
+  
+  // button = Button::getInstance(BUTTON_PIN, DEBOUNCE_TIME);
+  leds[0] = new Leds(STATUS_LED_25_PIN);
+  leds[1] = new Leds(STATUS_LED_50_PIN);
+  leds[2] = new Leds(STATUS_LED_75_PIN);
+  statusLedController = new StatusLed::getInstance();
+  device = new Device(statusLedController, leds[0], leds[1], leds[2]);
+ 
+  // eeprom_init();
 
   gpio_init();
   timers_init();
