@@ -1,7 +1,7 @@
 #ifndef OUTPUTLED
 #define OUTPUTLED
 
-#include "definitions.h"
+#include "../../definitions.h"
 
 class OutputLed
 {
@@ -16,8 +16,8 @@ class OutputLed
         void setModeVar(MODE_e* var)    {   _mode = var;    }
         MODE_e getMode()    {   return *_mode;   }
         void setMode();
-        void ledOn();
-        void ledOff();
+        static void ledOn();
+        static void ledOff();
     private:
         uint8_t _redLedPin, _whiteLedPin;
         MODE_e* _mode;

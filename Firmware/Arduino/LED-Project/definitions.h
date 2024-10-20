@@ -1,23 +1,26 @@
-#ifndef BASICDEF
-#define BASICDEF
+#ifndef DEFINITIONS
+#define DEFINITIONS
 
 #include <Arduino.h>
 #include <stdint.h>
 
-#define STATUS_LED_75_PIN   PIN_PA1
-#define STATUS_LED_50_PIN   PIN_PA2
-#define STATUS_LED_25_PIN   PIN_PA4
-#define GPOUT_PIN           PIN_PA5
-#define BATT_CHG_PIN        PIN_PA6
+#define STATUS_LED_75_PIN   PIN_PA1     // status led
+#define STATUS_LED_50_PIN   PIN_PA2     // status led
+#define STATUS_LED_25_PIN   PIN_PA4     // status led
+#define GPOUT_PIN           PIN_PA5     // MAX17048 ALRT pin
+#define BATT_CHG_PIN        PIN_PA6     // usb connected indicator pin
 #define SCL_PIN             PIN_PB0
 #define SDA_PIN             PIN_PB1
-#define U_INT_PIN           PIN_PB4
-#define U_KILL_PIN          PIN_PB5
-#define RED_LED_CTRL_PIN    PIN_PC0
-#define WHITE_LED_CTRL_PIN  PIN_PC2
+#define U_INT_PIN           PIN_PB4     // power manager pin, triggers when button pressed for 4secs
+#define U_KILL_PIN          PIN_PB5     // power manager pin, drive low to kill power
+#define RED_LED_CTRL_PIN    PIN_PC0     // output led
+#define WHITE_LED_CTRL_PIN  PIN_PC2     // output led
 #define BUTTON_PIN          PIN_PC1
 
-#define STATUS_LEDS   3
+#define DEBOUNCE_TIME       11U
+#define STATUS_LEDS         3
+#define BATTERY_LVL_MIN     3.0f
+#define BATTERY_LVL_MAX     4.2f
 
 typedef enum
 {
@@ -27,22 +30,31 @@ typedef enum
     EXTRA_LONG_PRESS,
 }BUTTON_STATE_e;
 
-typedef enum        // white/red LED state
+typedef enum        // white/red LED modes
 {
     MODE_OFF = 0,
     MODE_1,
     MODE_2,
     MODE_3,
-    MODE_4
+    MODE_4,
 }MODE_e;
 
-typedef enum {      // batt lvls
+typedef enum        // batt lvls
+{
     LVL_20,
     LVL_33,
     LVL_66,
     LVL_100,
-    LVL_MAX
+    LVL_MAX,
 }BATT_LVL_e;
 
+typedef enum
+{
+    POWERRED_OFF,
+    STANDBY,
+    ACTIVE,
+    CHARGING,
+    FAULT,
+}DEVICE_STATE_e;
 
 #endif

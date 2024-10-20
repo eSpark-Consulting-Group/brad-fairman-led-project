@@ -4,15 +4,20 @@
 #include "timer_interface.h"
 #include "tca0.h"
 #include "tcb1.h"
-#include "status_led.hpp"
-#include "output_led.hpp"
+#include "../Status_LED/status_led.hpp"
+#include "../Output_LED/output_led.hpp"
+
+uint32_t setFrequency(uint32_t freqInHz);
+
+//----------------------------------------------------------------------
 
 class Timer
 {
     public:
         Timer(StatusLed* handler)
-        : _status_led_handler(handler), _pwm_timer_object(&TCA0_Interface), _status_led_timer_object(&TCB1_Interface)
-        {   _period = setFrequency(10000);  }
+        : _pwm_timer_object(const_cast<TMR_INTERFACE*>(&TCA0_Interface)), _status_led_timer_object(const_cast<TMR_INTERFACE*>(&TCB1_Interface))
+        {   _status_led_handler = handler;
+            _period = setFrequency(10000);  }
 
         void setup();
 
@@ -26,14 +31,10 @@ class Timer
     private:
         uint16_t _period = 0xFFFF;              // period value for pwm timer
 
-        TMR_INTERFACE* _pwm_timer_object;//, _status_led_timer_object;
-        TMR_INTERFACE* _status_led_timer_object;
-        StatusLed* _status_led_handler;
-        OutputLed* _output_led_handler;
+        TMR_INTERFACE* _pwm_timer_object = NULL;
+        TMR_INTERFACE* _status_led_timer_object = NULL;
+        StatusLed* _status_led_handler = NULL;
+        OutputLed* _output_led_handler = NULL;
 };
-
-//----------------------------------------------------------------------
-
-uint32_t setFrequency(uint32_t freqInHz);
 
 #endif

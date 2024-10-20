@@ -1,9 +1,10 @@
 #ifndef STATUS_LED
 #define STATUS_LED
 
-#include "definitions.h"
+#include "../../definitions.h"
 
-typedef struct {
+typedef struct
+{
     bool state;             // led on or off
     uint8_t step;
     uint64_t time;          // time period for current state
@@ -28,11 +29,11 @@ class Leds
         void toggle();
         void on();
         void off();
-        void getTime()               {   return _control.time;      }
-        void setTime(uint64_t time)  {   _control.time = time;      }
-        void getTimer()              {   return _control.timer;     }
-        void getStep()               {   return _control.step;      }
-        void setStep(uint8_t stp)    {    _control.step = stp;      }
+        uint64_t getTime()              {   return _control.time;      }
+        void setTime(uint64_t time)     {   _control.time = time;      }
+        uint64_t getTimer()             {   return _control.timer;     }
+        uint8_t getStep()               {   return _control.step;      }
+        void setStep(uint8_t stp)       {    _control.step = stp;      }
     private:
         void updateState();
         uint8_t _pin;
@@ -47,9 +48,11 @@ class StatusLed
 
         static StatusLed* getInstance();
         
-        void statusLedHandler();
+        static void statusLedHandler();
 
         void addLeds(Leds* led1, Leds* led2, Leds* led3);
+        void addBattFlag(BATT_LVL_e* batt)  {   _batt_lvl_flag = batt;   }
+        // Placeholder for usb connection flag set method
         void ledOn(uint8_t led);
         void ledOff(uint8_t led);
     private:
@@ -57,6 +60,8 @@ class StatusLed
         
         uint64_t    _timerB1_counter = 0;
         Leds* _status_led[STATUS_LEDS];
+        BATT_LVL_e*  _batt_lvl_flag;
+        // Placeholder for usb connection flag
 
         static StatusLed* instance;
 };

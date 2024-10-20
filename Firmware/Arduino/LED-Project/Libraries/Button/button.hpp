@@ -1,7 +1,7 @@
 #ifndef BUTTONS
 #define BUTTONS
 
-#include "basicDef.h"
+#include "../../definitions.h"
 
 #define SHORT_PRESS_TIME        250
 #define LONG_PRESS_TIME         2000

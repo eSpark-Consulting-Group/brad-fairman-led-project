@@ -9,7 +9,7 @@ void OutputLed::setMode()
     }
 }
 
-void OutputLed::ledOn()
+static void OutputLed::ledOn()
 {
     if( MODE_4 == *_mode )
     {
@@ -21,7 +21,7 @@ void OutputLed::ledOn()
     }
 }
 
-void OutputLed::ledOff()
+static void OutputLed::ledOff()
 {
     if( MODE_4 == *_mode )
     {

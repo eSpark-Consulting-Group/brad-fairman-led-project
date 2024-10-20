@@ -1,11 +1,11 @@
 #include "device.hpp"
 
 
-
 void Device::setup()
 {
     eepromInit();
     _output_led_controller->setModeVar(&_current_mode);
+    _status_led_controller->addBattFlag(&_batt_lvl);
 }
 
 void Device::eepromModeWrite(MODE_e mode)
