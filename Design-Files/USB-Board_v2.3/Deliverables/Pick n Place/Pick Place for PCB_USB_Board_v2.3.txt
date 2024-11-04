@@ -1,0 +1,21 @@
+Altium Designer Pick and Place Locations
+C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\USB-Board_v2.3\Design Files\Project Outputs for USB_Board_v2.3\Pick Place for PCB_USB_Board_v2.3.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       04/11/24
+Time:       18:24
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+Designator Layer    Center-X(mm) Center-Y(mm) Rotation Ref-X(mm) Ref-Y(mm) Pad-X(mm) Pad-Y(mm) 
+D1         TopLayer 8.1534mm     8.6868mm     270      8.1534mm  8.6868mm  8.1534mm  8.8868mm  
+J1         TopLayer 6.9142mm     4.5640mm     0        6.9142mm  1.4090mm  4.1642mm  6.9690mm  
+P5         TopLayer 3.5023mm     20.6382mm    270      3.5023mm  20.6382mm 3.5023mm  20.6382mm 
+P6         TopLayer 3.5023mm     18.4781mm    270      3.5023mm  18.4781mm 3.5023mm  18.4781mm 
+P7         TopLayer 3.5023mm     16.3179mm    270      3.5023mm  16.3179mm 3.5023mm  16.3179mm 
+P8         TopLayer 3.5023mm     14.1577mm    270      3.5023mm  14.1577mm 3.5023mm  14.1577mm 
+R1         TopLayer 6.1722mm     8.5852mm     270      6.1722mm  8.5852mm  6.1722mm  8.8602mm  
+R2         TopLayer 6.9850mm     8.5852mm     270      6.9850mm  8.5852mm  6.9850mm  8.8602mm  
