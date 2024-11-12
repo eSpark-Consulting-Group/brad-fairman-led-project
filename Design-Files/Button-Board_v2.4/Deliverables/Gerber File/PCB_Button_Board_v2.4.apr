@@ -72,8 +72,8 @@ D80   RECTANGULAR        46.968      98.000       0.000 FLASH       0.000
 D81   RECTANGULAR        50.000     190.000       0.000 FLASH       0.000
 D82   RECTANGULAR        47.902      19.071       0.000 FLASH       0.000
 D83   RECTANGULAR        31.902      23.622       0.000 FLASH       0.000
-D84   ROUNDED            15.748      15.748       0.000 FLASH       0.000
-D85   ROUNDED            23.622      23.622       0.000 FLASH       0.000
+D84   ROUNDED            23.622      23.622       0.000 FLASH       0.000
+D85   ROUNDED            15.748      15.748       0.000 FLASH       0.000
 D86   ROUNDED            39.370      59.055       0.000 FLASH       0.000
 D87   RECTANGULAR        10.630      14.567       0.000 FLASH      90.000
 D88   RECTANGULAR        48.032      24.409       0.000 FLASH     180.000
