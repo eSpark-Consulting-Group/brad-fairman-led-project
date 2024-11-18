@@ -1,35 +1,35 @@
 Altium Designer Pick and Place Locations
-C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\Project Outputs for Button-Board_v2.4\Pick Place for PCB_Button_Board_v2.4.txt
+C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\Project Outputs for Control-Board_v2.4\Pick Place for PCB_Control_Board_v2.4.txt
 
 ========================================================================================================================
 File Design Information:
 
-Date:       12/11/24
-Time:       13:34
-Revision:   de4ffcccbe0205ced563e7a6c35ef5d4d686bd04
+Date:       18/11/24
+Time:       15:51
+Revision:   379290c1e50508c2b888828e3aedbcaba4e8d99e
 Variant:    No variations
 Units used: mm
 
 Designator Center-X(mm) Center-Y(mm) Layer       Rotation Ref-X(mm)  Ref-Y(mm) Pad-X(mm) Pad-Y(mm) 
-C1         -4.0057mm    22.0094mm    BottomLayer 90       -4.0057mm  22.0094mm -4.0057mm 21.7094mm 
-C2         -4.0057mm    23.2392mm    BottomLayer 270      -4.0057mm  23.2392mm -4.0057mm 23.5392mm 
+C1         -4.0824mm    22.1104mm    BottomLayer 180      -4.0824mm  22.1104mm -3.7824mm 22.1104mm 
+C2         -4.3308mm    23.2392mm    BottomLayer 270      -4.3308mm  23.2392mm -4.3308mm 23.5392mm 
 C3         12.5887mm    33.4288mm    BottomLayer 90       12.5887mm  33.4288mm 12.5887mm 32.9589mm 
 C4         18.5011mm    32.8648mm    BottomLayer 180      18.5011mm  32.8648mm 18.9710mm 32.8648mm 
 C6         -3.3433mm    24.7489mm    TopLayer    180      -3.3433mm  24.7489mm -2.8734mm 24.7489mm 
 C7         3.2377mm     30.9092mm    TopLayer    270      3.2377mm   30.9092mm 3.2377mm  31.3791mm 
 C8         12.9020mm    24.1429mm    TopLayer    90       12.9020mm  24.1429mm 12.9020mm 23.6730mm 
-C9         -2.2235mm    20.6805mm    TopLayer    180      -2.2235mm  20.6805mm -1.7536mm 20.6805mm 
+C9         -2.6227mm    20.6805mm    TopLayer    180      -2.6227mm  20.6805mm -2.1528mm 20.6805mm 
 C10        15.0181mm    27.4366mm    BottomLayer 90       15.0181mm  27.4366mm 15.0181mm 26.9667mm 
 C12        7.2644mm     11.6176mm    BottomLayer 180      7.2644mm   11.6176mm 7.7343mm  11.6176mm 
 C13        7.2644mm     10.1144mm    BottomLayer 180      7.2644mm   10.1144mm 7.7343mm  10.1144mm 
 C14        0.9708mm     11.0973mm    BottomLayer 0        0.9708mm   11.0973mm 0.5009mm  11.0973mm 
 C15        10.5664mm    16.1008mm    BottomLayer 270      10.5664mm  16.1008mm 10.5664mm 16.5707mm 
 D1         4.8006mm     28.7274mm    TopLayer    180      4.8006mm   28.7274mm 6.3756mm  28.7274mm 
-D2         -4.6380mm    30.5729mm    TopLayer    270      -4.6380mm  30.5729mm -4.6380mm 32.8729mm 
+D2         -4.1380mm    31.5730mm    TopLayer    270      -4.1380mm  31.5729mm -4.1380mm 33.5730mm 
 J2         12.2830mm    31.9383mm    TopLayer    180      12.2830mm  31.9758mm 12.7830mm 30.0008mm 
 J4         5.3401mm     33.5955mm    TopLayer    0        5.3401mm   33.5955mm 2.8001mm  33.5955mm 
-L1         8.6614mm     26.4922mm    TopLayer    0        8.6614mm   26.4922mm 7.1904mm  26.4922mm 
-L2         0.5724mm     22.6467mm    TopLayer    90       0.5724mm   22.6467mm 0.5724mm  23.9746mm 
+L1         8.7630mm     26.4922mm    TopLayer    0        8.7630mm   26.4922mm 7.2920mm  26.4922mm 
+L2         0.0724mm     23.1467mm    TopLayer    90       0.0724mm   23.1467mm 0.0724mm  24.4746mm 
 LED1       9.5105mm     16.0918mm    TopLayer    270      9.5105mm   16.0918mm 9.5105mm  16.5668mm 
 LED2       4.4945mm     17.0000mm    TopLayer    270      4.4945mm   17.0000mm 4.4945mm  17.4750mm 
 LED3       -0.4971mm    16.0918mm    TopLayer    270      -0.4971mm  16.0918mm -0.4971mm 16.5668mm 
@@ -43,9 +43,9 @@ P7         -2.8884mm    29.2034mm    BottomLayer 180      -6.2586mm  27.0056mm -
 P8         -1.3900mm    29.2086mm    BottomLayer 180      -1.3900mm  29.2086mm -1.3900mm 29.2086mm 
 Q1         10.8156mm    22.6031mm    BottomLayer 270      10.8156mm  22.6031mm 11.8156mm 23.5531mm 
 Q2         2.9718mm     13.3350mm    BottomLayer 0        2.9718mm   13.3350mm 2.4718mm  13.9800mm 
-Q3         -4.6848mm    25.5270mm    BottomLayer 270      -4.6848mm  25.5270mm -4.0398mm 26.0270mm 
+Q3         -4.6848mm    25.6032mm    BottomLayer 270      -4.6848mm  25.6032mm -4.0398mm 26.1032mm 
 Q4         -2.4063mm    25.5270mm    BottomLayer 270      -2.4063mm  25.5270mm -1.7613mm 26.0270mm 
-Q5         -0.7620mm    28.2194mm    TopLayer    180      -0.7620mm  28.2194mm 0.1880mm  29.2194mm 
+Q5         -0.3556mm    28.2194mm    TopLayer    180      -0.3556mm  28.2194mm 0.5944mm  29.2194mm 
 Q6         -8.8402mm    33.3786mm    TopLayer    180      -8.8402mm  33.3786mm -8.3402mm 34.0236mm 
 R1         -0.9821mm    25.6143mm    BottomLayer 90       -0.9821mm  25.6143mm -0.9821mm 25.3393mm 
 R2         -5.4573mm    25.2796mm    TopLayer    0        -5.4573mm  25.2796mm -5.7323mm 25.2796mm 
@@ -76,12 +76,12 @@ R26        0.6564mm     30.6068mm    TopLayer    180      0.6564mm   30.6068mm 1
 R27        -7.2011mm    33.5280mm    TopLayer    270      -7.2011mm  33.5280mm -7.2011mm 33.9979mm 
 R28        -7.2011mm    31.6186mm    TopLayer    90       -7.2011mm  31.6186mm -7.2011mm 31.1487mm 
 R30        18.5011mm    33.8910mm    BottomLayer 0        18.5011mm  33.8910mm 18.0312mm 33.8910mm 
-SB1        -5.3256mm    27.0968mm    BottomLayer 180      -5.3256mm  27.0968mm -4.8557mm 27.0968mm 
+SB1        -5.3256mm    27.1730mm    BottomLayer 180      -5.3256mm  27.1730mm -4.8557mm 27.1730mm 
 SW1        4.4899mm     8.9990mm     TopLayer    180      4.4899mm   8.9990mm  7.4899mm  7.1490mm  
 U2         4.1402mm     10.5410mm    BottomLayer 180      4.1402mm   10.5410mm 5.4402mm  11.5160mm 
 U3         -0.5801mm    22.6314mm    BottomLayer 0        -0.5801mm  22.6314mm -1.9801mm 21.8314mm 
 U4         10.6051mm    23.7238mm    TopLayer    0        10.6051mm  23.7238mm 9.5051mm  24.3738mm 
 U5         12.8220mm    27.7860mm    BottomLayer 180      12.8220mm  27.7860mm 13.8120mm 28.5360mm 
-U6         -3.0736mm    22.6467mm    TopLayer    180      -3.0736mm  22.6467mm -1.9161mm 21.6467mm 
+U6         -3.5236mm    22.6467mm    TopLayer    180      -3.5236mm  22.6467mm -2.3661mm 21.6467mm 
 U7         9.8552mm     11.0744mm    BottomLayer 90       9.8552mm   11.0744mm 10.4902mm 7.9494mm  
 U8         15.3356mm    32.9410mm    BottomLayer 180      15.3356mm  32.9410mm 16.6456mm 33.8910mm 

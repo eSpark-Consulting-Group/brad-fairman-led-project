@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------------------
-Gerber File Extension Report For: PCB_Button_Board_v2.4.GBR   12/11/2024  3:12:36 pm
+Gerber File Extension Report For: PCB_Control_Board_v2.4.GBR   18/11/2024  3:53:47 pm
 ------------------------------------------------------------------------------------------
 
 
@@ -16,7 +16,6 @@ Layer Extension     Layer Description
 .GBS                Bottom Solder                           
 .GBP                Bottom Paste                            
 .GBO                Bottom Overlay                          
-.GM1                Dimensions                              
 .GM2                Board Shape                             
 .GM4                Top Courtyard                           
 .GM5                Top Assembly                            

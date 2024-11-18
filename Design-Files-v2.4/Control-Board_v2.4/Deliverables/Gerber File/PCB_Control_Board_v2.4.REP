@@ -1,9 +1,9 @@
 *************************************************************
-FileName = PCB_Button_Board_v2.4.GBR
+FileName = PCB_Control_Board_v2.4.GBR
 AutoAperture = True
 *************************************************************
 Generating : Bottom Component Center
-      File : PCB_Button_Board_v2.4.GM24
+      File : PCB_Control_Board_v2.4.GM24
 
     Adding Layer      : Bottom Component Center
 
@@ -13,7 +13,7 @@ Used DCodes :
 
 *************************************************************
 Generating : Bottom Courtyard
-      File : PCB_Button_Board_v2.4.GM21
+      File : PCB_Control_Board_v2.4.GM21
 
     Adding Layer      : Bottom Courtyard
 
@@ -23,7 +23,7 @@ Used DCodes :
 
 *************************************************************
 Generating : Bottom Assembly
-      File : PCB_Button_Board_v2.4.GM20
+      File : PCB_Control_Board_v2.4.GM20
 
     Adding Layer      : Bottom Assembly
 
@@ -33,7 +33,7 @@ Used DCodes :
 
 *************************************************************
 Generating : Top Component Center
-      File : PCB_Button_Board_v2.4.GM16
+      File : PCB_Control_Board_v2.4.GM16
 
     Adding Layer      : Top Component Center
 
@@ -43,7 +43,7 @@ Used DCodes :
 
 *************************************************************
 Generating : Mechanical 15
-      File : PCB_Button_Board_v2.4.GM15
+      File : PCB_Control_Board_v2.4.GM15
 
     Adding Layer      : Mechanical 15
 
@@ -53,18 +53,18 @@ Used DCodes :
 
 *************************************************************
 Generating : Mechanical 13
-      File : PCB_Button_Board_v2.4.GM13
+      File : PCB_Control_Board_v2.4.GM13
 
     Adding Layer      : Mechanical 13
 
 
 Used DCodes :
-    D12
+    D11
 *************************************************************
 
 *************************************************************
 Generating : Top Assembly
-      File : PCB_Button_Board_v2.4.GM5
+      File : PCB_Control_Board_v2.4.GM5
 
     Adding Layer      : Top Assembly
 
@@ -74,7 +74,7 @@ Used DCodes :
 
 *************************************************************
 Generating : Top Courtyard
-      File : PCB_Button_Board_v2.4.GM4
+      File : PCB_Control_Board_v2.4.GM4
 
     Adding Layer      : Top Courtyard
 
@@ -84,35 +84,19 @@ Used DCodes :
 
 *************************************************************
 Generating : Board Shape
-      File : PCB_Button_Board_v2.4.GM2
+      File : PCB_Control_Board_v2.4.GM2
 
     Adding Layer      : Board Shape
 
 
 Used DCodes :
     D10
-    D12
-*************************************************************
-
-*************************************************************
-Generating : Dimensions
-      File : PCB_Button_Board_v2.4.GM1
-
-    Adding Layer      : Dimensions
-
-
-Used DCodes :
-    D12
-    D14
-    D59
-    D155
-    D156
-    D157
+    D11
 *************************************************************
 
 *************************************************************
 Generating : Keep-Out Layer
-      File : PCB_Button_Board_v2.4.GKO
+      File : PCB_Control_Board_v2.4.GKO
 
     Adding Layer      : Keep-Out Layer
 
@@ -122,20 +106,20 @@ Used DCodes :
 
 *************************************************************
 Generating : Bottom Overlay
-      File : PCB_Button_Board_v2.4.GBO
+      File : PCB_Control_Board_v2.4.GBO
 
     Adding Layer      : Bottom Overlay
 
 
 Used DCodes :
     D10
-    D11
-    D14
+    D12
+    D13
 *************************************************************
 
 *************************************************************
 Generating : Bottom Paste
-      File : PCB_Button_Board_v2.4.GBP
+      File : PCB_Control_Board_v2.4.GBP
 
     Adding Layer      : Bottom Paste
 
@@ -145,12 +129,10 @@ Generating : Bottom Paste
 
 
 Used DCodes :
-    D21
-    D22
-    D23
-    D24
-    D86
-    D87
+    D26
+    D28
+    D29
+    D30
     D88
     D89
     D90
@@ -163,11 +145,14 @@ Used DCodes :
     D97
     D98
     D99
+    D100
+    D101
+    D102
 *************************************************************
 
 *************************************************************
 Generating : Bottom Solder
-      File : PCB_Button_Board_v2.4.GBS
+      File : PCB_Control_Board_v2.4.GBS
 
     Adding Layer      : Bottom Solder
 
@@ -177,15 +162,12 @@ Generating : Bottom Solder
 
 
 Used DCodes :
-    D39
-    D40
-    D41
-    D42
-    D43
-    D45
-    D141
-    D142
-    D143
+    D44
+    D46
+    D47
+    D48
+    D49
+    D51
     D144
     D145
     D146
@@ -197,11 +179,15 @@ Used DCodes :
     D152
     D153
     D154
+    D155
+    D156
+    D157
+    D158
 *************************************************************
 
 *************************************************************
 Generating : Top Solder
-      File : PCB_Button_Board_v2.4.GTS
+      File : PCB_Control_Board_v2.4.GTS
 
     Adding Layer      : Top Solder
 
@@ -211,7 +197,6 @@ Generating : Top Solder
 
 
 Used DCodes :
-    D39
     D40
     D41
     D42
@@ -231,11 +216,12 @@ Used DCodes :
     D56
     D57
     D58
+    D59
 *************************************************************
 
 *************************************************************
 Generating : Top Paste
-      File : PCB_Button_Board_v2.4.GTP
+      File : PCB_Control_Board_v2.4.GTP
 
     Adding Layer      : Top Paste
 
@@ -245,7 +231,6 @@ Generating : Top Paste
 
 
 Used DCodes :
-    D21
     D22
     D23
     D24
@@ -263,11 +248,12 @@ Used DCodes :
     D36
     D37
     D38
+    D39
 *************************************************************
 
 *************************************************************
 Generating : Top Overlay
-      File : PCB_Button_Board_v2.4.GTO
+      File : PCB_Control_Board_v2.4.GTO
 
     Adding Layer      : Top Overlay
 
@@ -284,11 +270,12 @@ Used DCodes :
     D18
     D19
     D20
+    D21
 *************************************************************
 
 *************************************************************
 Generating : Top Pad Master
-      File : PCB_Button_Board_v2.4.GPT
+      File : PCB_Control_Board_v2.4.GPT
 
     Adding Layer      : Top Layer
 
@@ -296,7 +283,6 @@ Generating : Top Pad Master
 
 
 Used DCodes :
-    D21
     D22
     D23
     D24
@@ -314,11 +300,12 @@ Used DCodes :
     D36
     D37
     D38
+    D39
 *************************************************************
 
 *************************************************************
 Generating : Bottom Pad Master
-      File : PCB_Button_Board_v2.4.GPB
+      File : PCB_Control_Board_v2.4.GPB
 
     Adding Layer      : Bottom Layer
 
@@ -326,12 +313,10 @@ Generating : Bottom Pad Master
 
 
 Used DCodes :
-    D21
-    D22
-    D23
-    D24
-    D86
-    D87
+    D26
+    D28
+    D29
+    D30
     D88
     D89
     D90
@@ -344,11 +329,14 @@ Used DCodes :
     D97
     D98
     D99
+    D100
+    D101
+    D102
 *************************************************************
 
 *************************************************************
 Generating : Bottom Layer
-      File : PCB_Button_Board_v2.4.GBL
+      File : PCB_Control_Board_v2.4.GBL
 
     Adding Layer      : Bottom Layer
 
@@ -356,16 +344,14 @@ Generating : Bottom Layer
 
 
 Used DCodes :
-    D12
-    D21
-    D22
-    D23
-    D24
-    D59
+    D11
+    D26
+    D28
+    D29
+    D30
     D60
-    D61
-    D84
-    D85
+    D62
+    D63
     D86
     D87
     D88
@@ -421,11 +407,14 @@ Used DCodes :
     D138
     D139
     D140
+    D141
+    D142
+    D143
 *************************************************************
 
 *************************************************************
 Generating : POWER
-      File : PCB_Button_Board_v2.4.G2
+      File : PCB_Control_Board_v2.4.G2
 
     Adding Layer      : POWER
 
@@ -433,14 +422,14 @@ Generating : POWER
 
 
 Used DCodes :
-    D12
-    D84
-    D85
+    D11
+    D86
+    D87
 *************************************************************
 
 *************************************************************
 Generating : GND
-      File : PCB_Button_Board_v2.4.G1
+      File : PCB_Control_Board_v2.4.G1
 
     Adding Layer      : GND
 
@@ -448,15 +437,15 @@ Generating : GND
 
 
 Used DCodes :
-    D12
+    D11
     D60
-    D84
-    D85
+    D86
+    D87
 *************************************************************
 
 *************************************************************
 Generating : Top Layer
-      File : PCB_Button_Board_v2.4.GTL
+      File : PCB_Control_Board_v2.4.GTL
 
     Adding Layer      : Top Layer
 
@@ -464,7 +453,6 @@ Generating : Top Layer
 
 
 Used DCodes :
-    D21
     D22
     D23
     D24
@@ -482,7 +470,7 @@ Used DCodes :
     D36
     D37
     D38
-    D59
+    D39
     D60
     D61
     D62
@@ -509,11 +497,13 @@ Used DCodes :
     D83
     D84
     D85
+    D86
+    D87
 *************************************************************
 
 *************************************************************
 Generating : Drill Drawing
-      File : PCB_Button_Board_v2.4.GD1
+      File : PCB_Control_Board_v2.4.GD1
 
     Adding Drill Pair : Top Layer-Bottom Layer
 
@@ -521,15 +511,15 @@ Generating : Drill Drawing
 
 
 Used DCodes :
-    D12
-    D59
-    D158
+    D11
+    D62
     D159
+    D160
 *************************************************************
 
 *************************************************************
 Generating : Drill Guide
-      File : PCB_Button_Board_v2.4.GG1
+      File : PCB_Control_Board_v2.4.GG1
 
     Adding Drill Pair : Top Layer-Bottom Layer
 
@@ -537,15 +527,15 @@ Generating : Drill Guide
 
 
 Used DCodes :
-    D158
+    D159
 *************************************************************
 
 *************************************************************
 Generating : Profile
-      File : PCB_Button_Board_v2.4.GM
+      File : PCB_Control_Board_v2.4.GM
 
 
 Used DCodes :
-    D160
+    D161
 *************************************************************
 

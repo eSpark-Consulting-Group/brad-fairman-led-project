@@ -2,15 +2,15 @@
 Version=1.0
 
 [PublishSettings]
-OutputFilePath2=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\.PDF
+OutputFilePath2=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\.PDF
 ReleaseManaged2=0
-OutputBasePath2=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\
+OutputBasePath2=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\
 OutputPathMedia2=
 OutputPathMediaValue2=
 OutputPathOutputer2=[Output Type]
 OutputPathOutputerPrefix2=
 OutputPathOutputerValue2=
-OutputFileName2=Button-Board_v2.4.pdf
+OutputFileName2=Control-Board_v2.4.pdf
 OutputFileNameMulti2=
 UseOutputNameForMulti2=1
 OutputFileNameSpecial2=
@@ -81,7 +81,7 @@ WmvVideoCodecName4=Windows Media Video V7
 WmvQuality4=80
 
 [GeneratedFilesSettings]
-RelativeOutputPath2=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\.PDF
+RelativeOutputPath2=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\.PDF
 OpenOutputs2=1
 RelativeOutputPath3=
 OpenOutputs3=1
@@ -132,7 +132,7 @@ Configuration1_Item1=Record=SchPrintView|ShowNoERC=True|ShowParamSet=True|ShowPr
 OutputType2=PCB Print
 OutputName2=PCB Prints
 OutputCategory2=Documentation
-OutputDocumentPath2=PCB_Button_Board_v2.4.PcbDoc
+OutputDocumentPath2=PCB_Control_Board_v2.4.PcbDoc
 OutputVariantName2=
 OutputEnabled2=1
 OutputEnabled2_OutputMedium1=0
@@ -142,26 +142,26 @@ OutputEnabled2_OutputMedium4=0
 OutputDefault2=0
 PageOptions2=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.73|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
 Configuration2_Name1=OutputConfigurationParameter1
-Configuration2_Item1=DesignatorDisplayMode=Physical|PrintArea=DesignExtent|PrintAreaLowerLeftCornerX=0|PrintAreaLowerLeftCornerY=0|PrintAreaUpperRightCornerX=0|PrintAreaUpperRightCornerY=0|Record=PcbPrintView|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item1=DesignatorDisplayMode=Physical|PrintArea=DesignExtent|PrintAreaLowerLeftCornerX=0|PrintAreaLowerLeftCornerY=0|PrintAreaUpperRightCornerX=0|PrintAreaUpperRightCornerY=0|Record=PcbPrintView|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name2=OutputConfigurationParameter2
-Configuration2_Item2=IncludeBoardCutouts=False|IncludeBottomLayerComponents=True|IncludeMultiLayerComponents=True|IncludeTopLayerComponents=True|IncludeViewports=True|Index=0|Mirror=False|Name=Multilayer Composite Print|PadNumberFontSize=14|Record=PcbPrintOut|ShowHoles=False|ShowPadNets=False|ShowPadNumbers=False|SubstituteFonts=False|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item2=IncludeBoardCutouts=False|IncludeBottomLayerComponents=True|IncludeMultiLayerComponents=True|IncludeTopLayerComponents=True|IncludeViewports=True|Index=0|Mirror=False|Name=Multilayer Composite Print|PadNumberFontSize=14|Record=PcbPrintOut|ShowHoles=False|ShowPadNets=False|ShowPadNumbers=False|SubstituteFonts=False|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name3=OutputConfigurationParameter3
-Configuration2_Item3=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=TopOverlay|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item3=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=TopOverlay|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name4=OutputConfigurationParameter4
-Configuration2_Item4=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=TopLayer|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item4=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=TopLayer|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name5=OutputConfigurationParameter5
-Configuration2_Item5=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=BottomLayer|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item5=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=BottomLayer|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name6=OutputConfigurationParameter6
-Configuration2_Item6=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=MultiLayer|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item6=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=MultiLayer|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name7=OutputConfigurationParameter7
-Configuration2_Item7=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=BottomOverlay|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item7=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=BottomOverlay|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name8=OutputConfigurationParameter8
-Configuration2_Item8=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical1|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item8=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical1|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name9=OutputConfigurationParameter9
-Configuration2_Item9=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical2|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item9=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical2|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name10=OutputConfigurationParameter10
-Configuration2_Item10=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical13|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item10=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical13|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 Configuration2_Name11=OutputConfigurationParameter11
-Configuration2_Item11=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical15|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files\Button-Board_v2.4\Design File\PCB_Button_Board_v2.4.PcbDoc
+Configuration2_Item11=CArc=Full|CFill=Full|Comment=Full|Coordinate=Full|CPad=Full|CRegion=Full|CText=Full|CTrack=Full|CVia=Full|Designator=Full|Dimension=Full|DLayer1=TopLayer|DLayer2=BottomLayer|DrillType=Regular|FArc=Full|FFill=Full|FPad=Full|FRegion=Full|FText=Full|FTrack=Full|FVia=Full|Layer=Mechanical15|Polygon=Full|PrintOutIndex=0|Record=PcbPrintLayer|DocumentPath=C:\Users\eSpark Cons Group\Documents\GitHub\Melih-SoundSensor\bradfairman-ledproject\Design-Files-v2.4\Control-Board_v2.4\PCB_Control_Board_v2.4.PcbDoc
 PcbPrintPreferences2=
 
