@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------------------
-Gerber File Extension Report For: PCB_LED_Board_v2.1.GBR   12/09/2024  8:49:45 pm
+Gerber File Extension Report For: PCB_LED_Board_v2.1.GBR   22/11/2024  6:58:32 pm
 ------------------------------------------------------------------------------------------
 
 
@@ -10,7 +10,6 @@ Layer Extension     Layer Description
 .GTP                Top Paste                               
 .GTS                Board Layer Stack Top Solder            
 .GTL                Aluminium                               
-.G1                 Dielectric                              
 .GBL                Copper Layer                            
 .GBS                Board Layer Stack Bottom Solder         
 .GBP                Bottom Paste                            
@@ -21,5 +20,7 @@ Layer Extension     Layer Description
 .GKO                Keep-Out Layer                          
 .GPT                Top Pad Master                          
 .GPB                Bottom Pad Master                       
+.GD1                Drill Drawing                           
+.GG1                Drill Guide                             
 .GM                 Profile                                 
 ------------------------------------------------------------------------------------------

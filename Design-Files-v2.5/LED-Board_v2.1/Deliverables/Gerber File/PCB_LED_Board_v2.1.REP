@@ -2,18 +2,15 @@
 FileName = PCB_LED_Board_v2.1.GBR
 AutoAperture = True
 *************************************************************
-Generating : Bottom Pad Master
-      File : PCB_LED_Board_v2.1.GPB
+Generating : Fabrication info
+      File : PCB_LED_Board_v2.1.GM13
 
-    Adding Layer      : Copper Layer
-
-    Adding Layer      : Multi-Layer
+    Adding Layer      : Fabrication info
 
 
 Used DCodes :
-    D10
-    D11
-    D12
+    D15
+    D16
 *************************************************************
 
 *************************************************************
@@ -27,20 +24,42 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Fabrication info
-      File : PCB_LED_Board_v2.1.GM13
+Generating : Board Shape
+      File : PCB_LED_Board_v2.1.GM2
 
-    Adding Layer      : Fabrication info
+    Adding Layer      : Board Shape
 
 
 Used DCodes :
-    D15
-    D16
+    D14
 *************************************************************
 
 *************************************************************
-Generating : Copper Layer
-      File : PCB_LED_Board_v2.1.GBL
+Generating : Keep-Out Layer
+      File : PCB_LED_Board_v2.1.GKO
+
+    Adding Layer      : Keep-Out Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Board Layer Stack Bottom Overlay
+      File : PCB_LED_Board_v2.1.GBO
+
+    Adding Layer      : Board Layer Stack Bottom Overlay
+
+
+Used DCodes :
+    D14
+*************************************************************
+
+*************************************************************
+Generating : Bottom Paste
+      File : PCB_LED_Board_v2.1.GBP
+
+    Adding Layer      : Bottom Paste
 
     Adding Layer      : Copper Layer
 
@@ -71,31 +90,73 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Keep-Out Layer
-      File : PCB_LED_Board_v2.1.GKO
+Generating : Board Layer Stack Top Solder
+      File : PCB_LED_Board_v2.1.GTS
 
-    Adding Layer      : Keep-Out Layer
+    Adding Layer      : Board Layer Stack Top Solder
+
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Top Paste
+      File : PCB_LED_Board_v2.1.GTP
+
+    Adding Layer      : Top Paste
+
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
 
 
 Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Board Shape
-      File : PCB_LED_Board_v2.1.GM2
+Generating : Top Overlay
+      File : PCB_LED_Board_v2.1.GTO
 
-    Adding Layer      : Board Shape
+    Adding Layer      : Top Overlay
 
 
 Used DCodes :
-    D14
 *************************************************************
 
 *************************************************************
-Generating : Bottom Paste
-      File : PCB_LED_Board_v2.1.GBP
+Generating : Top Pad Master
+      File : PCB_LED_Board_v2.1.GPT
 
-    Adding Layer      : Bottom Paste
+    Adding Layer      : Aluminium
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Pad Master
+      File : PCB_LED_Board_v2.1.GPB
+
+    Adding Layer      : Copper Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+*************************************************************
+
+*************************************************************
+Generating : Copper Layer
+      File : PCB_LED_Board_v2.1.GBL
 
     Adding Layer      : Copper Layer
 
@@ -121,73 +182,24 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Top Paste
-      File : PCB_LED_Board_v2.1.GTP
+Generating : Drill Drawing
+      File : PCB_LED_Board_v2.1.GD1
 
-    Adding Layer      : Top Paste
+    Adding Drill Pair : Aluminium-Copper Layer
 
-    Adding Layer      : Aluminium
-
-    Adding Layer      : Multi-Layer
+    Adding Layer      : Drill Drawing
 
 
 Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Top Pad Master
-      File : PCB_LED_Board_v2.1.GPT
+Generating : Drill Guide
+      File : PCB_LED_Board_v2.1.GG1
 
-    Adding Layer      : Aluminium
+    Adding Drill Pair : Aluminium-Copper Layer
 
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-*************************************************************
-
-*************************************************************
-Generating : Top Overlay
-      File : PCB_LED_Board_v2.1.GTO
-
-    Adding Layer      : Top Overlay
-
-
-Used DCodes :
-*************************************************************
-
-*************************************************************
-Generating : Board Layer Stack Top Solder
-      File : PCB_LED_Board_v2.1.GTS
-
-    Adding Layer      : Board Layer Stack Top Solder
-
-    Adding Layer      : Aluminium
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-*************************************************************
-
-*************************************************************
-Generating : Board Layer Stack Bottom Overlay
-      File : PCB_LED_Board_v2.1.GBO
-
-    Adding Layer      : Board Layer Stack Bottom Overlay
-
-
-Used DCodes :
-    D14
-*************************************************************
-
-*************************************************************
-Generating : Dielectric
-      File : PCB_LED_Board_v2.1.G1
-
-    Adding Layer      : Dielectric
-
-    Adding Layer      : Multi-Layer
+    Adding Layer      : Drill Guide
 
 
 Used DCodes :
