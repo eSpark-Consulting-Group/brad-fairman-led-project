@@ -32,16 +32,20 @@
 
 #include "tcb0.h"
 // #include <avr/io.h>
+static long map(long x, long in_min, long in_max, long out_min, long out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+#define DEFAULT_PERIOD_VALUE 0xFF
 
 const struct TMR_INTERFACE TCB0_Interface = {
     .Initialize = TCB0_Initialize,
     .Start = TCB0_Start,
     .Stop = TCB0_Stop,
     .PeriodCountSet = TCB0_Write,
-    .TimeoutCallbackRegister = TCB0_CaptureCallbackRegister,
-    .CompareCallbackRegister = NULL,
-    .CompareRegisterSet = NULL,
-    .Tasks = NULL
+    .TimeoutCallbackRegister = NULL,
+    .Tasks = NULL,
+    .setDuty = setDutyCycleTCB
 };
 
 void (*TCB0_OVF_isr_cb)(void) = NULL;
@@ -50,7 +54,6 @@ void TCB0_CaptureCallbackRegister(TCB0_cb_t cb)
 {
 	TCB0_CAPT_isr_cb = cb;
 }
-
 
 ISR(TCB0_INT_vect)
 {
@@ -72,16 +75,30 @@ ISR(TCB0_INT_vect)
 
 }
 
+void setDutyCycleTCB(uint16_t duty)
+{
+  // uint16_t cmp_register = TCB0.CCMP;
+  // uint16_t low_byte = map(duty, 0, 100, 0, DEFAULT_PERIOD_VALUE);
+  // cmp_register |= (low_byte & 0X00FF);
+  // TCB0.CCMP = cmp_register;
+  TCB0.CCMPH = map(duty, 0, 100, 0, DEFAULT_PERIOD_VALUE);
+}
+
 void TCB0_Initialize(void)
 {
-    // CCMP 3333; 
-    TCB0.CCMP = (F_CPU / 1000);//0xD05;
+    // CCMP 3333;
+    // TCB0.CCMP = (F_CPU / 1000);//0xD05;
+    TCB0.CCMPL = DEFAULT_PERIOD_VALUE;//(F_CPU / 1000);            // Period control
+    setDutyCycleTCB(50);
+    // PORTC.DIRSET |= PIN0_bm; // Set PC0 as output
+    PORTMUX.CTRLD |= 0x01;//PORTMUX_TCB0_bm;       // enable alternate pin for TCB0 WC0
 
     // CNT undefined; 
     TCB0.CNT = 0x0;
 
-    //ASYNC disabled; CCMPEN disabled; CCMPINIT disabled; CNTMODE INT; 
-    TCB0.CTRLB = 0x0;
+    //ASYNC disabled; CCMPEN enabled; CCMPINIT disabled; CNTMODE INT; 8bit PWM mode; 
+    // TCB0.CTRLB = 0x0;
+    TCB0.CTRLB = 0x10 | TCB_CNTMODE_PWM8_gc;
     
     //DBGRUN enabled; 
     TCB0.DBGCTRL = 0x1;

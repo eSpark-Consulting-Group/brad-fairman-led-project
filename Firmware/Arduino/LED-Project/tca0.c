@@ -35,17 +35,21 @@
 #include <avr/interrupt.h>
 // #include <avr/io.h>
 
+static long map(long x, long in_min, long in_max, long out_min, long out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+unsigned int Period = 0xFFFF;
+
 const struct TMR_INTERFACE TCA0_Interface = {
     .Initialize = TCA0_Initialize,
     .Start = TCA0_Start,
     .Stop = TCA0_Stop,
-    .PeriodCountSet = TCA0_Write,
+    .PeriodCountSet = setFrequency,//TCA0_Write,
     .TimeoutCallbackRegister = TCA0_OverflowCallbackRegister,
-    .CompareCallbackRegister = TCA0_Compare2CallbackRegister,
-    .CompareRegisterSet = TCA0_Compare2Set,
-    .Tasks = NULL
+    .Tasks = NULL,
+    .setDuty = TCA0_Compare2Set
 };
-
 void TCA0_DefaultCompare0CallbackRegister(void);
 void (*TCA0_CMP0_isr_cb)(void) = &TCA0_DefaultCompare0CallbackRegister;
 
@@ -98,7 +102,6 @@ void TCA0_Compare2CallbackRegister(TCA0_cb_t cb)
     TCA0_CMP2_isr_cb = cb;
 }
 
-
 ISR(TCA0_CMP2_vect)
 {
     if (TCA0_CMP2_isr_cb != NULL)
@@ -113,6 +116,25 @@ ISR(TCA0_OVF_vect)
         (*TCA0_OVF_isr_cb)();
     
     TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
+}
+
+void setFrequency(uint16_t freqInHz)
+{
+  unsigned long tempperiod = (F_CPU / freqInHz);
+  uint8_t presc = 0;
+  while (tempperiod > 65536 && presc < 7)
+  {
+    presc++;
+    tempperiod      = tempperiod >> (presc > 4 ? 2 : 1);
+  }
+  Period            = tempperiod;
+  TCA0.SINGLE.CTRLA = (presc << 1) | TCA_SINGLE_ENABLE_bm;
+  TCA0.SINGLE.PER   = Period;
+}
+
+void setDutyCycleTCA(uint8_t duty)
+{
+  TCA0.SINGLE.CMP2 = map(duty, 0, 100, 0, Period);
 }
 
 void TCA0_Initialize(void) {
@@ -175,12 +197,16 @@ void TCA0_Initialize(void) {
 
 void TCA0_Start(void)
 {
+    // Workaround; reenable PWM output on GPIO
+    TCA0.SINGLE.CTRLB = 0x43;
     TCA0.SINGLE.CTRLA|= TCA_SINGLE_ENABLE_bm;
 }
 
 void TCA0_Stop(void)
 {
     TCA0.SINGLE.CTRLA&= ~TCA_SINGLE_ENABLE_bm;
+    // Workaround; sometimes timer would not stop so we should disable PWM output on the attached GPIO
+    TCA0.SINGLE.CTRLB = 0x03;
 }
 
 void TCA0_Write(uint16_t timerVal)
@@ -315,7 +341,8 @@ void TCA0_Compare1Set(uint16_t value)
 void TCA0_Compare2Set(uint16_t value)
 {
     //Write value to CMP2 register
-    TCA0.SINGLE.CMP2=value;
+    TCA0.SINGLE.CMP2=map(value, 0, 100, 0, Period);
+    // TCA0.SINGLE.CMP2=value;
 }
 
 void TCA0_ModeSet(TCA_SINGLE_WGMODE_t mode)

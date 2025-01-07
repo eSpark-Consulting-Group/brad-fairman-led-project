@@ -38,10 +38,9 @@ const struct TMR_INTERFACE TCB1_Interface = {
     .Start = TCB1_Start,
     .Stop = TCB1_Stop,
     .PeriodCountSet = TCB1_Write,
-    .TimeoutCallbackRegister = TCB1_CaptureCallbackRegister,
-    .CompareCallbackRegister = NULL,
-    .CompareRegisterSet = NULL,
-    .Tasks = NULL
+    .TimeoutCallbackRegister = NULL,
+    .Tasks = NULL,
+    .setDuty = NULL
 };
 
 void (*TCB1_OVF_isr_cb)(void) = NULL;
