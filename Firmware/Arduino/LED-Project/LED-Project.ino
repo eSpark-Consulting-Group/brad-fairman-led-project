@@ -22,6 +22,7 @@
 
 #define DEBOUNCE_TIME     11
 #define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
+#define MODE_OFF_TIME     4000            // button press time to trigger MODE_OFF
 #define MODE_CHANGE_TIME  20              // button press time to trigger mode change
 #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
@@ -30,6 +31,7 @@
 #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
 #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
 #define EEPROM_COUNT_ADDRESS      (EEPROM.begin()+2)
+// #define EEPROM_DEVICE_STATE_ADDRESS   (EEPROM.begin()+3)
 #define EEPROM_MODE_REF_ADDRESS   (EEPROM.begin()+3)
 #define EEPROM_MODE_ADDRESS       (EEPROM.begin()+4)
 
@@ -81,9 +83,11 @@ volatile BATT_LVL_e chg_sequence = (BATT_LVL_e)5;
 
 volatile bool is_button_pressed = false;
 volatile bool is_usb_connected=false;
-volatile bool is_turned_on=false;
+volatile bool is_turned_on=true;
 volatile bool batt_lvl_acquire_flag=false;
 volatile bool mode_change_flag=false;
+volatile bool state_change_flag=false;
+volatile bool device_state_changed=false;
 
 bool is_device_wakeup=true;
 
@@ -184,7 +188,7 @@ void update_led(MODE_e mode)
             TCA0_Interface.setDuty(37);
             TCA0_Interface.Start();
             break;
-        case MODE_OFF:
+        default:
             TCA0_Interface.Stop();
             TCB0_Interface.Stop();
             TCA0_Interface.setDuty(0);
@@ -192,6 +196,22 @@ void update_led(MODE_e mode)
             break;
     }
 }
+
+// void switch_modes(uint8_t *mode, bool is_activity_change)
+// {
+//     uint8_t activity_bit = *mode & (1 << 7);
+//     uint8_t extracted_mode = *mode & 0x0F;
+
+//     // Rotate the mode bits to the left, and wrap around using modulo 16
+//     extracted_mode = (extracted_mode << 1) & 0x0F;
+//     if (extracted_mode == 0)
+//     {
+//         extracted_mode = MODE_1;
+//     }
+
+//     // Combine the new mode with the activity bit
+//     *mode = extracted_mode | activity_bit;
+// }
 
 void update_mode(MODE_e* mode)
 {
@@ -474,14 +494,17 @@ void eeprom_init()
   }
 
   EEPROM_Write_Count = EEPROM.read(EEPROM_COUNT_ADDRESS);
-  // EEPROM_Address = EEPROM_MODE_REF_ADDRESS;
   EEPROM_Mode_Addr = EEPROM.read(EEPROM_MODE_REF_ADDRESS);
 
+  // uint8_t eeprom_value = EEPROM.read(EEPROM_Mode_Addr);
+  // is_turned_on = (eeprom_value & 0x80) != 0;
+  // current_mode = (MODE_e)(eeprom_value & 0x0F);
   current_mode = (MODE_e)(EEPROM.read(EEPROM_Mode_Addr));
   if(current_mode > MODE_4)
   {
     current_mode = MODE_1;
     eeprom_mode_write(current_mode);
+    // eeprom_mode_write(current_mode | (is_turned_on ? 0x80 : 0x00));
   }
 }
 
@@ -551,6 +574,9 @@ void timers_init()
 
 void process_ButtonState()
 {
+  if(is_device_wakeup)
+    return;
+
   bool state = !digitalRead(BUTTON_PIN) ;
   if(state)   // button pressed
   {
@@ -567,6 +593,10 @@ void process_ButtonState()
       {
           batt_lvl_acquire_flag = true;
       }
+      if((button_pressed_time_val >= (MODE_OFF_TIME)) && !state_change_flag)
+      {
+          state_change_flag = true;
+      }
     }
   }
   else  // button released
@@ -580,6 +610,11 @@ void process_ButtonState()
       if((button_pressed_time_val >= (MODE_CHANGE_TIME)) && (button_pressed_time_val < FUEL_CHECK_TIME))
       {
           mode_change_flag = true;
+      }
+      if(state_change_flag)
+      {
+          state_change_flag = false;
+          device_state_changed = false;
       }
     }
   }
@@ -598,6 +633,12 @@ void setup()
 
   led_sequence_action(false);
 
+  if(!digitalRead(BATT_CHG_PIN))
+  {
+      is_usb_connected = true;
+      is_turned_on = false;
+  }
+
   // Enable global interrupts
   // sei();
 }
@@ -607,12 +648,26 @@ void loop()
   delay(DEBOUNCE_TIME);
   process_ButtonState();
 
-    if (is_device_wakeup && !is_usb_connected)
+    if(state_change_flag && !device_state_changed)
+    {
+      device_state_changed = true;
+      is_turned_on = !is_turned_on;
+      if(!is_turned_on)
+      {
+        update_led(MODE_OFF);
+      }
+      else
+      {
+        update_led(current_mode);
+      }
+    }
+
+    if (is_device_wakeup && (!is_usb_connected & is_turned_on))
     {
       update_mode(&current_mode);
     }
 
-    if(mode_change_flag && !is_usb_connected)            // if button pressed once change mode accordingly
+    if(mode_change_flag && is_turned_on)// && !is_usb_connected)            // if button pressed once change mode accordingly
     {
         current_mode = (MODE_e)(current_mode + 1);
         update_mode(&current_mode);
@@ -676,7 +731,7 @@ void loop()
   {
     if(!is_usb_connected)
     {
-      update_led(MODE_OFF);
+      // update_led(MODE_OFF);
       is_usb_connected = true;
     }
   }
@@ -686,7 +741,8 @@ void loop()
       led_sequence_action(0);
       // if(!is_turned_on)
       // {
-        digitalWrite(U_KILL_PIN, HIGH);
+      //   digitalWrite(U_KILL_PIN, HIGH);
       // }
+      is_device_wakeup = true;
   }
 }
