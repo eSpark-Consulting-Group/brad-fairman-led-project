@@ -48,7 +48,7 @@ const struct TMR_INTERFACE TCA0_Interface = {
     .PeriodCountSet = setFrequency,//TCA0_Write,
     .TimeoutCallbackRegister = TCA0_OverflowCallbackRegister,
     .Tasks = NULL,
-    .setDuty = TCA0_Compare2Set
+    .setDuty = setDutyCycleTCA
 };
 void TCA0_DefaultCompare0CallbackRegister(void);
 void (*TCA0_CMP0_isr_cb)(void) = &TCA0_DefaultCompare0CallbackRegister;
@@ -341,8 +341,7 @@ void TCA0_Compare1Set(uint16_t value)
 void TCA0_Compare2Set(uint16_t value)
 {
     //Write value to CMP2 register
-    TCA0.SINGLE.CMP2=map(value, 0, 100, 0, Period);
-    // TCA0.SINGLE.CMP2=value;
+    TCA0.SINGLE.CMP2=value;
 }
 
 void TCA0_ModeSet(TCA_SINGLE_WGMODE_t mode)

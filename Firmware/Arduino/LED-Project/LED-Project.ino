@@ -181,7 +181,7 @@ void update_led(MODE_e mode)
             TCA0_Interface.Start();
             break;
         case MODE_2:
-            TCA0_Interface.setDuty(18);
+            TCA0_Interface.setDuty(31);
             TCA0_Interface.Start();
             break;
         case MODE_3:
