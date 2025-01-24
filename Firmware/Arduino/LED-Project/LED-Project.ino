@@ -177,15 +177,15 @@ void update_led(MODE_e mode)
             TCB0_Interface.Start();
             break;
         case MODE_1:
-            TCA0_Interface.setDuty(6);
+            TCA0_Interface.setDuty(1);
             TCA0_Interface.Start();
             break;
         case MODE_2:
-            TCA0_Interface.setDuty(31);
+            TCA0_Interface.setDuty(20);
             TCA0_Interface.Start();
             break;
         case MODE_3:
-            TCA0_Interface.setDuty(37);
+            TCA0_Interface.setDuty(50);
             TCA0_Interface.Start();
             break;
         default:
@@ -447,7 +447,7 @@ void batt_fuel_ic_init()
     while(!lipo.begin())
     {    }
     lipo.quickStart();
-    lipo.setThreshold();
+    lipo.setThreshold(10);
     lipo.disableSOCAlert();
     lipo.setVALRTMin(BATTERY_LVL_MIN);
     // lipo.setVALRTMin(BATTERY_LVL_MIN-0.3f);
@@ -560,7 +560,7 @@ void timers_init()
   TCA0_Interface.Initialize();                 // Main WHITE Led PWM generating timer
   TCB0_Interface.Initialize();                 // Main RED Led PWM denerating timer
   TCB1_Interface.Initialize();                 // 1ms timer for Status LEDs sequence
-  TCA0_Interface.PeriodCountSet(1000);         // set PWM freq to 1KHz
+  TCA0_Interface.PeriodCountSet(50000);         // set PWM freq to 10KHz
 
   TCA0_Interface.Stop();
   TCB0_Interface.Stop();
@@ -682,8 +682,10 @@ void loop()
     {
         batt_lvl_acquire_flag = false;
         led_sequence_action(0);
-        float current_batt_lvl = lipo.getVoltage();
-        batt_lvl = batt_lvl_percent(&current_batt_lvl);
+        // float current_batt_lvl = lipo.getVoltage();
+        // batt_lvl = batt_lvl_percent(&current_batt_lvl);
+        float current_batt_lvl = lipo.getSOC();
+        batt_lvl = batt_soc_percent(&current_batt_lvl);
       // batt_lvl = LVL_20;
         led_sequence_action(1);
     }
@@ -692,8 +694,8 @@ void loop()
     {
       // led_sequence_action(0);
       // float current_batt_lvl = lipo.getVoltage();
-      float current_batt_lvl = lipo.getSOC();
       // float current_batt_lvl = 3.85f;
+      float current_batt_lvl = lipo.getSOC();
       batt_lvl = batt_soc_percent(&current_batt_lvl);
       // batt_lvl = LVL_20;
       if(batt_lvl!=0)
@@ -719,9 +721,9 @@ void loop()
   if(!digitalRead(GPOUT_PIN))            // check batt fuel guage alert pin state
   {
     lipo.clearAlert();
-    uint8_t status = lipo.getStatus();
-    float current_batt_lvl = lipo.getVoltage();
-    if(lipo.isVoltageLow() || lipo.isLow())
+    // float current_batt_lvl = lipo.getVoltage();
+    // if(lipo.isVoltageLow() || lipo.isLow())
+    if(lipo.isLow())
     {
         digitalWrite(U_KILL_PIN, HIGH);
     }
