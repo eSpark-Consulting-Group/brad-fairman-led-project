@@ -7,6 +7,8 @@
 #include "tcb1.h"
 #include <Arduino.h>
 
+// #define INDICATION_LEDS_BLINK_TWICE_ON_MCU_START
+
 #define STATUS_LED_75   PIN_PA1
 #define STATUS_LED_50   PIN_PA2
 #define STATUS_LED_25   PIN_PA4
@@ -22,7 +24,7 @@
 
 #define DEBOUNCE_TIME     11
 #define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
-#define MODE_OFF_TIME     4000            // button press time to trigger MODE_OFF
+#define MODE_OFF_TIME     5000            // button press time to trigger MODE_OFF
 #define MODE_CHANGE_TIME  20              // button press time to trigger mode change
 #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
@@ -392,12 +394,12 @@ void status_LED_handler()
   }
 }
 
-float mapValue(float *input)      // arduino map function does not allow decimal point values
+float mapValue(float& input)      // arduino map function does not allow decimal point values
 {
-    return ((*input - BATTERY_LVL_MIN) * (100.0 - 0.0)) / (BATTERY_LVL_MAX - BATTERY_LVL_MIN);
+    return ((input - BATTERY_LVL_MIN) * (100.0 - 0.0)) / (BATTERY_LVL_MAX - BATTERY_LVL_MIN);
 }
 
-BATT_LVL_e batt_lvl_percent(float *batt_voltage)
+BATT_LVL_e batt_lvl_percent(float& batt_voltage)
 {
     float soc = mapValue(batt_voltage);
 
@@ -419,9 +421,9 @@ BATT_LVL_e batt_lvl_percent(float *batt_voltage)
     }
     return LVL_MAX;
 }
-BATT_LVL_e batt_soc_percent(float *batt_soc)
+BATT_LVL_e batt_soc_percent(float& soc)
 {
-    float soc = *batt_soc;
+    // float soc = *batt_soc;
 
     if(soc<=20.0)
     {
@@ -540,6 +542,7 @@ void gpio_init()
   // set_sleep_mode(SLEEP_MODE_STANDBY);
 
   // Flash the status LEDs twice to indicate that the mcu is running setup
+#ifdef INDICATION_LEDS_BLINK_TWICE_ON_MCU_START
   for(int i=0; i<4; i++)
   {
     bool ledState = (i == 0 || i == 2) ? HIGH : LOW;
@@ -549,6 +552,9 @@ void gpio_init()
     }
     delay(150);
   }
+#else
+    delay(500);
+#endif
 
   Wire.pins(SDA, SCL);
   Wire.begin();
@@ -639,6 +645,12 @@ void setup()
       is_usb_connected = true;
       is_turned_on = false;
   }
+#ifndef INDICATION_LEDS_BLINK_TWICE_ON_MCU_START
+  else
+  {
+      batt_lvl_acquire_flag = true;
+  }
+#endif
 
   // Enable global interrupts
   // sei();
@@ -684,9 +696,9 @@ void loop()
         batt_lvl_acquire_flag = false;
         led_sequence_action(0);
         // float current_batt_lvl = lipo.getVoltage();
-        // batt_lvl = batt_lvl_percent(&current_batt_lvl);
+        // batt_lvl = batt_lvl_percent(current_batt_lvl);
         float current_batt_lvl = lipo.getSOC();
-        batt_lvl = batt_soc_percent(&current_batt_lvl);
+        batt_lvl = batt_soc_percent(current_batt_lvl);
       // batt_lvl = LVL_20;
         led_sequence_action(1);
     }
@@ -694,10 +706,11 @@ void loop()
     if(is_usb_connected)
     {
       // led_sequence_action(0);
-      // float current_batt_lvl = lipo.getVoltage();
       // float current_batt_lvl = 3.85f;
+      // float current_batt_lvl = lipo.getVoltage();
+      // batt_lvl = batt_lvl_percent(current_batt_lvl);
       float current_batt_lvl = lipo.getSOC();
-      batt_lvl = batt_soc_percent(&current_batt_lvl);
+      batt_lvl = batt_soc_percent(current_batt_lvl);
       // batt_lvl = LVL_20;
       if(batt_lvl!=0)
       {
@@ -726,6 +739,10 @@ void loop()
     // if(lipo.isVoltageLow() || lipo.isLow())
     if(lipo.isLow())
     {
+        float current_batt_lvl = lipo.getSOC();
+        batt_lvl = batt_soc_percent(current_batt_lvl);
+        led_sequence_action(1);
+        delay(3000);
         digitalWrite(U_KILL_PIN, HIGH);
     }
   }
