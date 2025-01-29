@@ -132,7 +132,7 @@ void setFrequency(uint16_t freqInHz)
   TCA0.SINGLE.PER   = Period;
 }
 
-void setDutyCycleTCA(uint8_t duty)
+void setDutyCycleTCA(uint16_t duty)
 {
   TCA0.SINGLE.CMP2 = map(duty, 0, 100, 0, Period);
 }

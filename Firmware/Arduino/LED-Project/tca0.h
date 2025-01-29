@@ -27,7 +27,7 @@ typedef uint16_t cmpx_register_value_t;
 
 extern const struct TMR_INTERFACE TCA0_Interface;
 
-void setDutyCycleTCA(uint8_t duty);
+void setDutyCycleTCA(uint16_t duty);
 void setFrequency(uint16_t freqInHz);
 
 /**

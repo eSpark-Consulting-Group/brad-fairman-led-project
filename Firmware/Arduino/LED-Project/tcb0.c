@@ -89,7 +89,7 @@ void TCB0_Initialize(void)
     // CCMP 3333;
     // TCB0.CCMP = (F_CPU / 1000);//0xD05;
     TCB0.CCMPL = DEFAULT_PERIOD_VALUE;//(F_CPU / 1000);            // Period control
-    setDutyCycleTCB(50);
+    setDutyCycleTCB(65);
     // PORTC.DIRSET |= PIN0_bm; // Set PC0 as output
     PORTMUX.CTRLD |= 0x01;//PORTMUX_TCB0_bm;       // enable alternate pin for TCB0 WC0
 

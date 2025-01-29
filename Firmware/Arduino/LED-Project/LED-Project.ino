@@ -177,15 +177,15 @@ void update_led(MODE_e mode)
             TCB0_Interface.Start();
             break;
         case MODE_1:
-            TCA0_Interface.setDuty(1);
+            TCA0_Interface.setDuty(2);
             TCA0_Interface.Start();
             break;
         case MODE_2:
-            TCA0_Interface.setDuty(20);
+            TCA0_Interface.setDuty(16);
             TCA0_Interface.Start();
             break;
         case MODE_3:
-            TCA0_Interface.setDuty(50);
+            TCA0_Interface.setDuty(35);
             TCA0_Interface.Start();
             break;
         default:
@@ -560,7 +560,8 @@ void timers_init()
   TCA0_Interface.Initialize();                 // Main WHITE Led PWM generating timer
   TCB0_Interface.Initialize();                 // Main RED Led PWM denerating timer
   TCB1_Interface.Initialize();                 // 1ms timer for Status LEDs sequence
-  TCA0_Interface.PeriodCountSet(50000);         // set PWM freq to 10KHz
+  TCA0_Interface.PeriodCountSet(50000);        // set PWM freq (5 - 100 KHz range)
+  // TCB0_Interface.setDuty(50);                  // set red led duty cycle   - For some reason, unable to modify dutyCycle outside of .Initialize()
 
   TCA0_Interface.Stop();
   TCB0_Interface.Stop();
@@ -700,7 +701,7 @@ void loop()
       // batt_lvl = LVL_20;
       if(batt_lvl!=0)
       {
-        batt_lvl = batt_lvl-1;
+        batt_lvl = (BATT_LVL_e)(batt_lvl-1);
       }
       if(batt_lvl != chg_sequence) {
         led_sequence_action(0);
