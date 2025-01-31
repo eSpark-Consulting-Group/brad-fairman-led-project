@@ -451,8 +451,9 @@ void batt_fuel_ic_init()
     lipo.quickStart();
     lipo.setThreshold(10);
     lipo.disableSOCAlert();
-    lipo.setVALRTMin(BATTERY_LVL_MIN);
-    // lipo.setVALRTMin(BATTERY_LVL_MIN-0.3f);
+    // lipo.setVALRTMin(BATTERY_LVL_MIN);
+    lipo.setVALRTMin(BATTERY_LVL_MIN-0.25f);     // ON/OFF controller operating range (2.6-26V) - LDO is turning off because ON/OFF controller shuts down
+                                                // we should execute shutdown sequence if Batt_Vdd reaches such low voltages
     lipo.setVALRTMax(BATTERY_LVL_MAX);
 }
 
@@ -736,8 +737,8 @@ void loop()
   {
     lipo.clearAlert();
     // float current_batt_lvl = lipo.getVoltage();
-    // if(lipo.isVoltageLow() || lipo.isLow())
-    if(lipo.isLow())
+    if(lipo.isVoltageLow() || lipo.isLow())
+    // if(lipo.isLow())
     {
         float current_batt_lvl = lipo.getSOC();
         batt_lvl = batt_soc_percent(current_batt_lvl);
