@@ -57,6 +57,9 @@ void TCB1_Stop(void);
  * @param None.
  * @return None.
  */
+
+bool TCB1_IsRunning(void);
+
 void TCB1_EnableCaptInterrupt(void);
 /**
  * @ingroup tcb1

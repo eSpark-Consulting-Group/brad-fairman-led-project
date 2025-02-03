@@ -29,6 +29,9 @@
 #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
 #define BATTERY_LVL_MAX   4.2f
+#define CUTOFF_VOLTAGE    2.7f
+#define LOW_SOC_THRESHOLD 20.0f
+#define CRITICAL_SOC_LVL  10.0f
 
 #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
 #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
@@ -90,6 +93,7 @@ volatile bool batt_lvl_acquire_flag=false;
 volatile bool mode_change_flag=false;
 volatile bool state_change_flag=false;
 volatile bool device_state_changed=false;
+volatile bool batt_low=false;
 
 bool is_device_wakeup=true;
 
@@ -295,17 +299,17 @@ void led_sequence_action(bool state)
         TCB1_Interface.PeriodCountSet(0);
         // TCB1_Write(0);
         timerB1_counter = 0;
-        if(!is_usb_connected)
-        {
-          led_control_dischg(batt_lvl, 0, 0);
-          led_control_dischg(batt_lvl, 0, 1);
-          led_control_dischg(batt_lvl, 0, 2);
-        }
-        else
+        if(is_usb_connected || batt_low)
         {
           led_control_chg(batt_lvl, 0, 0);
           led_control_chg(batt_lvl, 0, 1);
           led_control_chg(batt_lvl, 0, 2);
+        }
+        else
+        {
+          led_control_dischg(batt_lvl, 0, 0);
+          led_control_dischg(batt_lvl, 0, 1);
+          led_control_dischg(batt_lvl, 0, 2);
         }
         TCB1_Interface.Start();
         // TCB1_Start();
@@ -348,7 +352,23 @@ void status_LED_handler()
   timerB1_counter++;
   static int step_count = 0;
 
-  if(!is_usb_connected)
+  if(is_usb_connected || batt_low)
+  {
+    for( uint8_t i=0; i<3; i++ )
+    {
+        // int32_t timer_diff = timerB1_counter-LED[i].timer;
+        if(((timerB1_counter-LED[i].timer) > LED[i].time) && (LED[i].time != 0) )
+        {
+              led_control_chg(batt_lvl, ++LED[i].step, i);
+              status_LED_toggler(i, LED[i].state);
+        }
+        else if (LED[i].time == 0)
+        {
+            // led_control_chg(batt_lvl, ++LED[i].step, i);
+        }
+    }
+  }
+  else
   {
     for( uint8_t i=0; i<3; i++ )
     {
@@ -374,22 +394,6 @@ void status_LED_handler()
     {
         led_sequence_action(0);
         step_count = 0;
-    }
-  }
-  else
-  {
-    for( uint8_t i=0; i<3; i++ )
-    {
-        // int32_t timer_diff = timerB1_counter-LED[i].timer;
-        if(((timerB1_counter-LED[i].timer) > LED[i].time) && (LED[i].time != 0) )
-        {
-              led_control_chg(batt_lvl, ++LED[i].step, i);
-              status_LED_toggler(i, LED[i].state);
-        }
-        else if (LED[i].time == 0)
-        {
-            // led_control_chg(batt_lvl, ++LED[i].step, i);
-        }
     }
   }
 }
@@ -448,12 +452,17 @@ void batt_fuel_ic_init()
 {
     while(!lipo.begin())
     {    }
-    lipo.quickStart();
-    lipo.setThreshold(10);
-    lipo.disableSOCAlert();
-    // lipo.setVALRTMin(BATTERY_LVL_MIN);
-    lipo.setVALRTMin(BATTERY_LVL_MIN-0.25f);     // ON/OFF controller operating range (2.6-26V) - LDO is turning off because ON/OFF controller shuts down
-                                                // we should execute shutdown sequence if Batt_Vdd reaches such low voltages
+    if(lipo.isReset(true))
+    {
+      lipo.quickStart();
+    }
+    // lipo.disableSOCAlert();
+    lipo.disableAlert();                        // disable resetAlert
+    // lipo.enableAlert();                       // disable resetAlert
+    // lipo.setResetVoltage(CUTOFF_VOLTAGE);     // ON/OFF controller operating range (2.6-26V) - LDO is turning off because ON/OFF controller shuts down
+    //                                           // we should execute shutdown sequence if Batt_Vdd reaches such low voltages
+    lipo.setThreshold(LOW_SOC_THRESHOLD);
+    lipo.setVALRTMin(BATTERY_LVL_MIN-0.1f);
     lipo.setVALRTMax(BATTERY_LVL_MAX);
 }
 
@@ -735,16 +744,29 @@ void loop()
 
   if(!digitalRead(GPOUT_PIN))            // check batt fuel guage alert pin state
   {
-    lipo.clearAlert();
+    lipo.clearAlert();          // clear the ALRT pin
     // float current_batt_lvl = lipo.getVoltage();
-    if(lipo.isVoltageLow() || lipo.isLow())
-    // if(lipo.isLow())
+    // if(lipo.isVoltageLow(true))
+    if(lipo.isVoltageLow(true) || lipo.isLow(true))
     {
+        batt_low = true;
         float current_batt_lvl = lipo.getSOC();
         batt_lvl = batt_soc_percent(current_batt_lvl);
-        led_sequence_action(1);
-        delay(3000);
-        digitalWrite(U_KILL_PIN, HIGH);
+        if(!TCB1_IsRunning())
+        {
+            led_sequence_action(true);
+        }
+    }
+    if(lipo.isChange(true))
+    {
+        if((lipo.getSOC() < CRITICAL_SOC_LVL) || (lipo.getVoltage() < CUTOFF_VOLTAGE))
+        {
+            digitalWrite(U_KILL_PIN, HIGH);
+        }
+        else if((lipo.getSOC() >= LOW_SOC_THRESHOLD))
+        {
+            batt_low = false;
+        }
     }
   }
 
