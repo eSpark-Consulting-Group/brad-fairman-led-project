@@ -11,13 +11,14 @@ class Button
 {
     public:
         Button(uint8_t pin, unsigned long debounceTime)
-        : _pin(pin), _debounce_time(debounceTime), _last_debounce_time(0),// _state(BUTTON_ACTIVE_STATE), 
-          _button_press_time(0), _press_duration(RELEASED)//, _last_button_state(BUTTON_ACTIVE_STATE)
+        : _pin(pin), _debounce_time(debounceTime), _last_debounce_time(0),
+          _button_press_time(0), _press_duration(RELEASED),
+          _last_button_state(BUTTON_ACTIVE_STATE),  _state(BUTTON_ACTIVE_STATE)     // set these values as active to avoid false detection at startup since button would be in active state for few ms
         {
           pinMode(_pin, INPUT);
-          bool state = (BUTTON_ACTIVE_STATE == LOW) HIGH : LOW;
-          _state = state;
-          _last_button_state = state;
+          bool state = (BUTTON_ACTIVE_STATE == LOW) ? HIGH : LOW;
+          // _state = state;
+          // _last_button_state = state;
         }
 
         void update();
@@ -43,7 +44,7 @@ class Button
         uint64_t    _button_press_time;
         BUTTON_STATE_e _press_duration;
         
-        Observer* _observer;
+        Observer* _observer = NULL;
 };
 
 #endif

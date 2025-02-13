@@ -37,14 +37,14 @@ void Leds::updateState()
 {
     digitalWrite(_pin, _control.state);
     _control.step++;
-    _control.timer = millis();
+    _control.stateStartTime = millis();
 }
 
 //----------------------------------------------------------------------
 
-StatusManager* StatusLed::_instance = nullptr;
+StatusManager* StatusManager::_instance = nullptr;
 
-static StatusManager* StatusManager::getInstance()
+StatusManager* StatusManager::getInstance()
 {
     if (!_instance) {
         _instance = new StatusManager();

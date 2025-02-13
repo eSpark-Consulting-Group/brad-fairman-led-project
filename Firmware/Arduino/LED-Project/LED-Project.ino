@@ -24,7 +24,7 @@
 
 #define DEBOUNCE_TIME     11
 #define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
-#define MODE_OFF_TIME     5000            // button press time to trigger MODE_OFF
+#define MODE_OFF_TIME     4000            // button press time to trigger MODE_OFF
 #define MODE_CHANGE_TIME  20              // button press time to trigger mode change
 #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
@@ -350,7 +350,7 @@ void status_LED_toggler(int led_num, bool state)
 void status_LED_handler()
 {
   timerB1_counter++;
-  static int step_count = 0;
+  static uint8_t step_count = 0;
 
   if(is_usb_connected || batt_low)
   {
@@ -419,7 +419,7 @@ BATT_LVL_e batt_lvl_percent(float& batt_voltage)
     {
         return LVL_66;
     }
-    else if(soc<100.0)
+    else if(soc<95.0)
     {
         return LVL_100;
     }
@@ -441,17 +441,26 @@ BATT_LVL_e batt_soc_percent(float& soc)
     {
         return LVL_66;
     }
-    else if(soc<100.0)
+    else if(soc<95.0)
     {
         return LVL_100;
     }
     return LVL_MAX;
 }
 
+void shutdown()
+{
+    lipo.sleep();
+    digitalWrite(U_KILL_PIN, HIGH);
+}
+
 void batt_fuel_ic_init()
 {
     while(!lipo.begin())
-    {    }
+    {   
+        lipo.wake();  
+        lipo.enableComparator();
+    }
     if(lipo.isReset(true))
     {
       lipo.quickStart();
@@ -639,9 +648,9 @@ void process_ButtonState()
 void setup()
 {
   disableUnusedPeripherals();
+  gpio_init();
   eeprom_init();
 
-  gpio_init();
   timers_init();
 
   batt_fuel_ic_init();
@@ -685,7 +694,7 @@ void loop()
       }
     }
 
-    if (is_device_wakeup && (!is_usb_connected & is_turned_on))
+    if(is_device_wakeup && (!is_usb_connected & is_turned_on))
     {
       update_mode(&current_mode);
     }
@@ -709,6 +718,7 @@ void loop()
         // batt_lvl = batt_lvl_percent(current_batt_lvl);
         float current_batt_lvl = lipo.getSOC();
         batt_lvl = batt_soc_percent(current_batt_lvl);
+        batt_lvl = (batt_lvl > LVL_100) ? LVL_100 : batt_lvl;
       // batt_lvl = LVL_20;
         led_sequence_action(1);
     }
@@ -721,6 +731,7 @@ void loop()
       // batt_lvl = batt_lvl_percent(current_batt_lvl);
       float current_batt_lvl = lipo.getSOC();
       batt_lvl = batt_soc_percent(current_batt_lvl);
+      // batt_lvl = (batt_lvl > LVL_100) ? LVL_100 : batt_lvl;
       // batt_lvl = LVL_20;
       if(batt_lvl!=0)
       {
@@ -752,6 +763,7 @@ void loop()
         batt_low = true;
         float current_batt_lvl = lipo.getSOC();
         batt_lvl = batt_soc_percent(current_batt_lvl);
+        batt_lvl = (batt_lvl > LVL_100) ? LVL_100 : batt_lvl;
         if(!TCB1_IsRunning())
         {
             led_sequence_action(true);
@@ -761,7 +773,7 @@ void loop()
     {
         if((lipo.getSOC() < CRITICAL_SOC_LVL) || (lipo.getVoltage() < CUTOFF_VOLTAGE))
         {
-            digitalWrite(U_KILL_PIN, HIGH);
+            shutdown();
         }
         else if((lipo.getSOC() >= LOW_SOC_THRESHOLD))
         {
@@ -780,12 +792,22 @@ void loop()
   }
   else if(is_usb_connected)
   {
+    float cmpVal = 4.05;
+    float voltage = lipo.getVoltage();
+    if(voltage < cmpVal)
+    {
       is_usb_connected = false;
       led_sequence_action(0);
-      // if(!is_turned_on)
-      // {
-      //   digitalWrite(U_KILL_PIN, HIGH);
-      // }
       is_device_wakeup = true;
+    }
+    // if(!is_turned_on)
+    // {
+    //   digitalWrite(U_KILL_PIN, HIGH);
+    // }
+  }
+  
+  if(!digitalRead(U_INT_PIN))            // check if ON/OFF controller is triggerred, ACTIVE LOW
+  {
+      shutdown();
   }
 }

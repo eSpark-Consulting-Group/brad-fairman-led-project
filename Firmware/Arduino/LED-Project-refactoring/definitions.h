@@ -24,6 +24,8 @@
 #define DEBOUNCE_TIME           11U
 #define BATTERY_LVL_MIN         3.0f
 #define BATTERY_LVL_MAX         4.2f
+#define LOW_SOC_THRESHOLD       20.0f
+#define CRITICAL_SOC_LVL        10.0f
 
 typedef enum
 {
@@ -57,16 +59,21 @@ typedef enum
     ACTIVE = 1 << 1,
     STANDBY = 1 << 2,
     CHARGING = 1 << 3,
-    POWERED_OFF = 1 << 4,
-    UPDATING_EEPROM = 1 << 5,
+    DISCHARGING = 1 << 4,
+    POWERED_OFF = 1 << 5,
+    UPDATING_EEPROM = 1 << 6,
 }DEVICE_STATE_e;
 
 typedef enum
 {
     BUTTON_TRIGGERED = 1,
+    BATTERY_UPDATE,
+    DEVICE_STATUS_UPDATE,
     FUEL_GUAGE_ALRT_ASSERTED,
     BATT_CHARGE_ALRT_ASSERTED,
     SHUTDOWN_SEQUENCE_TRIGGERRED,
+    OUTPUT_LED_MODE_CHANGE_TRIGGERED,
+    STATUS_LED_HANDLER_TRIGGERED,
 }EVENTS_LIST_e;
 
 // Observer (Subscriber) interface 

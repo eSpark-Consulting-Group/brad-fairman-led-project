@@ -71,7 +71,7 @@ void setup()
   leds[0] = new Leds(STATUS_LED_25_PIN);
   leds[1] = new Leds(STATUS_LED_50_PIN);
   leds[2] = new Leds(STATUS_LED_75_PIN);
-  statusLedController = StatusLed::getInstance();
+  statusLedController = StatusManager::getInstance();
   battManager = new BattManager(&battMonitor, BATT_CHG_PIN, GPOUT_PIN, SDA_PIN, SCL_PIN);
   outputLedController = new OutputLed(RED_LED_CTRL_PIN, WHITE_LED_CTRL_PIN);
   timer = new Timer(statusLedController);
