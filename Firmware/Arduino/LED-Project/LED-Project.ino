@@ -24,7 +24,7 @@
 
 #define DEBOUNCE_TIME     11
 #define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
-#define MODE_OFF_TIME     5000            // button press time to trigger MODE_OFF
+#define MODE_OFF_TIME     4000            // button press time to trigger MODE_OFF
 #define MODE_CHANGE_TIME  20              // button press time to trigger mode change
 #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
@@ -32,6 +32,7 @@
 #define CUTOFF_VOLTAGE    2.7f
 #define LOW_SOC_THRESHOLD 20.0f
 #define CRITICAL_SOC_LVL  10.0f
+#define NO_STATUS_LEDS    3
 
 #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
 #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
@@ -68,13 +69,13 @@ typedef struct {
     uint32_t timer;         // when this sequence started
 }LED_STATE_t;
 
-LED_STATE_t LED[3];
+LED_STATE_t LED[NO_STATUS_LEDS];
 
-#define LED_BLINK_STEPS_DISCHG 3
+#define LED_BLINK_STEPS_DISCHG 6
 #define LED_BLINK_STEPS_CHG 2
-uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
-uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {3000,0,0}, {3000,0,0}};
-uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {0,0,0},    {3000,0,0}};
+uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{1000, 1000},     {3000,0}, {3000,0}, {3000,0}};
+uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {3000,0}, {3000,0}};
+uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {0,0},    {3000,0}};
 
 uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{1000, 1000}, {1000,1},      {1000,1},       {1000,1}};
 uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {1000,1000},   {1000,1},       {1000,1}};
@@ -264,26 +265,27 @@ void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 void led_control_dischg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 {
     LED[led].timer = timerB1_counter;
+    // LED[led].step = step%2;
     LED[led].step = step;
     LED[led].state = ((step+1) % 2);
     switch(led)
     {
         case 0:
-            LED[led].time = led1_dischg_sequence[lvl][step];
+            LED[led].time = led1_dischg_sequence[lvl][LED[led].step%2];
             if((step == 0) && (LED[led].time!=0))
             {
               status_LED_toggler(led, LED[led].state);
             }
             break;
         case 1:
-            LED[led].time = led2_dischg_sequence[lvl][step];
+            LED[led].time = led2_dischg_sequence[lvl][LED[led].step%2];
             if((step == 0) && (LED[led].time!=0))
             {
               status_LED_toggler(led, LED[led].state);
             }
             break;
         case 2:
-            LED[led].time = led3_dischg_sequence[lvl][step];
+            LED[led].time = led3_dischg_sequence[lvl][LED[led].step%2];
             if((step == 0) && (LED[led].time!=0))
             {
               status_LED_toggler(led, LED[led].state);
@@ -350,7 +352,8 @@ void status_LED_toggler(int led_num, bool state)
 void status_LED_handler()
 {
   timerB1_counter++;
-  static int step_count = 0;
+  static uint8_t step_count = 0;
+  static uint8_t led_steps[NO_STATUS_LEDS] = {0};
 
   if(is_usb_connected || batt_low)
   {
@@ -376,7 +379,8 @@ void status_LED_handler()
         {
             if (LED[i].step == (LED_BLINK_STEPS_DISCHG-1) || (LED[i].time == 0))
             {
-                step_count |= (1 << i);
+                led_steps[i] += 1;
+                step_count |= (led_steps[i] >= 3) ? (1 << i) : 0x00;
             }
             else
             {
@@ -419,7 +423,7 @@ BATT_LVL_e batt_lvl_percent(float& batt_voltage)
     {
         return LVL_66;
     }
-    else if(soc<100.0)
+    else if(soc<95.0)
     {
         return LVL_100;
     }
@@ -441,17 +445,26 @@ BATT_LVL_e batt_soc_percent(float& soc)
     {
         return LVL_66;
     }
-    else if(soc<100.0)
+    else if(soc<95.0)
     {
         return LVL_100;
     }
     return LVL_MAX;
 }
 
+void shutdown()
+{
+    lipo.sleep();
+    digitalWrite(U_KILL_PIN, HIGH);
+}
+
 void batt_fuel_ic_init()
 {
     while(!lipo.begin())
-    {    }
+    {   
+        lipo.wake();  
+        lipo.enableComparator();
+    }
     if(lipo.isReset(true))
     {
       lipo.quickStart();
@@ -639,9 +652,9 @@ void process_ButtonState()
 void setup()
 {
   disableUnusedPeripherals();
+  gpio_init();
   eeprom_init();
 
-  gpio_init();
   timers_init();
 
   batt_fuel_ic_init();
@@ -685,7 +698,7 @@ void loop()
       }
     }
 
-    if (is_device_wakeup && (!is_usb_connected & is_turned_on))
+    if(is_device_wakeup && (!is_usb_connected & is_turned_on))
     {
       update_mode(&current_mode);
     }
@@ -709,6 +722,7 @@ void loop()
         // batt_lvl = batt_lvl_percent(current_batt_lvl);
         float current_batt_lvl = lipo.getSOC();
         batt_lvl = batt_soc_percent(current_batt_lvl);
+        batt_lvl = (batt_lvl > LVL_100) ? LVL_100 : batt_lvl;
       // batt_lvl = LVL_20;
         led_sequence_action(1);
     }
@@ -721,6 +735,7 @@ void loop()
       // batt_lvl = batt_lvl_percent(current_batt_lvl);
       float current_batt_lvl = lipo.getSOC();
       batt_lvl = batt_soc_percent(current_batt_lvl);
+      // batt_lvl = (batt_lvl > LVL_100) ? LVL_100 : batt_lvl;
       // batt_lvl = LVL_20;
       if(batt_lvl!=0)
       {
@@ -752,6 +767,7 @@ void loop()
         batt_low = true;
         float current_batt_lvl = lipo.getSOC();
         batt_lvl = batt_soc_percent(current_batt_lvl);
+        batt_lvl = (batt_lvl > LVL_100) ? LVL_100 : batt_lvl;
         if(!TCB1_IsRunning())
         {
             led_sequence_action(true);
@@ -761,7 +777,7 @@ void loop()
     {
         if((lipo.getSOC() < CRITICAL_SOC_LVL) || (lipo.getVoltage() < CUTOFF_VOLTAGE))
         {
-            digitalWrite(U_KILL_PIN, HIGH);
+            shutdown();
         }
         else if((lipo.getSOC() >= LOW_SOC_THRESHOLD))
         {
@@ -780,12 +796,22 @@ void loop()
   }
   else if(is_usb_connected)
   {
+    float cmpVal = 4.05;
+    float voltage = lipo.getVoltage();
+    if(voltage < cmpVal)
+    {
       is_usb_connected = false;
       led_sequence_action(0);
-      // if(!is_turned_on)
-      // {
-      //   digitalWrite(U_KILL_PIN, HIGH);
-      // }
       is_device_wakeup = true;
+    }
+    // if(!is_turned_on)
+    // {
+    //   digitalWrite(U_KILL_PIN, HIGH);
+    // }
+  }
+  
+  if(!digitalRead(U_INT_PIN))            // check if ON/OFF controller is triggerred, ACTIVE LOW
+  {
+      shutdown();
   }
 }
