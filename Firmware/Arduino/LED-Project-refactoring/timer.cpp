@@ -1,4 +1,4 @@
-#include "timer.hpp"
+#include "Libraries/Timer/timer.hpp"
 
 uint32_t setFrequency(uint32_t freqInHz)
 {
@@ -19,30 +19,33 @@ uint32_t setFrequency(uint32_t freqInHz)
 
 void Timer::setup()
 {
-    _pwm_timer_object->Initialize();
-    _status_led_timer_object->Initialize();
-    pwmStop();
-    statusLedStop();
+    _white_pwm_timer_object->Initialize();                // Main WHITE Led PWM generating timer
+    _red_pwm_timer_object->Initialize();                  // Main RED Led PWM denerating timer
+    _status_led_timer_object->Initialize();               // 1ms timer for Status LEDs sequence
+    _white_pwm_timer_object->PeriodCountSet(50000);       // set PWM freq (5 - 100 KHz range)
+    // _red_pwm_timer_object->setDuty(50);                   // set red led duty cycle   - For some reason, unable to modify dutyCycle outside of .Initialize()
+    
+    // pwmStop();
+    // statusLedStop();
 
-    _pwm_timer_object->PeriodCountSet(_period);
     _status_led_timer_object->TimeoutCallbackRegister(&_status_led_handler->statusLedHandler());
-    _pwm_timer_object->TimeoutCallbackRegister(&_output_led_handler->ledOn());         // overflow
-    _pwm_timer_object->CompareCallbackRegister(&_output_led_handler->ledOff());        // compare
+    // _white_pwm_timer_object->TimeoutCallbackRegister(&_output_led_handler->ledOn());         // overflow
+    // _white_pwm_timer_object->CompareCallbackRegister(&_output_led_handler->ledOff());        // compare
 }
 
 void Timer::pwmStart()
 {
-    _pwm_timer_object->Start();
+    _white_pwm_timer_object->Start();
 }
 
 void Timer::pwmStop()
 {
-    _pwm_timer_object->Stop();
+    _white_pwm_timer_object->Stop();
 }
 
 void Timer::pwmDutySet(uint8_t duty)
 {
-    _pwm_timer_object->CompareRegisterSet(map(duty, 0, 100, 0, _period));
+    _white_pwm_timer_object->CompareRegisterSet(map(duty, 0, 100, 0, _period));
 }
 
 void Timer::statusLedStart()

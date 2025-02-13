@@ -18,7 +18,7 @@ This code is released under the MIT license.
 
 Distributed as-is; no warranty is given.
 ******************************************************************************/
-#include "SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h"
+#include "Libraries/Batt_Manager/src/SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h"
 
 SFE_MAX1704X::SFE_MAX1704X(sfe_max1704x_devices_e device)
 {

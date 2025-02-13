@@ -3,35 +3,47 @@
 
 #include "../../definitions.h"
 
-#define SHORT_PRESS_TIME        250
+#define SHORT_PRESS_TIME        1000
 #define LONG_PRESS_TIME         2000
 #define EXTRA_LONG_PRESS_TIME   4000
 
 class Button
 {
     public:
-        // Button(const Button&) = delete;
-        // Button& operator=(const Button&) = delete;
-        // static Button* getInstance(uint8_t pin, unsigned long time);
-        Button(uint8_t pin, unsigned long time)
-        : _pin(pin), _debounce_time(time), _last_debounce_time(0), _state(BUTTON_ACTIVE_STATE), 
-          _last_button_state(BUTTON_ACTIVE_STATE), _button_press_time(0), _press_duration(RELEASED)
-        {  pinMode(_pin, INPUT_PULLUP);  }
-
-        // static void cleanup();
+        Button(uint8_t pin, unsigned long debounceTime)
+        : _pin(pin), _debounce_time(debounceTime), _last_debounce_time(0),// _state(BUTTON_ACTIVE_STATE), 
+          _button_press_time(0), _press_duration(RELEASED)//, _last_button_state(BUTTON_ACTIVE_STATE)
+        {
+          pinMode(_pin, INPUT);
+          bool state = (BUTTON_ACTIVE_STATE == LOW) HIGH : LOW;
+          _state = state;
+          _last_button_state = state;
+        }
 
         void update();
         BUTTON_STATE_e getPressDuration();
-    private:
+
+        void subscribe(Observer* observer)
+        {
+          _observer = observer;
+        }
+        void unsubscribe(Observer* observer)
+        {
+          if(_observer == observer)
+            _observer = NULL;
+        }
+
+      private:
+        bool captureButtonState();
+        void notify();
 
         uint8_t _pin;
         unsigned long  _debounce_time, _last_debounce_time;
         bool    _state, _last_button_state;
         uint64_t    _button_press_time;
         BUTTON_STATE_e _press_duration;
-
-        // static Button* instance;
+        
+        Observer* _observer;
 };
-
 
 #endif

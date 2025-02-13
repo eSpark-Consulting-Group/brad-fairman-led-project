@@ -38,10 +38,9 @@ const struct TMR_INTERFACE TCB1_Interface = {
     .Start = TCB1_Start,
     .Stop = TCB1_Stop,
     .PeriodCountSet = TCB1_Write,
-    .TimeoutCallbackRegister = TCB1_CaptureCallbackRegister,
-    .CompareCallbackRegister = NULL,
-    .CompareRegisterSet = NULL,
-    .Tasks = NULL
+    .TimeoutCallbackRegister = NULL,
+    .Tasks = NULL,
+    .setDuty = NULL
 };
 
 void (*TCB1_OVF_isr_cb)(void) = NULL;
@@ -100,7 +99,7 @@ void TCB1_Initialize(void)
 
     //CLKSEL CLKDIV1; ENABLE enabled; RUNSTDBY disabled; SYNCUPD disabled; 
     TCB1.CTRLA = 0x1;
-    TCB1.CTRLA &= ~TCB_ENABLE_bm;
+    TCB1.CTRLA &= ~TCB_ENABLE_bm; /* Stop Timer */
 }
 
 void TCB1_Start(void)
@@ -111,6 +110,11 @@ void TCB1_Start(void)
 void TCB1_Stop(void)
 {
     TCB1.CTRLA &= ~TCB_ENABLE_bm; /* Stop Timer */
+}
+
+bool TCB1_IsRunning(void)
+{
+    return (TCB1.CTRLA & TCB_ENABLE_bm) != 0;
 }
 
 void TCB1_Write(uint16_t timerVal)

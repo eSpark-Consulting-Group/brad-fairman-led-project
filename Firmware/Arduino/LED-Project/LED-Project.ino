@@ -7,6 +7,8 @@
 #include "tcb1.h"
 #include <Arduino.h>
 
+// #define INDICATION_LEDS_BLINK_TWICE_ON_MCU_START
+
 #define STATUS_LED_75   PIN_PA1
 #define STATUS_LED_50   PIN_PA2
 #define STATUS_LED_25   PIN_PA4
@@ -22,14 +24,19 @@
 
 #define DEBOUNCE_TIME     11
 #define FUEL_CHECK_TIME   2000            // button press time to trigger batt fuel check
+#define MODE_OFF_TIME     5000            // button press time to trigger MODE_OFF
 #define MODE_CHANGE_TIME  20              // button press time to trigger mode change
 #define EEPROM_ENDURANCE  100000          // Number of cycles EEPROM can be erased/written
 #define BATTERY_LVL_MIN   3.0f
 #define BATTERY_LVL_MAX   4.2f
+#define CUTOFF_VOLTAGE    2.7f
+#define LOW_SOC_THRESHOLD 20.0f
+#define CRITICAL_SOC_LVL  10.0f
 
 #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
 #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
 #define EEPROM_COUNT_ADDRESS      (EEPROM.begin()+2)
+// #define EEPROM_DEVICE_STATE_ADDRESS   (EEPROM.begin()+3)
 #define EEPROM_MODE_REF_ADDRESS   (EEPROM.begin()+3)
 #define EEPROM_MODE_ADDRESS       (EEPROM.begin()+4)
 
@@ -81,9 +88,12 @@ volatile BATT_LVL_e chg_sequence = (BATT_LVL_e)5;
 
 volatile bool is_button_pressed = false;
 volatile bool is_usb_connected=false;
-volatile bool is_turned_on=false;
+volatile bool is_turned_on=true;
 volatile bool batt_lvl_acquire_flag=false;
 volatile bool mode_change_flag=false;
+volatile bool state_change_flag=false;
+volatile bool device_state_changed=false;
+volatile bool batt_low=false;
 
 bool is_device_wakeup=true;
 
@@ -173,18 +183,18 @@ void update_led(MODE_e mode)
             TCB0_Interface.Start();
             break;
         case MODE_1:
-            TCA0_Interface.setDuty(6);
+            TCA0_Interface.setDuty(2);
             TCA0_Interface.Start();
             break;
         case MODE_2:
-            TCA0_Interface.setDuty(18);
+            TCA0_Interface.setDuty(16);
             TCA0_Interface.Start();
             break;
         case MODE_3:
-            TCA0_Interface.setDuty(37);
+            TCA0_Interface.setDuty(35);
             TCA0_Interface.Start();
             break;
-        case MODE_OFF:
+        default:
             TCA0_Interface.Stop();
             TCB0_Interface.Stop();
             TCA0_Interface.setDuty(0);
@@ -192,6 +202,22 @@ void update_led(MODE_e mode)
             break;
     }
 }
+
+// void switch_modes(uint8_t *mode, bool is_activity_change)
+// {
+//     uint8_t activity_bit = *mode & (1 << 7);
+//     uint8_t extracted_mode = *mode & 0x0F;
+
+//     // Rotate the mode bits to the left, and wrap around using modulo 16
+//     extracted_mode = (extracted_mode << 1) & 0x0F;
+//     if (extracted_mode == 0)
+//     {
+//         extracted_mode = MODE_1;
+//     }
+
+//     // Combine the new mode with the activity bit
+//     *mode = extracted_mode | activity_bit;
+// }
 
 void update_mode(MODE_e* mode)
 {
@@ -273,17 +299,17 @@ void led_sequence_action(bool state)
         TCB1_Interface.PeriodCountSet(0);
         // TCB1_Write(0);
         timerB1_counter = 0;
-        if(!is_usb_connected)
-        {
-          led_control_dischg(batt_lvl, 0, 0);
-          led_control_dischg(batt_lvl, 0, 1);
-          led_control_dischg(batt_lvl, 0, 2);
-        }
-        else
+        if(is_usb_connected || batt_low)
         {
           led_control_chg(batt_lvl, 0, 0);
           led_control_chg(batt_lvl, 0, 1);
           led_control_chg(batt_lvl, 0, 2);
+        }
+        else
+        {
+          led_control_dischg(batt_lvl, 0, 0);
+          led_control_dischg(batt_lvl, 0, 1);
+          led_control_dischg(batt_lvl, 0, 2);
         }
         TCB1_Interface.Start();
         // TCB1_Start();
@@ -326,7 +352,23 @@ void status_LED_handler()
   timerB1_counter++;
   static int step_count = 0;
 
-  if(!is_usb_connected)
+  if(is_usb_connected || batt_low)
+  {
+    for( uint8_t i=0; i<3; i++ )
+    {
+        // int32_t timer_diff = timerB1_counter-LED[i].timer;
+        if(((timerB1_counter-LED[i].timer) > LED[i].time) && (LED[i].time != 0) )
+        {
+              led_control_chg(batt_lvl, ++LED[i].step, i);
+              status_LED_toggler(i, LED[i].state);
+        }
+        else if (LED[i].time == 0)
+        {
+            // led_control_chg(batt_lvl, ++LED[i].step, i);
+        }
+    }
+  }
+  else
   {
     for( uint8_t i=0; i<3; i++ )
     {
@@ -354,30 +396,14 @@ void status_LED_handler()
         step_count = 0;
     }
   }
-  else
-  {
-    for( uint8_t i=0; i<3; i++ )
-    {
-        // int32_t timer_diff = timerB1_counter-LED[i].timer;
-        if(((timerB1_counter-LED[i].timer) > LED[i].time) && (LED[i].time != 0) )
-        {
-              led_control_chg(batt_lvl, ++LED[i].step, i);
-              status_LED_toggler(i, LED[i].state);
-        }
-        else if (LED[i].time == 0)
-        {
-            // led_control_chg(batt_lvl, ++LED[i].step, i);
-        }
-    }
-  }
 }
 
-float mapValue(float *input)      // arduino map function does not allow decimal point values
+float mapValue(float& input)      // arduino map function does not allow decimal point values
 {
-    return ((*input - BATTERY_LVL_MIN) * (100.0 - 0.0)) / (BATTERY_LVL_MAX - BATTERY_LVL_MIN);
+    return ((input - BATTERY_LVL_MIN) * (100.0 - 0.0)) / (BATTERY_LVL_MAX - BATTERY_LVL_MIN);
 }
 
-BATT_LVL_e batt_lvl_percent(float *batt_voltage)
+BATT_LVL_e batt_lvl_percent(float& batt_voltage)
 {
     float soc = mapValue(batt_voltage);
 
@@ -399,9 +425,9 @@ BATT_LVL_e batt_lvl_percent(float *batt_voltage)
     }
     return LVL_MAX;
 }
-BATT_LVL_e batt_soc_percent(float *batt_soc)
+BATT_LVL_e batt_soc_percent(float& soc)
 {
-    float soc = *batt_soc;
+    // float soc = *batt_soc;
 
     if(soc<=20.0)
     {
@@ -426,11 +452,17 @@ void batt_fuel_ic_init()
 {
     while(!lipo.begin())
     {    }
-    lipo.quickStart();
-    lipo.setThreshold();
-    lipo.disableSOCAlert();
-    lipo.setVALRTMin(BATTERY_LVL_MIN);
-    // lipo.setVALRTMin(BATTERY_LVL_MIN-0.3f);
+    if(lipo.isReset(true))
+    {
+      lipo.quickStart();
+    }
+    // lipo.disableSOCAlert();
+    lipo.disableAlert();                        // disable resetAlert
+    // lipo.enableAlert();                       // disable resetAlert
+    // lipo.setResetVoltage(CUTOFF_VOLTAGE);     // ON/OFF controller operating range (2.6-26V) - LDO is turning off because ON/OFF controller shuts down
+    //                                           // we should execute shutdown sequence if Batt_Vdd reaches such low voltages
+    lipo.setThreshold(LOW_SOC_THRESHOLD);
+    lipo.setVALRTMin(BATTERY_LVL_MIN-0.1f);
     lipo.setVALRTMax(BATTERY_LVL_MAX);
 }
 
@@ -474,14 +506,17 @@ void eeprom_init()
   }
 
   EEPROM_Write_Count = EEPROM.read(EEPROM_COUNT_ADDRESS);
-  // EEPROM_Address = EEPROM_MODE_REF_ADDRESS;
   EEPROM_Mode_Addr = EEPROM.read(EEPROM_MODE_REF_ADDRESS);
 
+  // uint8_t eeprom_value = EEPROM.read(EEPROM_Mode_Addr);
+  // is_turned_on = (eeprom_value & 0x80) != 0;
+  // current_mode = (MODE_e)(eeprom_value & 0x0F);
   current_mode = (MODE_e)(EEPROM.read(EEPROM_Mode_Addr));
   if(current_mode > MODE_4)
   {
     current_mode = MODE_1;
     eeprom_mode_write(current_mode);
+    // eeprom_mode_write(current_mode | (is_turned_on ? 0x80 : 0x00));
   }
 }
 
@@ -517,6 +552,7 @@ void gpio_init()
   // set_sleep_mode(SLEEP_MODE_STANDBY);
 
   // Flash the status LEDs twice to indicate that the mcu is running setup
+#ifdef INDICATION_LEDS_BLINK_TWICE_ON_MCU_START
   for(int i=0; i<4; i++)
   {
     bool ledState = (i == 0 || i == 2) ? HIGH : LOW;
@@ -526,6 +562,9 @@ void gpio_init()
     }
     delay(150);
   }
+#else
+    delay(500);
+#endif
 
   Wire.pins(SDA, SCL);
   Wire.begin();
@@ -537,7 +576,8 @@ void timers_init()
   TCA0_Interface.Initialize();                 // Main WHITE Led PWM generating timer
   TCB0_Interface.Initialize();                 // Main RED Led PWM denerating timer
   TCB1_Interface.Initialize();                 // 1ms timer for Status LEDs sequence
-  TCA0_Interface.PeriodCountSet(1000);         // set PWM freq to 1KHz
+  TCA0_Interface.PeriodCountSet(50000);        // set PWM freq (5 - 100 KHz range)
+  // TCB0_Interface.setDuty(50);                  // set red led duty cycle   - For some reason, unable to modify dutyCycle outside of .Initialize()
 
   TCA0_Interface.Stop();
   TCB0_Interface.Stop();
@@ -551,6 +591,9 @@ void timers_init()
 
 void process_ButtonState()
 {
+  if(is_device_wakeup)
+    return;
+
   bool state = !digitalRead(BUTTON_PIN) ;
   if(state)   // button pressed
   {
@@ -567,6 +610,10 @@ void process_ButtonState()
       {
           batt_lvl_acquire_flag = true;
       }
+      if((button_pressed_time_val >= (MODE_OFF_TIME)) && !state_change_flag)
+      {
+          state_change_flag = true;
+      }
     }
   }
   else  // button released
@@ -580,6 +627,11 @@ void process_ButtonState()
       if((button_pressed_time_val >= (MODE_CHANGE_TIME)) && (button_pressed_time_val < FUEL_CHECK_TIME))
       {
           mode_change_flag = true;
+      }
+      if(state_change_flag)
+      {
+          state_change_flag = false;
+          device_state_changed = false;
       }
     }
   }
@@ -598,6 +650,18 @@ void setup()
 
   led_sequence_action(false);
 
+  if(!digitalRead(BATT_CHG_PIN))
+  {
+      is_usb_connected = true;
+      is_turned_on = false;
+  }
+#ifndef INDICATION_LEDS_BLINK_TWICE_ON_MCU_START
+  else
+  {
+      batt_lvl_acquire_flag = true;
+  }
+#endif
+
   // Enable global interrupts
   // sei();
 }
@@ -607,12 +671,26 @@ void loop()
   delay(DEBOUNCE_TIME);
   process_ButtonState();
 
-    if (is_device_wakeup && !is_usb_connected)
+    if(state_change_flag && !device_state_changed)
+    {
+      device_state_changed = true;
+      is_turned_on = !is_turned_on;
+      if(!is_turned_on)
+      {
+        update_led(MODE_OFF);
+      }
+      else
+      {
+        update_led(current_mode);
+      }
+    }
+
+    if (is_device_wakeup && (!is_usb_connected & is_turned_on))
     {
       update_mode(&current_mode);
     }
 
-    if(mode_change_flag && !is_usb_connected)            // if button pressed once change mode accordingly
+    if(mode_change_flag && is_turned_on)// && !is_usb_connected)            // if button pressed once change mode accordingly
     {
         current_mode = (MODE_e)(current_mode + 1);
         update_mode(&current_mode);
@@ -627,8 +705,10 @@ void loop()
     {
         batt_lvl_acquire_flag = false;
         led_sequence_action(0);
-        float current_batt_lvl = lipo.getVoltage();
-        batt_lvl = batt_lvl_percent(&current_batt_lvl);
+        // float current_batt_lvl = lipo.getVoltage();
+        // batt_lvl = batt_lvl_percent(current_batt_lvl);
+        float current_batt_lvl = lipo.getSOC();
+        batt_lvl = batt_soc_percent(current_batt_lvl);
       // batt_lvl = LVL_20;
         led_sequence_action(1);
     }
@@ -636,14 +716,15 @@ void loop()
     if(is_usb_connected)
     {
       // led_sequence_action(0);
-      // float current_batt_lvl = lipo.getVoltage();
-      float current_batt_lvl = lipo.getSOC();
       // float current_batt_lvl = 3.85f;
-      batt_lvl = batt_soc_percent(&current_batt_lvl);
+      // float current_batt_lvl = lipo.getVoltage();
+      // batt_lvl = batt_lvl_percent(current_batt_lvl);
+      float current_batt_lvl = lipo.getSOC();
+      batt_lvl = batt_soc_percent(current_batt_lvl);
       // batt_lvl = LVL_20;
       if(batt_lvl!=0)
       {
-        batt_lvl = batt_lvl-1;
+        batt_lvl = (BATT_LVL_e)(batt_lvl-1);
       }
       if(batt_lvl != chg_sequence) {
         led_sequence_action(0);
@@ -663,12 +744,29 @@ void loop()
 
   if(!digitalRead(GPOUT_PIN))            // check batt fuel guage alert pin state
   {
-    lipo.clearAlert();
-    uint8_t status = lipo.getStatus();
-    float current_batt_lvl = lipo.getVoltage();
-    if(lipo.isVoltageLow() || lipo.isLow())
+    lipo.clearAlert();          // clear the ALRT pin
+    // float current_batt_lvl = lipo.getVoltage();
+    // if(lipo.isVoltageLow(true))
+    if(lipo.isVoltageLow(true) || lipo.isLow(true))
     {
-        digitalWrite(U_KILL_PIN, HIGH);
+        batt_low = true;
+        float current_batt_lvl = lipo.getSOC();
+        batt_lvl = batt_soc_percent(current_batt_lvl);
+        if(!TCB1_IsRunning())
+        {
+            led_sequence_action(true);
+        }
+    }
+    if(lipo.isChange(true))
+    {
+        if((lipo.getSOC() < CRITICAL_SOC_LVL) || (lipo.getVoltage() < CUTOFF_VOLTAGE))
+        {
+            digitalWrite(U_KILL_PIN, HIGH);
+        }
+        else if((lipo.getSOC() >= LOW_SOC_THRESHOLD))
+        {
+            batt_low = false;
+        }
     }
   }
 
@@ -676,7 +774,7 @@ void loop()
   {
     if(!is_usb_connected)
     {
-      update_led(MODE_OFF);
+      // update_led(MODE_OFF);
       is_usb_connected = true;
     }
   }
@@ -686,7 +784,8 @@ void loop()
       led_sequence_action(0);
       // if(!is_turned_on)
       // {
-        digitalWrite(U_KILL_PIN, HIGH);
+      //   digitalWrite(U_KILL_PIN, HIGH);
       // }
+      is_device_wakeup = true;
   }
 }

@@ -1,4 +1,4 @@
-#include "button.hpp"
+#include "Libraries/Button/button.hpp"
 
 // Button* Button::instance = nullptr;
 
@@ -18,7 +18,7 @@
 
 void Button::update()
 {
-    bool reading = digitalRead(_pin);
+    bool reading = captureButtonState();
         
     if (reading != _last_button_state)
     {
@@ -40,6 +40,7 @@ void Button::update()
                 unsigned long pressDurationTime = millis() - _button_press_time;
                 if (pressDurationTime < SHORT_PRESS_TIME) {
                     _press_duration = SHORT_PRESS;
+                    notify();
                 } else {
                     _press_duration = RELEASED;
                 }
@@ -51,19 +52,33 @@ void Button::update()
         unsigned long currentDuration = millis() - _button_press_time;
         if (currentDuration >= LONG_PRESS_TIME) {
             _press_duration = LONG_PRESS;
+            notify();
         } else if (currentDuration >= EXTRA_LONG_PRESS_TIME) {
             _press_duration = EXTRA_LONG_PRESS;
+            notify();
         }
     }
 
     _last_button_state = reading;
 }
 
-BUTTON_STATE_e Button::getPressDuration() const
+BUTTON_STATE_e Button::getPressDuration()
 {
     // if (_state == HIGH)
     // {
-        return _press_duration; // Return last detected press duration when released
+    return _press_duration; // Return last detected press duration when released
     // }
     // return RELEASED; // If still pressed, return RELEASED state
+}
+    
+bool Button::captureButtonState()
+{
+    bool state = digitalRead(_pin);
+    return (BUTTON_ACTIVE_STATE == HIGH) ? state : !state;
+}
+
+void Button::notify()
+{
+    if(NULL != _observer)
+        _observer->registerEvent(BUTTON_TRIGGERED, (uint8_t)_press_duration);
 }

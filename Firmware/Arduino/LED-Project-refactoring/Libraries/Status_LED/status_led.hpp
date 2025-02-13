@@ -3,12 +3,13 @@
 
 #include "../../definitions.h"
 
+//----------------------------------------------------------------------
 typedef struct
 {
     bool state;                      // led on or off
     uint8_t step;                    // current step in sequence
-    uint64_t statePeriod;            // time period for current state
-    uint64_t stateStartTime;         // timer value when this sequence started
+    uint64_t statePeriod;            // time duration for current state
+    uint64_t stateStartTime;         // timer value when this state started
 }LED_STATE_t;
 
 class Leds
@@ -17,7 +18,8 @@ class Leds
         Leds(uint8_t pin) : _pin(pin)
         {   
             pinMode(_pin, OUTPUT);
-            _control = {LOW, 0, 0, 0};
+            _control = {(STATUS_LEDS_INVERTED) ? HIGH: LOW, 
+                        0, 0, 0};
             //     .state = LOW,
             //     .step = 0,
             //     .statePeriod = 0,
@@ -41,7 +43,7 @@ class Leds
         uint8_t _pin;
         LED_STATE_t _control;
 };
-
+//----------------------------------------------------------------------
 class StatusManager
 {
     public:
@@ -50,7 +52,7 @@ class StatusManager
 
         static StatusManager* getInstance();
         
-        static void statusLedHandler();
+        static void statusLedHandler();             // callback function handling status LEDs
 
         void setStatus(DEVICE_STATE_e status, bool value);
         bool hasStatus(DEVICE_STATE_e status);

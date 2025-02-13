@@ -6,14 +6,14 @@
 #include "Libraries/Batt_Manager/batt_Manager.hpp"
 #include "Libraries/Timer/timer.hpp"
 
-Button        button(BUTTON_PIN, DEBOUNCE_TIME);
-SFE_MAX1704X  battMonitor(MAX1704X_MAX17048);
-Leds*         leds[STATUS_LEDS];
-BattManager*  battManager;
-StatusLed*    statusLedController;
-OutputLed*    outputLedController;
-Timer*        timer;
-Device*       device;
+Button          button(BUTTON_PIN, DEBOUNCE_TIME);
+SFE_MAX1704X    battMonitor(MAX1704X_MAX17048);
+Leds*           leds[STATUS_LEDS];
+BattManager*    battManager;
+StatusManager*  statusLedController;
+OutputLed*      outputLedController;
+Timer*          timer;
+Device*         device;
 
 void disableUnusedPeripherals()
 {

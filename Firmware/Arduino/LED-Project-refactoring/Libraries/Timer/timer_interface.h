@@ -52,12 +52,12 @@ struct TMR_INTERFACE
     void (*Initialize)(void);
     void (*Start)(void);
     void (*Stop)(void);
-    void (*PeriodCountSet)(size_t count);
+    void (*PeriodCountSet)(size_t);
     void (*TimeoutCallbackRegister)(void (* CallbackHandler)(void));
-    void (*CompareCallbackRegister)(void (* CallbackHandler)(void));
-    void (*CompareRegisterSet)(void (* CallbackHandler)(uint16_t));
     void (*Tasks)(void);
+    void (*setDuty)(uint16_t);
 };
+
 /**
  * @}
  */

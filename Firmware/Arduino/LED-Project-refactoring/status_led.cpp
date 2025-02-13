@@ -1,4 +1,4 @@
-#include "Libraries/Status_Manager/status_led.hpp"
+#include "Libraries/Status_LED/status_led.hpp"
 
 #define LED_BLINK_STEPS_DISCHG 3
 uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
@@ -23,21 +23,13 @@ void Leds::toggle()
 
 void Leds::on()
 {
-    if(STATUS_LEDS_INVERTED)
-        _control.state = LOW;
-    else
-        _control.state = HIGH;
-
+    _control.state = (STATUS_LEDS_INVERTED) ? LOW : HIGH;
     updateState();
 }
 
 void Leds::off()
 {
-    if(STATUS_LEDS_INVERTED)
-        _control.state = HIGH;
-    else
-        _control.state = LOW;
-
+    _control.state = (STATUS_LEDS_INVERTED) ? HIGH : LOW;
     updateState();
 }
 
@@ -52,10 +44,10 @@ void Leds::updateState()
 
 StatusManager* StatusLed::_instance = nullptr;
 
-static StatusManager* StatusLed::getInstance()
+static StatusManager* StatusManager::getInstance()
 {
     if (!_instance) {
-        _instance = new StatusLed();
+        _instance = new StatusManager();
     }
     return _instance;
 }
@@ -200,5 +192,6 @@ static void StatusManager::statusLedHandler()
         {
             _status_led[i].toggle();
         }
+    }
     
 }

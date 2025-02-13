@@ -13,6 +13,7 @@ extern "C" {
 
 extern const struct TMR_INTERFACE TCB0_Interface;
 
+void setDutyCycleTCB(uint16_t duty);
 
 /**
  * @ingroup tcb0

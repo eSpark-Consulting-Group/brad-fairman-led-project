@@ -112,6 +112,11 @@ void TCB1_Stop(void)
     TCB1.CTRLA &= ~TCB_ENABLE_bm; /* Stop Timer */
 }
 
+bool TCB1_IsRunning(void)
+{
+    return (TCB1.CTRLA & TCB_ENABLE_bm) != 0;
+}
+
 void TCB1_Write(uint16_t timerVal)
 {
     TCB1.CNT = timerVal;
