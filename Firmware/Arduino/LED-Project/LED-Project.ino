@@ -32,6 +32,7 @@
 #define CUTOFF_VOLTAGE    2.7f
 #define LOW_SOC_THRESHOLD 20.0f
 #define CRITICAL_SOC_LVL  10.0f
+#define NO_STATUS_LEDS    3
 
 #define EEPROM_ID_HIGH_BYTE       (EEPROM.begin())
 #define EEPROM_ID_LOW_BYTE        (EEPROM.begin()+1)
@@ -68,13 +69,13 @@ typedef struct {
     uint32_t timer;         // when this sequence started
 }LED_STATE_t;
 
-LED_STATE_t LED[3];
+LED_STATE_t LED[NO_STATUS_LEDS];
 
-#define LED_BLINK_STEPS_DISCHG 3
+#define LED_BLINK_STEPS_DISCHG 6
 #define LED_BLINK_STEPS_CHG 2
-uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{1000, 1000, 1000}, {3000,0,0}, {3000,0,0}, {3000,0,0}};
-uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {3000,0,0}, {3000,0,0}};
-uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG] = {{0,0,0},            {0,0,0},    {0,0,0},    {3000,0,0}};
+uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{1000, 1000},     {3000,0}, {3000,0}, {3000,0}};
+uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {3000,0}, {3000,0}};
+uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {0,0},    {3000,0}};
 
 uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{1000, 1000}, {1000,1},      {1000,1},       {1000,1}};
 uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {1000,1000},   {1000,1},       {1000,1}};
@@ -264,26 +265,27 @@ void led_control_chg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 void led_control_dischg(BATT_LVL_e lvl, uint8_t step, uint8_t led)
 {
     LED[led].timer = timerB1_counter;
+    // LED[led].step = step%2;
     LED[led].step = step;
     LED[led].state = ((step+1) % 2);
     switch(led)
     {
         case 0:
-            LED[led].time = led1_dischg_sequence[lvl][step];
+            LED[led].time = led1_dischg_sequence[lvl][LED[led].step%2];
             if((step == 0) && (LED[led].time!=0))
             {
               status_LED_toggler(led, LED[led].state);
             }
             break;
         case 1:
-            LED[led].time = led2_dischg_sequence[lvl][step];
+            LED[led].time = led2_dischg_sequence[lvl][LED[led].step%2];
             if((step == 0) && (LED[led].time!=0))
             {
               status_LED_toggler(led, LED[led].state);
             }
             break;
         case 2:
-            LED[led].time = led3_dischg_sequence[lvl][step];
+            LED[led].time = led3_dischg_sequence[lvl][LED[led].step%2];
             if((step == 0) && (LED[led].time!=0))
             {
               status_LED_toggler(led, LED[led].state);
@@ -351,6 +353,7 @@ void status_LED_handler()
 {
   timerB1_counter++;
   static uint8_t step_count = 0;
+  static uint8_t led_steps[NO_STATUS_LEDS] = {0};
 
   if(is_usb_connected || batt_low)
   {
@@ -376,7 +379,8 @@ void status_LED_handler()
         {
             if (LED[i].step == (LED_BLINK_STEPS_DISCHG-1) || (LED[i].time == 0))
             {
-                step_count |= (1 << i);
+                led_steps[i] += 1;
+                step_count |= (led_steps[i] >= 3) ? (1 << i) : 0x00;
             }
             else
             {
