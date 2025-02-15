@@ -4,18 +4,18 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-#define STATUS_LED_75_PIN   PIN_PA1     // status led
-#define STATUS_LED_50_PIN   PIN_PA2     // status led
-#define STATUS_LED_25_PIN   PIN_PA4     // status led
-#define GPOUT_PIN           PIN_PA5     // MAX17048 ALRT pin
-#define BATT_CHG_PIN        PIN_PA6     // battery charge indicator pin
-#define SCL_PIN             PIN_PB0
-#define SDA_PIN             PIN_PB1
-#define U_INT_PIN           PIN_PB4     // power manager pin, triggers when button pressed for 4secs, initiate device shutdown sequence when triggered
-#define U_KILL_PIN          PIN_PB5     // power manager pin, drive low to kill power (turn off LDO)
-#define RED_LED_CTRL_PIN    PIN_PC0     // output led
-#define WHITE_LED_CTRL_PIN  PIN_PB2     // output led
-#define BUTTON_PIN          PIN_PC1
+#define STATUS_LED_75_PIN       PIN_PA1     // status led
+#define STATUS_LED_50_PIN       PIN_PA2     // status led
+#define STATUS_LED_25_PIN       PIN_PA4     // status led
+#define GPOUT_PIN               PIN_PA5     // MAX17048 ALRT pin
+#define BATT_CHG_PIN            PIN_PA6     // battery charge indicator pin
+#define SCL_PIN                 PIN_PB0
+#define SDA_PIN                 PIN_PB1
+#define U_INT_PIN               PIN_PB4     // power manager pin, triggers when button pressed for 4secs, initiate device shutdown sequence when triggered
+#define U_KILL_PIN              PIN_PB5     // power manager pin, drive low to kill power (turn off LDO)
+#define RED_LED_CTRL_PIN        PIN_PC0     // output led
+#define WHITE_LED_CTRL_PIN      PIN_PB2     // output led
+#define BUTTON_PIN              PIN_PC1
 
 #define BUTTON_ACTIVE_STATE     LOW
 
@@ -24,8 +24,8 @@
 #define DEBOUNCE_TIME           11U
 #define BATTERY_LVL_MIN         3.0f
 #define BATTERY_LVL_MAX         4.2f
-#define LOW_SOC_THRESHOLD       20.0f
-#define CRITICAL_SOC_LVL        10.0f
+#define LOW_SOC_THRESHOLD       20
+#define CRITICAL_SOC_LVL        10
 
 typedef enum
 {
@@ -66,8 +66,8 @@ typedef enum
 
 typedef enum
 {
-    BUTTON_TRIGGERED = 1,
-    BATTERY_UPDATE,
+    BUTTON_EVENT = 1,
+    BATTERY_UPDATE_EVENT,
     DEVICE_STATUS_UPDATE,
     FUEL_GUAGE_ALRT_ASSERTED,
     BATT_CHARGE_ALRT_ASSERTED,
@@ -80,6 +80,7 @@ typedef enum
 class Observer {
     public:
         virtual void registerEvent(EVENTS_LIST_e eventID, uint8_t val) = 0;
+        // virtual void registerReply(bool state) = 0;
 };
 
 #endif

@@ -1,20 +1,5 @@
 #include "Libraries/Button/button.hpp"
 
-// Button* Button::instance = nullptr;
-
-// static Button* Button::getInstance(uint8_t pin, unsigned long time)
-// {
-//     if (!instance) {
-//         instance = new button(pin, time);
-//     }
-//     return instance;
-// }
-
-// static void Button::cleanup()
-// {
-//     delete instance;
-//     instance = nullptr;
-// }
 
 void Button::update()
 {
@@ -31,31 +16,36 @@ void Button::update()
         {
             _state = reading;
 
-            if (_state == BUTTON_ACTIVE_STATE)
+            if (_state)
             {
                 _button_press_time = millis();
             }
             else
             {
                 unsigned long pressDurationTime = millis() - _button_press_time;
-                if (pressDurationTime < SHORT_PRESS_TIME) {
-                    _press_duration = SHORT_PRESS;
-                    notify();
-                } else {
-                    _press_duration = RELEASED;
+                if (pressDurationTime < LONG_PRESS_TIME)
+                {
+                    changePressDuration(SHORT_PRESS);
+                    // changePressDuration(RELEASED);
                 }
+                // else {
+                //     // _press_duration = RELEASED;
+                // }
+                changePressDuration(RELEASED);
             }
         }
+    
     }
-
-    if (_state == BUTTON_ACTIVE_STATE) {
+    if (_state)
+    {
         unsigned long currentDuration = millis() - _button_press_time;
-        if (currentDuration >= LONG_PRESS_TIME) {
-            _press_duration = LONG_PRESS;
-            notify();
-        } else if (currentDuration >= EXTRA_LONG_PRESS_TIME) {
-            _press_duration = EXTRA_LONG_PRESS;
-            notify();
+        if ((currentDuration >= LONG_PRESS_TIME) && (currentDuration < EXTRA_LONG_PRESS_TIME))
+        {
+            changePressDuration(LONG_PRESS);
+        }
+        else if (currentDuration >= EXTRA_LONG_PRESS_TIME)
+        {
+            changePressDuration(EXTRA_LONG_PRESS);
         }
     }
 
@@ -64,11 +54,17 @@ void Button::update()
 
 BUTTON_STATE_e Button::getPressDuration()
 {
-    // if (_state == HIGH)
-    // {
     return _press_duration; // Return last detected press duration when released
-    // }
-    // return RELEASED; // If still pressed, return RELEASED state
+}
+
+void Button::changePressDuration(BUTTON_STATE_e duration)
+{
+    if(duration != _press_duration)
+    {
+        _press_duration = duration;
+        _send_notification = true;
+        notify();
+    }
 }
     
 bool Button::captureButtonState()
@@ -79,6 +75,9 @@ bool Button::captureButtonState()
 
 void Button::notify()
 {
-    if(NULL != _observer)
-        _observer->registerEvent(BUTTON_TRIGGERED, (uint8_t)_press_duration);
+    if(NULL != _observer && _send_notification)
+    {
+        _observer->registerEvent(BUTTON_EVENT, (uint8_t)getPressDuration());
+        _send_notification = false;
+    }
 }

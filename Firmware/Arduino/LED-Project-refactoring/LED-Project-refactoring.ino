@@ -1,19 +1,19 @@
 #include "definitions.h"
 #include "Libraries/Button/button.hpp"
-#include "Libraries/Device/device.hpp"
-#include "Libraries/Status_LED/status_led.hpp"
-#include "Libraries/Output_LED/output_led.hpp"
-#include "Libraries/Batt_Manager/batt_Manager.hpp"
-#include "Libraries/Timer/timer.hpp"
+// #include "Libraries/Device/device.hpp"
+// #include "Libraries/Status_LED/status_led.hpp"
+// #include "Libraries/Output_LED/output_led.hpp"
+// #include "Libraries/Batt_Manager/batt_Manager.hpp"
+// #include "Libraries/Timer/timer.hpp"
 
+// Leds*           leds[STATUS_LEDS];
 Button          button(BUTTON_PIN, DEBOUNCE_TIME);
-SFE_MAX1704X    battMonitor(MAX1704X_MAX17048);
-Leds*           leds[STATUS_LEDS];
-BattManager*    battManager;
-StatusManager*  statusLedController;
-OutputLed*      outputLedController;
-Timer*          timer;
-Device*         device;
+// SFE_MAX1704X    battMonitor(MAX1704X_MAX17048);
+// BattManager*    battManager;
+// StatusManager*  statusLedController;
+// OutputLed*      outputLedController;
+// Timer*          timer;
+// Device*         device;
 
 void disableUnusedPeripherals()
 {
@@ -68,15 +68,21 @@ void setup()
   disableUnusedPeripherals();
   
   // button = Button::getInstance(BUTTON_PIN, DEBOUNCE_TIME);
-  leds[0] = new Leds(STATUS_LED_25_PIN);
-  leds[1] = new Leds(STATUS_LED_50_PIN);
-  leds[2] = new Leds(STATUS_LED_75_PIN);
-  statusLedController = StatusManager::getInstance();
-  battManager = new BattManager(&battMonitor, BATT_CHG_PIN, GPOUT_PIN, SDA_PIN, SCL_PIN);
-  outputLedController = new OutputLed(RED_LED_CTRL_PIN, WHITE_LED_CTRL_PIN);
-  timer = new Timer(statusLedController);
-  device = new Device(outputLedController, statusLedController, leds[0], leds[1], leds[2]);
+  // leds[0] = new Leds(STATUS_LED_25_PIN);
+  // leds[1] = new Leds(STATUS_LED_50_PIN);
+  // leds[2] = new Leds(STATUS_LED_75_PIN);
+  // statusLedController = StatusManager::getInstance();
+  // battManager = new BattManager(&battMonitor, BATT_CHG_PIN, GPOUT_PIN, SDA_PIN, SCL_PIN);
+  // outputLedController = new OutputLed(RED_LED_CTRL_PIN, WHITE_LED_CTRL_PIN);
+  // timer = new Timer(statusLedController);
+  // device = new Device(outputLedController, statusLedController, leds[0], leds[1], leds[2]);
  
+  // battManager->subscribe();
+  
+  
+  // battManager->init();
+
+
   // // eeprom_init();
 
   // gpio_init();
@@ -95,5 +101,6 @@ void setup()
 
 void loop()
 {
-
+  button.update();
+  // battManager->update();
 }
