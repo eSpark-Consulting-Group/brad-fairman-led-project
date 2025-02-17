@@ -1,11 +1,11 @@
-#ifndef TIMERS
-#define TIMERS
+#ifndef TIMERS_H
+#define TIMERS_H
 
 #include "timer_interface.h"
 #include "tca0.h"
 #include "tcb0.h"
 #include "tcb1.h"
-#include "../Status_LED/status_led.hpp"
+#include "../Status_LED/status_led_manager.hpp"
 #include "../Output_LED/output_led.hpp"
 
 uint32_t setFrequency(uint32_t freqInHz);

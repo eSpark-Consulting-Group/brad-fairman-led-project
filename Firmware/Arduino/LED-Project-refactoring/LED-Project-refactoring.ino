@@ -1,17 +1,17 @@
 #include "definitions.h"
 #include "Libraries/Button/button.hpp"
 // #include "Libraries/Device/device.hpp"
-// #include "Libraries/Status_LED/status_led.hpp"
+#include "Libraries/LED_Manager/led_manager.hpp"
 // #include "Libraries/Output_LED/output_led.hpp"
-// #include "Libraries/Batt_Manager/batt_Manager.hpp"
+#include "Libraries/Batt_Manager/batt_Manager.hpp"
 // #include "Libraries/Timer/timer.hpp"
 
-// Leds*           leds[STATUS_LEDS];
-Button          button(BUTTON_PIN, DEBOUNCE_TIME);
+// Button          button(BUTTON_PIN, DEBOUNCE_TIME);
+// OutputLed       outputLed(RED_LED_CTRL_PIN, WHITE_LED_CTRL_PIN);
+StatusLeds      leds[STATUS_LEDS] = {STATUS_LED_25_PIN, STATUS_LED_50_PIN, STATUS_LED_75_PIN};
 // SFE_MAX1704X    battMonitor(MAX1704X_MAX17048);
-// BattManager*    battManager;
-// StatusManager*  statusLedController;
-// OutputLed*      outputLedController;
+// BattManager     battManager(&battMonitor, BATT_CHG_PIN, GPOUT_PIN, SDA_PIN, SCL_PIN);
+StatusManager*  statusLedController;
 // Timer*          timer;
 // Device*         device;
 
@@ -67,20 +67,20 @@ void setup()
 {
   disableUnusedPeripherals();
   
-  // button = Button::getInstance(BUTTON_PIN, DEBOUNCE_TIME);
-  // leds[0] = new Leds(STATUS_LED_25_PIN);
-  // leds[1] = new Leds(STATUS_LED_50_PIN);
-  // leds[2] = new Leds(STATUS_LED_75_PIN);
-  // statusLedController = StatusManager::getInstance();
+  statusLedController = StatusManager::getInstance();
   // battManager = new BattManager(&battMonitor, BATT_CHG_PIN, GPOUT_PIN, SDA_PIN, SCL_PIN);
   // outputLedController = new OutputLed(RED_LED_CTRL_PIN, WHITE_LED_CTRL_PIN);
   // timer = new Timer(statusLedController);
   // device = new Device(outputLedController, statusLedController, leds[0], leds[1], leds[2]);
  
-  // battManager->subscribe();
+  // button.subscribe();
+  // battManager.subscribe();
   
-  
-  // battManager->init();
+  for(int i=0; i<STATUS_LEDS; i++)
+  {
+    statusLedController->addLed(&leds[i]);
+  }
+  // battManager.init();
 
 
   // // eeprom_init();
@@ -97,10 +97,24 @@ void setup()
   // // Enable global interrupts
   // // sei();
 
+  statusLedController->managerTest(DISCHARGING, LVL_20);
+
 }
 
 void loop()
 {
-  button.update();
-  // battManager->update();
+  // button.update();
+  // battManager.update();
+
+  // for(int i=0; i<STATUS_LEDS; i++)
+  // {
+  //   statusLedController->ledOn(i);
+  // }
+  // delay(3000);
+  // for(int i=0; i<STATUS_LEDS; i++)
+  // {
+  //   statusLedController->ledOff(i);
+  // }
+  // delay(3000);
+  statusLedController->statusLedHandlerWrapper();
 }

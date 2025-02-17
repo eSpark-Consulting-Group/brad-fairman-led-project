@@ -4,9 +4,9 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-#define STATUS_LED_75_PIN       PIN_PA1     // status led
+#define STATUS_LED_25_PIN       PIN_PA1     // status led
 #define STATUS_LED_50_PIN       PIN_PA2     // status led
-#define STATUS_LED_25_PIN       PIN_PA4     // status led
+#define STATUS_LED_75_PIN       PIN_PA4     // status led
 #define GPOUT_PIN               PIN_PA5     // MAX17048 ALRT pin
 #define BATT_CHG_PIN            PIN_PA6     // battery charge indicator pin
 #define SCL_PIN                 PIN_PB0
@@ -24,8 +24,11 @@
 #define DEBOUNCE_TIME           11U
 #define BATTERY_LVL_MIN         3.0f
 #define BATTERY_LVL_MAX         4.2f
+#define BATTERY_CRITIVAL_VOLTGE (BATTERY_LVL_MIN-0.2f)
 #define LOW_SOC_THRESHOLD       20
 #define CRITICAL_SOC_LVL        10
+
+#define BIT_SET(position)       (1U << position)
 
 typedef enum
 {
@@ -46,6 +49,7 @@ typedef enum        // white/red LED modes
 
 typedef enum        // batt lvls
 {
+    LVL_CRITICAL,
     LVL_20,
     LVL_33,
     LVL_66,
@@ -71,7 +75,7 @@ typedef enum
     DEVICE_STATUS_UPDATE,
     FUEL_GUAGE_ALRT_ASSERTED,
     BATT_CHARGE_ALRT_ASSERTED,
-    SHUTDOWN_SEQUENCE_TRIGGERRED,
+    SHUTDOWN_SEQUENCE_EVENT,
     OUTPUT_LED_MODE_CHANGE_TRIGGERED,
     STATUS_LED_HANDLER_TRIGGERED,
 }EVENTS_LIST_e;

@@ -1,5 +1,5 @@
-#ifndef BUTTONS
-#define BUTTONS
+#ifndef BUTTONS_H
+#define BUTTONS_H
 
 #include "../../definitions.h"
 

@@ -28,7 +28,7 @@ void Timer::setup()
     // pwmStop();
     // statusLedStop();
 
-    _status_led_timer_object->TimeoutCallbackRegister(&_status_led_handler->statusLedHandler());
+    _status_led_timer_object->TimeoutCallbackRegister(&_status_led_handler->statusLedHandlerWrapper());
     // _white_pwm_timer_object->TimeoutCallbackRegister(&_output_led_handler->ledOn());         // overflow
     // _white_pwm_timer_object->CompareCallbackRegister(&_output_led_handler->ledOff());        // compare
 }

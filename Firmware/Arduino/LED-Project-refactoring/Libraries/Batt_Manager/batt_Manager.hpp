@@ -1,8 +1,8 @@
-#ifndef BATTMANAGER
-#define BATTMANAGER
+#ifndef BATTMANAGER_H
+#define BATTMANAGER_H
 
 #include "../../definitions.h"
-#include "SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h"
+#include "src/SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h"
 
 class BattManager
 {
@@ -12,7 +12,7 @@ class BattManager
         {
             pinMode(_chg_pin, INPUT);
             pinMode(_max17048_alrt_pin, INPUT);
-            instance = this;
+            _instance = this;
             // attachInterrupt(digitalPinToInterrupt(_chg_pin), battInterruptHandler, FALLING);     // It takes some time for charging IC to assert interrupt pin ~400ms
             // attachInterrupt(digitalPinToInterrupt(_max17048_alrt_pin), alrtInterruptHandler, FALLING);     }
         }
@@ -56,7 +56,7 @@ class BattManager
         bool _is_charging = false;
                 
         Observer* _observer = NULL;
-        static BattManager* instance;
+        static BattManager* _instance;
 };
 
 #endif

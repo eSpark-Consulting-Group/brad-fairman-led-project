@@ -1,5 +1,5 @@
-#ifndef DEVICE
-#define DEVICE
+#ifndef DEVICE_H
+#define DEVICE_H
 
 #include "../../definitions.h"
 #include "../Timer/timer_interface.h"

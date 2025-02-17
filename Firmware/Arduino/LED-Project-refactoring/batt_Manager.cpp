@@ -1,7 +1,7 @@
 #include "Libraries/Batt_Manager/batt_Manager.hpp"
 #include <Wire.h>
 
-BattManager* BattManager::instance = NULL;
+BattManager* BattManager::_instance = NULL;
 
 float mapValue(float& input)      // arduino map function does not allow decimal point values
 {
@@ -39,7 +39,9 @@ void BattManager::update()
 {
     if(_is_usb_connected && !_is_charging)
     {
-        if((BATTERY_LVL_MAX-0.15f) > (_batt->getVoltage()))
+        float threshold = BATTERY_LVL_MAX-0.15f;
+        float battVoltage = _batt->getVoltage();
+        if(threshold > battVoltage)
         {
             _is_usb_connected = false;
             notify(DEVICE_STATUS_UPDATE, (uint8_t)DISCHARGING);
@@ -53,10 +55,11 @@ void BattManager::updateBattStatus()
     _batt_voltage = _batt->getVoltage();
     BATT_LVL_e temp = batt_lvl_percent(_batt_soc);
     // BATT_LVL_e temp = batt_lvl_percent(_batt_voltage);
-    if(temp != _batt_level)
+    temp = (temp > LVL_100) ? LVL_100 : temp;
+    if(temp != getBattLvl())
     {
         _batt_level = temp;
-        notify(BATTERY_UPDATE_EVENT, (uint8_t)_batt_level);
+        notify(BATTERY_UPDATE_EVENT, (uint8_t)getBattLvl());
     }
 }
 
@@ -79,7 +82,11 @@ BATT_LVL_e BattManager::batt_lvl_percent(float& batt_voltage)
 {
     float soc = mapValue(batt_voltage);
 
-    if(soc<=20.0)
+    if(soc<=10.0)
+    {
+        return LVL_CRITICAL;
+    }
+    else if(soc<=20.0)
     {
         return LVL_20;
     }
@@ -101,7 +108,11 @@ BATT_LVL_e BattManager::batt_lvl_percent(int& soc)
 {
     // float soc = *batt_soc;
 
-    if(soc<=20)
+    if(soc<=CRITICAL_SOC_LVL)
+    {
+        return LVL_CRITICAL;
+    }
+    else if(soc<=20)
     {
         return LVL_20;
     }
@@ -146,28 +157,32 @@ void BattManager::chgInterruptHandler()
 void BattManager::alrtInterruptHandler()
 {
     _batt->clearAlert();          // clear the ALRT pin
-    if(_batt->isChange(true))
+    if(_batt->isChange(true) || _batt->isLow(true))
     {
         updateBattStatus();
     }
-    if(_batt->isLow(true) || _batt->isVoltageLow(true))
+    if(_batt->isVoltageLow(true))
     {
-
+        updateBattStatus();
+        if((_batt_soc < CRITICAL_SOC_LVL) || (_batt_voltage < BATTERY_CRITIVAL_VOLTGE))
+        {
+            notify(SHUTDOWN_SEQUENCE_EVENT, (uint8_t)0);
+        }
     }
 }
 
 void BattManager::battChgInterruptWrapper()
 {
-    if(instance)
+    if(_instance)
     {
-        instance->chgInterruptHandler();
+        _instance->chgInterruptHandler();
     }
 }
 
 void BattManager::fuelICInterruptWrapper()
 {
-    if(instance)
+    if(_instance)
     {
-        instance->alrtInterruptHandler();
+        _instance->alrtInterruptHandler();
     }
 }
