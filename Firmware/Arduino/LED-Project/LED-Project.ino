@@ -73,13 +73,13 @@ LED_STATE_t LED[NO_STATUS_LEDS];
 
 #define LED_BLINK_STEPS_DISCHG 6
 #define LED_BLINK_STEPS_CHG 2
-uint32_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{1000, 1000},     {3000,0}, {3000,0}, {3000,0}};
-uint32_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {3000,0}, {3000,0}};
-uint32_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {0,0},    {3000,0}};
+const uint16_t led1_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{1000, 1000},     {3000,0}, {3000,0}, {3000,0}};
+const uint16_t led2_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {3000,0}, {3000,0}};
+const uint16_t led3_dischg_sequence[LVL_MAX][LED_BLINK_STEPS_DISCHG/3] = {{0,0},            {0,0},    {0,0},    {3000,0}};
 
-uint32_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{1000, 1000}, {1000,1},      {1000,1},       {1000,1}};
-uint32_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {1000,1000},   {1000,1},       {1000,1}};
-uint32_t led3_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {0,0},         {1000,1000},    {1000,1}};
+const uint16_t led1_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{1000, 1000}, {1000,1},      {1000,1},       {1000,1}};
+const uint16_t led2_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {1000,1000},   {1000,1},       {1000,1}};
+const uint16_t led3_chg_sequence[LVL_MAX][LED_BLINK_STEPS_CHG]       = {{0,0},        {0,0},         {1000,1000},    {1000,1}};
 
 MODE_e current_mode = MODE_1;
 volatile BATT_LVL_e batt_lvl = LVL_20;
@@ -146,30 +146,6 @@ void disableUnusedPeripherals()
   BOD.CTRLA = 0;          // Disable BOD
 }
 
-// ISR for main WHITE/RED LEDs
-// void TCA0_cmpr2_isr()
-// {
-//   if(current_mode==MODE_4)
-//   {
-//     digitalWrite(RED_LED_CTRL, LOW);
-//   }
-//   // else//(current_mode!=MODE_4)
-//   // {
-//   //   digitalWrite(WHITE_LED_CTRL, LOW);
-//   // }
-// }
-// void TCA0_overflow_isr()
-// {
-//   if(current_mode==MODE_4)
-//   {
-//     digitalWrite(RED_LED_CTRL, HIGH);
-//   }
-//   // else//(current_mode!=MODE_4)
-//   // {
-//   //   digitalWrite(WHITE_LED_CTRL, HIGH);
-//   // }
-// }
-
 void update_led(MODE_e mode)
 {
     TCA0_Interface.Stop();
@@ -203,22 +179,6 @@ void update_led(MODE_e mode)
             break;
     }
 }
-
-// void switch_modes(uint8_t *mode, bool is_activity_change)
-// {
-//     uint8_t activity_bit = *mode & (1 << 7);
-//     uint8_t extracted_mode = *mode & 0x0F;
-
-//     // Rotate the mode bits to the left, and wrap around using modulo 16
-//     extracted_mode = (extracted_mode << 1) & 0x0F;
-//     if (extracted_mode == 0)
-//     {
-//         extracted_mode = MODE_1;
-//     }
-
-//     // Combine the new mode with the activity bit
-//     *mode = extracted_mode | activity_bit;
-// }
 
 void update_mode(MODE_e* mode)
 {
@@ -322,7 +282,7 @@ void led_sequence_action(bool state)
         // TCB1_Stop();
         chg_sequence = (BATT_LVL_e)5;
         // turn off all status LEDs
-        for(int i=0; i<3; i++)
+        for(int i=0; i<NO_STATUS_LEDS; i++)
         {
           status_LED_toggler(i, 0);
           LED[i].state = false;
@@ -353,7 +313,7 @@ void status_LED_handler()
 {
   timerB1_counter++;
   static uint8_t step_count = 0;
-  static uint8_t led_steps[NO_STATUS_LEDS] = {0};
+  // static uint8_t led_steps[NO_STATUS_LEDS] = {0};
 
   if(is_usb_connected || batt_low)
   {
@@ -379,8 +339,9 @@ void status_LED_handler()
         {
             if (LED[i].step == (LED_BLINK_STEPS_DISCHG-1) || (LED[i].time == 0))
             {
-                led_steps[i] += 1;
-                step_count |= (led_steps[i] >= 3) ? (1 << i) : 0x00;
+                // led_steps[i] += 1;
+                // step_count |= (led_steps[i] >= 3) ? (1 << i) : 0x00;
+                step_count |= (1 << i);
             }
             else
             {
@@ -454,24 +415,26 @@ BATT_LVL_e batt_soc_percent(float& soc)
 
 void shutdown()
 {
-    lipo.sleep();
+    // lipo.sleep();
+    lipo.enableHibernate();
+    lipo.clearAlert();
     digitalWrite(U_KILL_PIN, HIGH);
 }
 
 void batt_fuel_ic_init()
 {
     while(!lipo.begin())
-    {   
-        lipo.wake();  
-        lipo.enableComparator();
-    }
+    {       }
+    lipo.wake();
+    lipo.enableComparator();
+    lipo.disableHibernate();
     if(lipo.isReset(true))
     {
       lipo.quickStart();
     }
     // lipo.disableSOCAlert();
     lipo.disableAlert();                        // disable resetAlert
-    // lipo.enableAlert();                       // disable resetAlert
+    // lipo.enableAlert();                       // enable resetAlert
     // lipo.setResetVoltage(CUTOFF_VOLTAGE);     // ON/OFF controller operating range (2.6-26V) - LDO is turning off because ON/OFF controller shuts down
     //                                           // we should execute shutdown sequence if Batt_Vdd reaches such low voltages
     lipo.setThreshold(LOW_SOC_THRESHOLD);
@@ -553,9 +516,9 @@ void gpio_init()
   pinMode(STATUS_LED_25, OUTPUT);
   pinMode(RED_LED_CTRL, OUTPUT);
   pinMode(WHITE_LED_CTRL, OUTPUT);
-  pinMode(U_KILL_PIN, OUTPUT);       // IC removed
+  pinMode(U_KILL_PIN, OUTPUT);
 
-  pinMode(U_INT_PIN, INPUT);       // IC removed
+  pinMode(U_INT_PIN, INPUT);
   pinMode(BUTTON_PIN, INPUT);
   pinMode(GPOUT_PIN, INPUT);
   pinMode(BATT_CHG_PIN, INPUT);
