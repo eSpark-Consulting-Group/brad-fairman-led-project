@@ -117,7 +117,8 @@ void TCB0_Initialize(void)
 
     //CLKSEL CLKDIV1; ENABLE enabled; RUNSTDBY disabled; SYNCUPD disabled; 
     TCB0.CTRLA = 0x1;
-    TCB0.CTRLA |= TCB_ENABLE_bm;
+    // TCB0.CTRLA |= TCB_ENABLE_bm;
+    TCB0_Stop();
 }
 
 void TCB0_Start(void)

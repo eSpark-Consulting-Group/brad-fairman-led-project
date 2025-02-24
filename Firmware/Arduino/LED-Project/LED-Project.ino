@@ -317,7 +317,7 @@ void status_LED_handler()
 
   if(is_usb_connected || batt_low)
   {
-    for( uint8_t i=0; i<3; i++ )
+    for( uint8_t i=0; i<NO_STATUS_LEDS; i++ )
     {
         // int32_t timer_diff = timerB1_counter-LED[i].timer;
         if(((timerB1_counter-LED[i].timer) > LED[i].time) && (LED[i].time != 0) )
@@ -333,7 +333,7 @@ void status_LED_handler()
   }
   else
   {
-    for( uint8_t i=0; i<3; i++ )
+    for( uint8_t i=0; i<NO_STATUS_LEDS; i++ )
     {
         if(((timerB1_counter-LED[i].timer) >= LED[i].time) && !(step_count & (1 << i) ))
         {
@@ -555,8 +555,8 @@ void timers_init()
   TCA0_Interface.PeriodCountSet(50000);        // set PWM freq (5 - 100 KHz range)
   // TCB0_Interface.setDuty(50);                  // set red led duty cycle   - For some reason, unable to modify dutyCycle outside of .Initialize()
 
-  TCA0_Interface.Stop();
-  TCB0_Interface.Stop();
+  // TCA0_Interface.Stop();                       // performed within .Initialize()
+  // TCB0_Interface.Stop();                       // performed within .Initialize()
   // timer callbacks for PWM generation
   // TCA0_Compare2CallbackRegister(&TCA0_cmpr2_isr);
   // TCA0_OverflowCallbackRegister(&TCA0_overflow_isr);

@@ -191,8 +191,8 @@ void TCA0_Initialize(void) {
     
     // CLKSEL DIV1; ENABLE enabled; 
     TCA0.SINGLE.CTRLA = 0x1;
-    TCA0.SINGLE.CTRLA&= ~TCA_SINGLE_ENABLE_bm;
-    
+    TCA0.SINGLE.CTRLA|= TCA_SINGLE_ENABLE_bm;
+    TCA0_Stop();
 }
 
 void TCA0_Start(void)
